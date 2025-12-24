@@ -1,26 +1,83 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ======================
+   THEME TOKENS
+   ====================== */
+@theme {
+  --color-primary: #51baff;
+  --color-primary-dark: #2fa4ff;
+  --color-secondary: #ffd700;
+  --color-secondary-dark: #fff700;
+
+  --color-bg-dark: #0b0f14;
+  --color-bg-soft: #111827;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ======================
+   BASE STYLES
+   ====================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    background-color: var(--color-bg-dark);
+    color: #e5e7eb;
+  }
+
+  button {
+    cursor: pointer;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ======================
+   COMPONENT CLASSES
+   ====================== */
+@layer components {
+  .primary-btn {
+    @apply rounded-lg px-8 py-2 font-semibold text-black shadow-sm;
+    background-image: linear-gradient(
+      to right,
+      var(--color-primary),
+      var(--color-primary-dark)
+    );
+  }
+  .secondary-btn {
+    @apply rounded-lg px-8 py-2 font-semibold text-black shadow-sm;
+    background-image: linear-gradient(
+      to right,
+      var(--color-secondary),
+      var(--color-secondary-dark)
+    );
+  }
+}
+
+/* ======================
+   SCROLLBAR
+   ====================== */
+
+/* Chromium, Edge, Safari */
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-primary);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) transparent;
 }

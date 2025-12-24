@@ -1,16 +1,46 @@
 "use client";
 
+import { ArrowRight, Car, Search } from "lucide-react";
+
 export default function FinalCTA() {
   return (
-    <section className="py-24 text-center">
-      <h2 className="text-3xl font-bold">Ready to hit the road?</h2>
-      <div className="mt-6 flex justify-center gap-4">
-        <button className="rounded-md bg-linear-to-r from-primary to-primaryDark px-6 py-3 text-black">
-          Sign Up as Driver
-        </button>
-        <button className="rounded-md border border-gold px-6 py-3 text-gold">
-          Find a Ride
-        </button>
+    <section className="bg-[#0b0f14] py-24 pb-0 relative overflow-hidden">
+      {/* Dynamic background elements */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_70%_50%,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_20%_80%,_var(--tw-gradient-stops))] from-secondary/10 via-transparent to-transparent pointer-events-none" />
+
+      <div className="min-w-full relative z-10">
+        <div className="bg-white/5 p-8 md:p-16 overflow-hidden relative group">
+          {/* Subtle glow that follows the card */}
+          <div className="absolute inset-0 bg-linear-to-br from-secondary/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+          <div className="relative z-10 text-center max-w-3xl mx-auto">
+            <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-[1.1]">
+              The road is calling. <br />
+              <span className="text-secondary">Join </span>
+              <span>the movement.</span>
+            </h2>
+            <p className="text-gray-400 text-lg md:text-xl mb-12 leading-relaxed">
+              Whether you’re behind the wheel or in the passenger seat, Travelus
+              makes every kilometer count. No downloads required—start right
+              from your browser.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              {/* Operator Action */}
+              <button className="group/btn relative flex items-center gap-3 bg-primary text-black px-10 py-3 rounded-xl font-bold text-lg hover:bg-primary/90 transition-all w-full sm:w-auto justify-center">
+                Start Earning
+                <ArrowRight className="size-5 group-hover/btn:translate-x-1 transition-transform" />
+              </button>
+
+              {/* Passenger Action */}
+              <button className="group/btn flex items-center gap-3 bg-white/5 text-white border border-white/10 px-10 py-3 rounded-xl font-bold text-lg hover:bg-white/10 transition-all w-full sm:w-auto justify-center">
+                <Search className="size-5 text-secondary" />
+                Book a Trip
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
