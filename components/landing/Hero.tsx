@@ -21,7 +21,8 @@ export default function Hero() {
 
           {/* Subtext */}
           <p className="mt-4 text-xl md:text-2xl text-gray-300 leading-snug">
-            Stop hunting passengers. Start running predictable income.
+            Giving you all the benefits of a booking system you need without the
+            high cost associated to it.
           </p>
           <div className="flex flex-col relative justify-between w-full">
             <Image
@@ -47,15 +48,6 @@ export default function Hero() {
               </div>
             </div>
           </div>
-
-          {/* Buttons */}
-          {/* <div className="mt-12 flex justify-center gap-4">
-          <button className="primary-btn">Get Started</button>
-
-          <button className="rounded-lg border border-gray-600/50 px-8 py-2 text-gold hover:bg-gold/10 transition">
-            Find a Trip
-          </button>
-        </div> */}
         </div>
         <div className="p-5 hidden md:flex left-20 top-1/2 shadow shadow-secondary/60 absolute rounded-lg gap-6 px-8  z-20 flex-col bg-gray-800/20 border border-white/10">
           <div className="flex items-center gap-4">
@@ -72,7 +64,7 @@ export default function Hero() {
           </div>
         </div>
         <div className="size-40 hidden lg:flex right-40 top-96 absolute rounded-full blur-3xl bg-secondary/60 shadow-2xl" />
-        <div className="size-40 hidden md:flex right-10 top-60 absolute rounded-full blur-3xl bg-secondary/40 shadow-2xl" />
+        <div className="size-40 hidden md:flex right-10 top-60 absolute rounded-full blur-3xl bg-amber-600/40 shadow-2xl" />
       </section>
     </>
   );

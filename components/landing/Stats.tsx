@@ -1,6 +1,6 @@
 const stats = [
-  { label: "Trips Completed", value: "125.0K+" },
-  { label: "Active Passengers", value: "450.0K+" },
+  { label: "Trips Completed", value: "125K+" },
+  { label: "Active Passengers", value: "450K+" },
   { label: "Total Operators", value: "9K+" },
   { label: "Counties Covered", value: "47" },
 ];
@@ -24,7 +24,7 @@ export default function Stats() {
               key={i}
               className="text-center p-10 rounded-xl bg-white/5 border border-white/10 hover:border-primary/30 transition-colors"
             >
-              <div className="text-4xl md:text-5xl font-extrabold text-primary mb-2 tracking-tighter">
+              <div className="text-2xl md:text-4xl font-extrabold text-primary mb-2 tracking-tighter">
                 {stat.value}
               </div>
               <div className="text-gray-300 font-medium tracking-widest text-xs">
