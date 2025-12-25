@@ -35,7 +35,7 @@ export default function OperatorLayout({ children, params }: Props) {
         operator_slug={operator_slug}
       />
 
-      <main className="flex-1 h-screen overflow-y-auto overflow-x-hidden custom-scrollbar">
+      <main className="flex-1 p-4 md:p-8 h-screen overflow-y-auto overflow-x-hidden custom-scrollbar">
         {children}
       </main>
     </div>

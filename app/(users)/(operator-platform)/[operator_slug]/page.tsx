@@ -6,6 +6,7 @@ import {
   Bell,
   Search,
 } from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   params: Promise<{ operator_slug: string }>;
@@ -14,7 +15,7 @@ type Props = {
 export default async function OperatorDashboard({ params }: Props) {
   const { operator_slug } = await params; // Await the promise here
   return (
-    <div className="min-h-screen p-4 md:p-8 space-y-8 max-w-[1600px] mx-auto">
+    <div className="min-h-screen space-y-8 max-w-[1600px] mx-auto">
       {/* 1. TOP NAV / HEADER */}
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -39,9 +40,11 @@ export default async function OperatorDashboard({ params }: Props) {
             <span className="absolute top-3 right-3 size-2 bg-secondary rounded-full border-2 border-bg-dark"></span>
           </button>
           <div className="h-10 w-[1px] bg-white/10 mx-2" />
-          <button className="secondary-btn flex items-center gap-2">
-            <Calendar className="size-4" /> Schedule Trip
-          </button>
+          <Link href={`/${operator_slug}/trips`}>
+            <button className="secondary-btn flex items-center gap-2">
+              <Calendar className="size-4" /> Schedule Trip
+            </button>
+          </Link>
         </div>
       </header>
 

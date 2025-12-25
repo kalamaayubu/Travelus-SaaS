@@ -33,7 +33,7 @@ export function Sidebar({
     {
       icon: LayoutDashboard,
       label: "Command Center",
-      href: `/${operator_slug}/dashboard`,
+      href: `/${operator_slug}`,
     },
     { icon: Bus, label: "Fleet & Vehicles", href: `/${operator_slug}/fleet` },
     { icon: Users, label: "Driver Network", href: `/${operator_slug}/staff` },
@@ -83,7 +83,7 @@ export function Sidebar({
               T
             </div>
             {!isCollapsed && (
-              <span className="text-xl font-black tracking-tighter uppercase animate-in fade-in slide-in-from-left-2">
+              <span className="text-xl font-black tracking-tighter uppercase animate-in fade-in slide-in-from-left-2 text-white">
                 Travel<span className="text-secondary">us</span>
               </span>
             )}
@@ -101,7 +101,13 @@ export function Sidebar({
         {/* NAVIGATION */}
         <nav className="flex-1 space-y-2">
           {menuItems.map((item) => {
-            const isActive = pathname.includes(item.href);
+            // Checks if the current pathname matches the href.
+            // For the dashboard (root), we check for exact match to prevent it from always being active.
+            const isActive =
+              item.href === `/${operator_slug}`
+                ? pathname === item.href
+                : pathname.startsWith(item.href);
+
             return (
               <Link
                 key={item.label}
@@ -118,7 +124,7 @@ export function Sidebar({
                 `}
               >
                 <item.icon
-                  className={`size-5 shrink-0 ${
+                  className={`size-5 shrink-0 transition-colors ${
                     isActive ? "text-black" : "group-hover:text-secondary"
                   }`}
                 />
@@ -142,7 +148,7 @@ export function Sidebar({
             <div className="size-10 min-w-10 rounded-full bg-gradient-to-tr from-secondary to-amber-600 shrink-0" />
             {!isCollapsed && (
               <div className="overflow-hidden animate-in fade-in">
-                <p className="text-sm font-bold truncate uppercase">
+                <p className="text-sm font-bold truncate uppercase text-white">
                   {operator_slug}
                 </p>
                 <p className="text-[10px] text-gray-500 truncate">
@@ -152,11 +158,11 @@ export function Sidebar({
             )}
           </div>
           <button
-            className={`flex items-center text-gray-500 hover:text-red-500 transition-colors ${
+            className={`flex items-center text-gray-500 hover:text-red-500 transition-colors group ${
               isCollapsed ? "justify-center py-3" : "gap-3 px-4 py-3 w-full"
             }`}
           >
-            <LogOut className="size-5 shrink-0" />
+            <LogOut className="size-5 shrink-0 group-hover:rotate-12 transition-transform" />
             {!isCollapsed && (
               <span className="text-sm font-medium">Exit Portal</span>
             )}
