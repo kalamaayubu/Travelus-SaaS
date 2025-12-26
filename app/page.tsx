@@ -1,4 +1,3 @@
-import Footer from "@/components/Footer";
 import FAQ from "@/components/landing/FAQ";
 import Features from "@/components/landing/Features";
 import FinalCTA from "@/components/landing/FinalCTA";
@@ -7,12 +6,10 @@ import HowItWorks from "@/components/landing/HowItWorks";
 import Pricing from "@/components/landing/Pricing";
 import Stats from "@/components/landing/Stats";
 import Testimonials from "@/components/landing/Testimonials";
-import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
     <>
-      <Navbar />
       <Hero />
       <Features />
       <HowItWorks />
@@ -21,7 +18,6 @@ export default function Home() {
       <FAQ />
       <Pricing />
       <FinalCTA />
-      <Footer />
     </>
   );
 }

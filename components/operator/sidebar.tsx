@@ -79,12 +79,12 @@ export function Sidebar({
               isCollapsed ? "justify-center" : ""
             }`}
           >
-            <div className="size-8 min-w-8 rounded-lg bg-secondary flex items-center justify-center text-black font-black shrink-0">
-              T
+            <div className="size-8 min-w-8  uppercase rounded-lg bg-secondary flex items-center justify-center text-black font-black shrink-0">
+              {operator_slug.charAt(0)}
             </div>
             {!isCollapsed && (
-              <span className="text-xl font-black tracking-tighter uppercase animate-in fade-in slide-in-from-left-2 text-white">
-                Travel<span className="text-secondary">us</span>
+              <span className="uppercase font-black tracking-tighter">
+                {operator_slug}
               </span>
             )}
           </div>

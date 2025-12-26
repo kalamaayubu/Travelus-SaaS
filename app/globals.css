@@ -4,13 +4,26 @@
    THEME TOKENS
    ====================== */
 @theme {
+  /* Brand Colors */
   --color-primary: #51baff;
   --color-primary-dark: #2fa4ff;
   --color-secondary: #ffb000;
   --color-secondary-dark: #d97706;
+  --color-tertiary: #16a34a;
 
+  /* App Backgrounds */
   --color-bg-dark: #0b0f14;
   --color-bg-soft: #111827;
+
+  /* Gray Scale Logic */
+  --color-gray0: #ffffff;
+  --color-gray1: #f3f4f6;
+  --color-gray2: #e5e7eb;
+  --color-gray3: #d1d5db;
+  --color-gray4: #9ca3af;
+  --color-gray5: #6b7280;
+  --color-gray6: #4b5563;
+  --color-gray7: #374151;
 }
 
 /* ======================
@@ -64,16 +77,16 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--color-primary);
+  background-color: var(--color-gray7);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-primary);
+  background-color: var(--color-gray7);
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-primary) transparent;
+  scrollbar-color: var(--color-gray7) transparent;
 }

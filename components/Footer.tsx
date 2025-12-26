@@ -9,7 +9,18 @@ import {
   Mail,
 } from "lucide-react";
 
+import { usePathname } from "next/navigation";
+
 export default function Footer() {
+  const pathname = usePathname();
+
+  // Define the routes where the Navbar is allowed to show
+  const allowedPaths = ["/", "/trips"];
+
+  // If the current path is not in the allowed list, return nothing
+  if (!allowedPaths.includes(pathname)) {
+    return null;
+  }
   return (
     <footer className="bg-bg-dark pt-20 pb-10 px-6 border-t border-white/5">
       <div className="max-w-6xl mx-auto">

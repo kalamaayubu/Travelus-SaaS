@@ -31,7 +31,7 @@ export default function SignupPage() {
   const getAccentColor = () => {
     switch (role) {
       case "passenger":
-        return "bg-green-500 hover:bg-green-400 text-black";
+        return "bg-tertiary hover:bg-green-400 text-black";
       case "driver":
         return "bg-primary hover:bg-blue-400 text-black";
       case "operator":
@@ -44,7 +44,7 @@ export default function SignupPage() {
 
   return (
     <section className="min-h-screen bg-bg-dark flex items-center justify-center px-6 py-20">
-      <div className="max-w-md w-full">
+      <div className="max-w-lg px-8 py-6 rounded-xl bg-white/5 border border-white/[0.2] w-full">
         {/* Progress Bar (Only show if role is selected) */}
         {role === "operator" && (
           <div className="flex justify-between mb-8 px-2">
@@ -83,9 +83,9 @@ export default function SignupPage() {
           <div className="space-y-4">
             <button
               onClick={() => setRole("passenger")}
-              className="w-full p-6 bg-white/5 border border-white/10 rounded-2xl flex items-center gap-5 hover:border-green-500 hover:bg-green-500/5 transition-all group"
+              className="w-full p-6 bg-white/5 border border-white/10 rounded-2xl flex items-center gap-5 hover:border-tertiary hover:bg-tertiary/5 transition-all group"
             >
-              <div className="size-12 px-3 rounded-xl bg-green-500/10 flex items-center justify-center text-green-500">
+              <div className="size-12 px-3 rounded-xl bg-tertiary/10 flex items-center justify-center text-tertiary">
                 <User />
               </div>
               <div className="text-left">
@@ -94,7 +94,7 @@ export default function SignupPage() {
                   Book seats and travel comfortably.
                 </p>
               </div>
-              <ArrowRight className="size-5 text-gray-600 ml-auto group-hover:text-green-500 group-hover:translate-x-1 transition-all" />
+              <ArrowRight className="size-5 text-gray-600 ml-auto group-hover:text-tertiary group-hover:translate-x-1 transition-all" />
             </button>
             {/* ... Driver and Operator buttons same as previous code ... */}
             {/* Driver Option */}
@@ -117,9 +117,9 @@ export default function SignupPage() {
             {/* Operator option */}
             <button
               onClick={() => setRole("operator")}
-              className="w-full p-6 bg-white/5 border border-white/10 rounded-2xl flex items-center gap-5 hover:border-secondary hover:bg-secondary border-secondary/5 transition-all group"
+              className="w-full p-6 bg-white/5 border border-white/10 rounded-2xl flex items-center gap-5 hover:border-secondary  border-secondary/5 transition-all group"
             >
-              <div className="size-12 px-3 rounded-xl bg-secondary/10 border-secondary/10 flex items-center justify-center text-secondary border-secondary">
+              <div className="size-12 px-3 rounded-xl bg-secondary/10 border-secondary/10 flex items-center justify-center text-secondary">
                 <Building2 />
               </div>
               <div className="text-left">

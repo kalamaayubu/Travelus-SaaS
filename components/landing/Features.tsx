@@ -16,6 +16,7 @@ const features = [
       "Operators and drivers can post trips in seconds with intuitive tools. Set your route, vehicle, and schedule effortlessly.",
     icon: PlusCircle,
     color: "text-blue-500",
+    glow: "bg-blue-500",
   },
   {
     title: "Flexible Booking",
@@ -23,6 +24,7 @@ const features = [
       "Passengers can book specific seats in advance. Choose your preferred spot and travel time that fits your schedule.",
     icon: Armchair,
     color: "text-green-500",
+    glow: "bg-green-500",
   },
   {
     title: "Smart Route Management",
@@ -30,6 +32,7 @@ const features = [
       "Save frequently used routes and pickup points as templates. Efficiently manage complex logistics.",
     icon: Route,
     color: "text-amber-500",
+    glow: "bg-amber-500",
   },
   {
     title: "Secure Payments",
@@ -37,6 +40,7 @@ const features = [
       "Integrated mobile money and card payments. Instant confirmation and automated receipts for every transaction.",
     icon: Wallet,
     color: "text-emerald-500",
+    glow: "bg-emerald-500",
   },
   {
     title: "Analytics & Insights",
@@ -44,6 +48,7 @@ const features = [
       "Track revenue, passenger trends, and vehicle performance with our comprehensive dashboard.",
     icon: BarChart3,
     color: "text-purple-500",
+    glow: "bg-purple-500",
   },
   {
     title: "Flexible Commission",
@@ -51,15 +56,16 @@ const features = [
       "Fair pricing models for operators. Choose between subscription plans or commission-per-seat options.",
     icon: Percent,
     color: "text-rose-500",
+    glow: "bg-rose-500",
   },
 ];
 
 export default function FeaturesSection() {
   return (
-    <section className="bg-[#0b0f14] py-24 px-6 relative overflow-hidden">
-      {/* Subtle background glow to match hero */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-96 bg-blue-600/10 blur-[120px] pointer-events-none" />
-
+    <section
+      id="features"
+      className="bg-bg-dark py-24 px-6 relative overflow-hidden"
+    >
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -78,11 +84,19 @@ export default function FeaturesSection() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-secondary/50 transition-all duration-300 hover:-translate-y-1"
+              className="group relative p-8 rounded-2xl overflow-hidden bg-white/5 border border-white/10 transition-all duration-500"
             >
+              <div className="h-px absolute top-0 left-0 rounded-full w-full bg-linear-to-l from-transparent via-primary to-transparent" />
+              <div className="h-px absolute bottom-0 left-0 rounded-full w-full bg-linear-to-l from-transparent via-secondary to-transparent" />
+
               <div
-                className={`size-12 rounded-lg bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}
+                className={`size-12 relative rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}
               >
+                {/* The Glow Effect */}
+                <div
+                  className={`absolute inset-0 rounded-full blur-xl opacity-20 group-hover:opacity-50 group-hover:scale-150 transition-all duration-700 pointer-events-none ${feature.glow}`}
+                />
+
                 <feature.icon className={`size-6 ${feature.color}`} />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">

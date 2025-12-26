@@ -65,7 +65,7 @@ export default function HowItWorks() {
         {/* Header */}
         <div className="text-center mb-20">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-            How <span className="text-secondary">Travelus</span> Works
+            How <span className="text-primary">Travelus</span> Works
           </h2>
           <p className="text-gray-400 text-lg">
             Simple steps for everyone on the road.
@@ -73,23 +73,23 @@ export default function HowItWorks() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {/* Operators Column */}
+          {/* Passengers Column */}
           <div className="relative">
             <h3 className="text-2xl font-bold text-white mb-10 flex items-center gap-3">
-              <span className="bg-primary/5 text-primary p-2 px-3 rounded-lg">
-                For Operators
+              <span className="bg-secondary/10 text-secondary p-2 px-3 rounded-lg">
+                For Passengers
               </span>
             </h3>
 
             <div className="space-y-12 relative">
               {/* Vertical Line */}
-              <div className="absolute left-[27px] top-2 bottom-2 w-[2px] bg-gradient-to-b from-primary/50 to-transparent" />
+              <div className="absolute left-[27px] top-2 bottom-2 w-[2px] bg-linear-to-b from-secondary/50 to-transparent" />
 
-              {operatorSteps.map((step, idx) => (
+              {passengerSteps.map((step, idx) => (
                 <div key={idx} className="relative flex gap-8 group">
-                  <div className="relative z-10 size-14 shrink-0 rounded-full bg-[#161b22] border border-white/10 flex items-center justify-center text-white font-bold group-hover:border-primary/60 transition-colors">
-                    <step.icon className="size-6 text-blue-400" />
-                    <span className="absolute -top-1 -right-1 size-6 rounded-full text-[10px] flex items-center justify-center bg-gray-700">
+                  <div className="relative z-10 size-14 shrink-0 rounded-full bg-[#161b22] border border-white/10 flex items-center justify-center text-white font-bold group-hover:border-secondary/60 transition-colors">
+                    <step.icon className="size-6 text-secondary" />
+                    <span className="absolute -top-1 -right-1 size-6 bg-gray-700 rounded-full text-[10px] flex items-center justify-center">
                       {idx + 1}
                     </span>
                   </div>
@@ -106,23 +106,23 @@ export default function HowItWorks() {
             </div>
           </div>
 
-          {/* Passengers Column */}
+          {/* Operators Column */}
           <div className="relative">
             <h3 className="text-2xl font-bold text-white mb-10 flex items-center gap-3">
-              <span className="bg-secondary/5 text-secondary p-2 px-3 rounded-lg">
-                For Passengers
+              <span className="bg-primary/10 text-primary p-2 px-3 rounded-lg">
+                For Operators
               </span>
             </h3>
 
             <div className="space-y-12 relative">
               {/* Vertical Line */}
-              <div className="absolute left-[27px] top-2 bottom-2 w-[2px] bg-linear-to-b from-secondary/50 to-transparent" />
+              <div className="absolute left-[27px] top-2 bottom-2 w-[2px] bg-gradient-to-b from-primary/50 to-transparent" />
 
-              {passengerSteps.map((step, idx) => (
+              {operatorSteps.map((step, idx) => (
                 <div key={idx} className="relative flex gap-8 group">
-                  <div className="relative z-10 size-14 shrink-0 rounded-full bg-[#161b22] border border-white/10 flex items-center justify-center text-white font-bold group-hover:border-secondary/60 transition-colors">
-                    <step.icon className="size-6 text-secondary" />
-                    <span className="absolute -top-1 -right-1 size-6 bg-gray-700 rounded-full text-[10px] flex items-center justify-center">
+                  <div className="relative z-10 size-14 shrink-0 rounded-full bg-[#161b22] border border-white/10 flex items-center justify-center text-white font-bold group-hover:border-primary/60 transition-colors">
+                    <step.icon className="size-6 text-blue-400" />
+                    <span className="absolute -top-1 -right-1 size-6 rounded-full text-[10px] flex items-center justify-center bg-gray-700">
                       {idx + 1}
                     </span>
                   </div>

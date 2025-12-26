@@ -20,7 +20,7 @@ export default async function OperatorDashboard({ params }: Props) {
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black tracking-tight text-white uppercase">
-            {operator_slug} <span className="text-secondary">Control</span>
+            Dashboard <span className="text-secondary"></span>
           </h1>
           <p className="text-gray-500 font-medium">
             Thursday, 25 Dec 2025 • Fleet Live Status
@@ -59,7 +59,7 @@ export default async function OperatorDashboard({ params }: Props) {
           </div>
           <div>
             <p className="text-gray-500 font-bold text-sm uppercase tracking-widest">
-              Total Sacco Revenue
+              Total Revenue
             </p>
             <h2 className="text-5xl font-black text-white mt-2">
               KES 1,284,000

@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowRight, Car, Search } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
+import Link from "next/link";
 
 export default function FinalCTA() {
   return (
@@ -28,16 +29,22 @@ export default function FinalCTA() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
               {/* Operator Action */}
-              <button className="group/btn relative flex items-center gap-3 bg-primary text-black px-10 py-3 rounded-xl font-bold text-lg hover:bg-primary/90 transition-all w-full sm:w-auto justify-center">
-                Start Earning
+              <Link
+                href={"/login"}
+                className=" group/btn relative flex items-center gap-3 bg-primary text-black px-10 py-3 rounded-xl font-bold text-lg hover:bg-primary/90 transition-all w-full sm:w-auto justify-center"
+              >
+                Get Started
                 <ArrowRight className="size-5 group-hover/btn:translate-x-1 transition-transform" />
-              </button>
+              </Link>
 
               {/* Passenger Action */}
-              <button className="group/btn flex items-center gap-3 bg-white/5 text-white border border-white/10 px-10 py-3 rounded-xl font-bold text-lg hover:bg-white/10 transition-all w-full sm:w-auto justify-center">
-                <Search className="size-5 text-secondary" />
+              <Link
+                href={"/trips"}
+                className="flex items-center gap-3 bg-secondary/95 hover:bg-secondary text-black px-10 py-3 rounded-xl font-bold text-lgtransition-all w-full sm:w-auto justify-center"
+              >
+                <Search className="size-5" />
                 Book a Trip
-              </button>
+              </Link>
             </div>
           </div>
         </div>
