@@ -22,7 +22,7 @@ export default function Footer() {
     return null;
   }
   return (
-    <footer className="bg-bg-dark pt-20 pb-10 px-6 border-t border-white/5">
+    <footer className="bg-dark pt-20 pb-10 px-6 border-t border-white/5">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           {/* Brand Column */}
@@ -30,15 +30,15 @@ export default function Footer() {
             <div className="text-2xl font-bold text-white mb-6">
               Travel<span className="text-secondary">us</span>
             </div>
-            <p className="text-gray-500 text-sm leading-relaxed mb-6">
+            <p className="text-gray5 text-sm leading-relaxed mb-6">
               Giving you the competitive edge of a booking system without the
               expensive cost or maintenance headaches
             </p>
             <div className="flex gap-4">
-              <Facebook className="size-5 text-gray-500 hover:text-secondary cursor-pointer transition-colors" />
-              <Twitter className="size-5 text-gray-500 hover:text-secondary cursor-pointer transition-colors" />
-              <Instagram className="size-5 text-gray-500 hover:text-secondary cursor-pointer transition-colors" />
-              <Linkedin className="size-5 text-gray-500 hover:text-secondary cursor-pointer transition-colors" />
+              <Facebook className="size-5 text-gray5 hover:text-secondary cursor-pointer transition-colors" />
+              <Twitter className="size-5 text-gray5 hover:text-secondary cursor-pointer transition-colors" />
+              <Instagram className="size-5 text-gray5 hover:text-secondary cursor-pointer transition-colors" />
+              <Linkedin className="size-5 text-gray5 hover:text-secondary cursor-pointer transition-colors" />
             </div>
           </div>
 
@@ -47,7 +47,7 @@ export default function Footer() {
             <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-widest">
               Platform
             </h4>
-            <ul className="space-y-4 text-gray-500 text-sm">
+            <ul className="space-y-4 text-gray5 text-sm">
               <li className="hover:text-white cursor-pointer transition-colors">
                 Find a Trip
               </li>
@@ -67,7 +67,7 @@ export default function Footer() {
             <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-widest">
               Support
             </h4>
-            <ul className="space-y-4 text-gray-500 text-sm">
+            <ul className="space-y-4 text-gray5 text-sm">
               <li className="hover:text-white cursor-pointer transition-colors">
                 Help Center
               </li>
@@ -88,7 +88,7 @@ export default function Footer() {
             <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-widest">
               Contact
             </h4>
-            <ul className="space-y-4 text-gray-500 text-sm">
+            <ul className="space-y-4 text-gray5 text-sm">
               <li className="flex items-center gap-3">
                 <MapPin className="size-4 text-secondary" />
                 Nairobi, Kenya
@@ -101,7 +101,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/5 text-center text-gray-600 text-xs">
+        <div className="pt-8 border-t border-white/5 text-center text-gray6 text-xs">
           <p>
             © {new Date().getFullYear()} Travelus Technology Ltd. All rights
             reserved. Made for the Kenyan Road.

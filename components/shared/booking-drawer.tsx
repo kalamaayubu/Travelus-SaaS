@@ -53,9 +53,9 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-md bg-bg-dark border-l border-white/10 h-full flex flex-col animate-in slide-in-from-right duration-500 shadow-2xl">
+      <div className="relative w-full max-w-md bg-dark border-l border-white/10 h-full flex flex-col animate-in slide-in-from-right duration-500 shadow-2xl">
         {/* Header */}
-        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-bg-soft/30">
+        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-soft-dark/30">
           <div>
             <h2 className="text-2xl font-black italic uppercase tracking-tighter text-primary leading-none">
               Choose Seats
@@ -68,7 +68,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
             onClick={onClose}
             className="size-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 hover:bg-white/10 transition-colors"
           >
-            <X size={20} className="text-gray-400" />
+            <X size={20} className="text-gray4" />
           </button>
         </div>
 
@@ -78,7 +78,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
             {/* Legend */}
             <div className="flex flex-wrap gap-6 pb-10">
               <div className="flex items-center gap-2">
-                <div className="size-6 rounded-sm bg-bg-soft border border-white/10"></div>
+                <div className="size-6 rounded-sm bg-soft-dark border border-white/10"></div>
                 <span className="text-[12px] uppercase text-gray4">
                   Available
                 </span>
@@ -96,7 +96,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="size-6 flex items-center justify-center border border-white/5 rounded-sm bg-white/[0.02]">
+                <div className="size-6 flex items-center justify-center border border-white/5 rounded-sm bg-white/2">
                   <User className="text-primary size-3" />
                 </div>
                 <span className="text-[12px] uppercase text-gray4">
@@ -104,7 +104,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
                 </span>
               </div>
             </div>
-            <div className="w-48 h-1 bg-linear-to-r from-transparent via-primary/20 to-transparent rounded-full mb-12" />
+            <div className="w-full h-0.5 bg-linear-to-r from-transparent via-primary/20 to-transparent rounded-full mb-12" />
 
             <SeatMap
               layout={MOCK_LAYOUT_DATA}
@@ -117,10 +117,10 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
         </div>
 
         {/* Footer */}
-        <div className="p-8 border-t border-white/5 bg-bg-soft/50 space-y-6 backdrop-blur-md">
+        <div className="p-8 border-t border-white/5 bg-soft-dark/50 space-y-6 backdrop-blur-md">
           <div className="flex justify-between items-end">
             <div className="space-y-1">
-              <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
+              <p className="text-[10px] font-black text-gray3 uppercase tracking-widest">
                 Selected Seats ({selectedSeats.length})
               </p>
               <div className="flex flex-wrap gap-1 max-w-[200px]">
@@ -141,7 +141,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
+              <p className="text-[10px] font-black text-gray3 uppercase tracking-widest">
                 Total to Pay
               </p>
               <p

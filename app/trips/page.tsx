@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
 import {
   Search,
   MapPin,
@@ -11,9 +12,14 @@ import {
 } from "lucide-react";
 import BookingDrawer from "@/components/shared/booking-drawer";
 
-export default function PublicSearchPage() {
+// --- PART 1: THE CONTENT COMPONENT ---
+// This component uses useSearchParams(), so it MUST be inside <Suspense>
+function SearchPageContent() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [hasSearched, setHasSearched] = useState(false);
-  const [activeTrip, setActiveTrip] = useState<any>(null);
   const [text, setText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);
@@ -22,6 +28,44 @@ export default function PublicSearchPage() {
     new Date().toISOString().split("T")[0]
   );
 
+  // 1. Determine active trip from URL (?trip=ID)
+  const activeTripId = searchParams.get("trip");
+
+  // 2. Mock Trips Data
+  const trips = [
+    {
+      id: "h308hfefh",
+      from: "Nairobi",
+      to: "Nakuru",
+      price: 800,
+      provider: "Easy Coach",
+    },
+    {
+      id: "k92jdf92j",
+      from: "Nairobi",
+      to: "Mombasa",
+      price: 1500,
+      provider: "Mash Poa",
+    },
+  ];
+
+  // 3. Find the trip data based on the ID in URL
+  const activeTripData = trips.find((t) => t.id === activeTripId);
+
+  // 4. Navigation logic
+  const openTrip = (trip: any) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("trip", trip.id.toString());
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  const closeDrawer = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("trip");
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  // 5. Typing Effect Logic
   const words = [
     "Safe Travels",
     "Instant Booking",
@@ -51,13 +95,13 @@ export default function PublicSearchPage() {
   }, [text, isDeleting, loopNum]);
 
   return (
-    <div className="min-h-screen bg-bg-dark mb-10 text-white font-sans">
+    <div className="min-h-screen bg-dark text-white font-sans">
       {/* HERO & SEARCH */}
       <div className="pt-20 pb-16 px-6 max-w-6xl mt-20 mx-auto">
         <div className="space-y-6 mb-12">
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9]">
             Book{" "}
-            <span className="text-secondary inline-block min-w-[300px]">
+            <span className="text-secondary inline-block min-w-75">
               {text}
               <span className="animate-pulse">|</span>
             </span>
@@ -70,11 +114,11 @@ export default function PublicSearchPage() {
         </div>
 
         {/* SEARCH BAR */}
-        <div className="bg-bg-soft p-3 rounded-2xl border border-white/10 flex flex-col lg:items-center lg:flex-row gap-3">
+        <div className="bg-soft-dark p-3 rounded-2xl border border-white/10 flex flex-col lg:items-center lg:flex-row gap-3">
           <div className="relative flex-1">
             <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-primary" />
             <input
-              className="w-full h-16 bg-bg-dark border border-white/5 pl-12 pr-4 rounded-xl text-sm focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray4"
+              className="w-full h-16 bg-dark border border-white/5 pl-12 pr-4 rounded-xl text-sm focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray4"
               placeholder="From"
             />
           </div>
@@ -82,7 +126,7 @@ export default function PublicSearchPage() {
           <div className="relative flex-1">
             <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-primary" />
             <input
-              className="w-full h-16 bg-bg-dark border border-white/5 pl-12 pr-4 rounded-xl text-sm focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray4"
+              className="w-full h-16 bg-dark border border-white/5 pl-12 pr-4 rounded-xl text-sm focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray4"
               placeholder="To"
             />
           </div>
@@ -93,7 +137,7 @@ export default function PublicSearchPage() {
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full h-16 bg-bg-dark border border-white/5 pl-12 pr-4 rounded-xl text-sm focus:outline-none focus:border-primary/50 transition-all color-scheme-dark"
+              className="w-full h-16 bg-dark border border-white/5 pl-12 pr-4 rounded-xl text-sm focus:outline-none focus:border-primary/50 transition-all color-scheme-dark"
               style={{ colorScheme: "dark" }}
             />
           </div>
@@ -110,7 +154,6 @@ export default function PublicSearchPage() {
         </div>
       </div>
 
-      {/* CONDITIONAL RENDERING: PRE-SEARCH vs RESULTS */}
       <main className="max-w-6xl p-4 mx-auto">
         {!hasSearched ? (
           <div className="text-center py-20 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
@@ -131,81 +174,79 @@ export default function PublicSearchPage() {
           </div>
         ) : (
           <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
-            <div className="flex items-center gap-4">
-              <div className="h-px flex-1 bg-primary/10"></div>
-              <span className=" font-black uppercase tracking-[0.4em] text-gray-400 italic">
-                Available Results
-              </span>
-              <div className="h-px flex-1 bg-primary/10"></div>
-            </div>
-
             <div className="grid gap-6">
-              {[1, 2].map((trip) => {
-                const tripData = {
-                  id: trip,
-                  from: "Nairobi",
-                  to: "Nakuru",
-                  price: 800,
-                  provider: "Easy Coach Sacco",
-                };
-
-                return (
-                  <div
-                    key={trip}
-                    className="group bg-bg-soft border border-white/5 py-6 px-3 md:px-5 lg:py-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-8 hover:border-secondary/10 transition-all"
-                  >
-                    <div className="flex items-center justify-between gap-6 sm:gap-8">
-                      <div className="size-16 md:size-20 rounded-xl bg-gray-800 border border-white/5 flex items-center justify-center text-primary/40 group-hover:text-primary transition-colors">
-                        <Bus className="size-8" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter group-hover:text-primary transition-colors">
-                          {tripData.from} → {tripData.to}
-                        </h3>
-                        <div className="flex items-center gap-2 mt-1">
-                          <p className="text-gray3 font-bold uppercase text-[10px] tracking-widest">
-                            {tripData.provider}
-                          </p>
-                          <div className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-secondary/10 border border-secondary/20 text-[8px] font-black text-secondary uppercase tracking-widest">
-                            <ShieldCheck size={10} /> Verified
-                          </div>
+              {trips.map((trip) => (
+                <div
+                  key={trip.id}
+                  className="group bg-soft-dark border border-white/5 py-6 px-3 md:px-5 lg:py-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-8 hover:border-secondary/10 transition-all"
+                >
+                  <div className="flex items-center justify-between gap-6 sm:gap-8">
+                    <div className="size-16 md:size-20 rounded-xl bg-gray8 border border-white/5 flex items-center justify-center text-primary/40 group-hover:text-primary transition-colors">
+                      <Bus className="size-8" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter group-hover:text-primary transition-colors">
+                        {trip.from} → {trip.to}
+                      </h3>
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-gray3 font-bold uppercase text-[10px] tracking-widest">
+                          {trip.provider}
+                        </p>
+                        <div className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-secondary/10 border border-secondary/20 text-[8px] font-black text-secondary uppercase tracking-widest">
+                          <ShieldCheck size={10} /> Verified
                         </div>
                       </div>
                     </div>
-
-                    <div className="flex items-center gap-12 w-full md:w-auto justify-between border-t md:border-t-0 border-white/5 pt-6 md:pt-0">
-                      <div className="text-center md:text-left">
-                        <p className="text-[10px] font-black text-gray4 uppercase tracking-widest mb-1">
-                          Departure
-                        </p>
-                        <p className="text-xl font-black italic">14:30 PM</p>
-                      </div>
-                      <div className="text-center md:text-right">
-                        <p className="text-[10px] font-black text-gray4 uppercase tracking-widest mb-1">
-                          Fare
-                        </p>
-                        <p className="text-xl md:text-2xl font-black text-white">
-                          KES {tripData.price}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => setActiveTrip(tripData)}
-                        className="secondary-btn whitespace-nowrap rounded-lg h-12 px-4 py-2 uppercase font-bold text-xs tracking-widest"
-                      >
-                        Select Seat
-                      </button>
-                    </div>
                   </div>
-                );
-              })}
+
+                  <div className="flex items-center gap-12 w-full md:w-auto justify-between border-t md:border-t-0 border-white/5 pt-6 md:pt-0">
+                    <div className="text-center md:text-left">
+                      <p className="text-[10px] font-black text-gray4 uppercase tracking-widest mb-1">
+                        Departure
+                      </p>
+                      <p className="text-xl font-black italic">14:30 PM</p>
+                    </div>
+                    <div className="text-center md:text-right">
+                      <p className="text-[10px] font-black text-gray4 uppercase tracking-widest mb-1">
+                        Fare
+                      </p>
+                      <p className="text-xl md:text-2xl font-black text-white">
+                        KES {trip.price}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => openTrip(trip)}
+                      className="secondary-btn whitespace-nowrap rounded-lg h-12 px-4 py-2 uppercase font-bold text-xs tracking-widest"
+                    >
+                      Select Seat
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
       </main>
 
-      {activeTrip && (
-        <BookingDrawer trip={activeTrip} onClose={() => setActiveTrip(null)} />
+      {/* DRAWER RENDERING */}
+      {activeTripData && (
+        <BookingDrawer trip={activeTripData} onClose={closeDrawer} />
       )}
     </div>
+  );
+}
+
+// --- PART 2: THE MAIN EXPORT (Safety Wrapper) ---
+export default function PublicSearchPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-dark flex items-center justify-center text-white/20 uppercase font-black tracking-widest">
+          Loading...
+        </div>
+      }
+    >
+      <SearchPageContent />
+    </Suspense>
   );
 }

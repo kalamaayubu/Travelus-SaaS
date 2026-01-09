@@ -44,14 +44,14 @@ export default function TripsPage() {
           <h1 className="text-3xl font-black text-white uppercase tracking-tight">
             Trip <span className="text-secondary">Scheduler</span>
           </h1>
-          <p className="text-gray-500 font-medium text-sm">
+          <p className="text-gray5 font-medium text-sm">
             Dispatch vehicles and manage active routes
           </p>
         </div>
       </div>
 
       {/* TRIP TABLE */}
-      <div className="bg-bg-soft rounded-xl border border-white/5 overflow-hidden">
+      <div className="bg-soft-dark rounded-xl border border-white/5 overflow-hidden">
         <Table>
           <TableHeader className="bg-white/5 p-2">
             <TableRow className="border-white/5 hover:bg-transparent uppercase">
@@ -83,13 +83,13 @@ export default function TripsPage() {
                     <span className="font-bold text-white flex items-center gap-2">
                       {trip.route}
                     </span>
-                    <span className="text-[11px] text-gray-500 font-mono flex items-center gap-1">
+                    <span className="text-[11px] text-gray5 font-mono flex items-center gap-1">
                       <MapPin size={10} /> {trip.vehicle}
                     </span>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2 text-gray-300">
+                  <div className="flex items-center gap-2 text-gray3">
                     <Clock className="h-4 w-4 text-secondary" />
                     <span className="text-sm font-medium">
                       {trip.departure}
@@ -99,7 +99,7 @@ export default function TripsPage() {
                 <TableCell>
                   <div className="space-y-1.5 w-32">
                     <div className="flex justify-between text-[10px] font-bold">
-                      <span className="text-gray-500">KES {trip.fare}</span>
+                      <span className="text-gray5">KES {trip.fare}</span>
                       <span className="text-white">
                         {trip.booked}/{trip.capacity}
                       </span>

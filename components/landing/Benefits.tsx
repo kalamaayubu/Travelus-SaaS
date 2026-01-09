@@ -19,7 +19,7 @@ export default function Benefits() {
             className="rounded-lg border border-white/5 p-6 bg-bgSoft"
           >
             <h4 className="font-semibold text-primary">{item}</h4>
-            <p className="mt-2 text-sm text-gray-400">
+            <p className="mt-2 text-sm text-gray4">
               Designed to scale effortlessly for both individuals and fleets.
             </p>
           </div>

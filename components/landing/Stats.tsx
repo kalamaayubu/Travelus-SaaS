@@ -13,7 +13,7 @@ export default function Stats() {
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
             Travelus by the <span className="text-secondary">Numbers</span>
           </h2>
-          <p className="text-gray-400">
+          <p className="text-gray4">
             Join thousands of Kenyans already moving smarter.
           </p>
         </div>
@@ -27,7 +27,7 @@ export default function Stats() {
               <div className="text-2xl md:text-4xl font-extrabold text-primary mb-2 tracking-tighter">
                 {stat.value}
               </div>
-              <div className="text-gray-300 font-medium tracking-widest text-xs">
+              <div className="text-gray3 font-medium tracking-widest text-xs">
                 {stat.label}
               </div>
             </div>

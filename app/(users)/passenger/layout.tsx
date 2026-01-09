@@ -18,7 +18,7 @@ export default function PassengerLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-bg-dark text-white flex flex-col">
+    <div className="min-h-screen bg-dark text-white flex flex-col">
       {/* Desktop Header */}
       <header className="hidden md:flex items-center justify-between px-10 py-6 border-b border-white/5">
         <div className="flex items-center gap-2">
@@ -37,13 +37,13 @@ export default function PassengerLayout({
               className={`text-sm font-bold transition-colors ${
                 pathname === item.href
                   ? "text-green-500"
-                  : "text-gray-400 hover:text-white"
+                  : "text-gray4 hover:text-white"
               }`}
             >
               {item.label}
             </Link>
           ))}
-          <button className="text-gray-500 hover:text-red-500">
+          <button className="text-gray5 hover:text-red-500">
             <LogOut size={18} />
           </button>
         </nav>
@@ -53,7 +53,7 @@ export default function PassengerLayout({
       <main className="flex-1 pb-24 md:pb-0">{children}</main>
 
       {/* Mobile Bottom Nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-bg-soft/80 backdrop-blur-xl border-t border-white/5 flex justify-around py-4 z-50">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-soft-dark/80 backdrop-blur-xl border-t border-white/5 flex justify-around py-4 z-50">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -61,7 +61,7 @@ export default function PassengerLayout({
               key={item.label}
               href={item.href}
               className={`flex flex-col items-center gap-1 ${
-                isActive ? "text-green-500" : "text-gray-500"
+                isActive ? "text-green-500" : "text-gray5"
               }`}
             >
               <item.icon size={20} />

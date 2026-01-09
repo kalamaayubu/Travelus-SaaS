@@ -48,7 +48,7 @@ export default function Pricing() {
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
             Simple <span className="text-primary">Pricing</span>
           </h2>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray4 text-lg">
             Choose the model that works for your business.
           </p>
         </div>
@@ -74,22 +74,19 @@ export default function Pricing() {
                 <h3 className="text-2xl font-bold text-white mb-2">
                   {plan.name}
                 </h3>
-                <p className="text-gray-400 text-sm">{plan.tagline}</p>
+                <p className="text-gray4 text-sm">{plan.tagline}</p>
               </div>
 
               <div className="mb-8 flex items-baseline gap-2">
                 <span className="text-4xl md:text-5xl font-extrabold text-white">
                   {plan.price}
                 </span>
-                <span className="text-gray-400">{plan.unit}</span>
+                <span className="text-gray4">{plan.unit}</span>
               </div>
 
               <ul className="space-y-4 mb-10">
                 {plan.features.map((feature, idx) => (
-                  <li
-                    key={idx}
-                    className="flex items-center gap-3 text-gray-300"
-                  >
+                  <li key={idx} className="flex items-center gap-3 text-gray3">
                     <Check
                       className={`size-5 shrink-0 ${
                         plan.popular ? "text-secondary" : "text-green-500"

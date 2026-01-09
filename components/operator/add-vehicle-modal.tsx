@@ -47,12 +47,12 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] bg-bg-soft border-white/10 text-white p-0 overflow-hidden rounded-2xl">
+      <DialogContent className="sm:max-w-[500px] bg-soft-dark border-white/10 text-white p-0 overflow-hidden rounded-2xl">
         <DialogHeader className="p-8 pb-0">
           <DialogTitle className="text-2xl font-black uppercase tracking-tight">
             Register <span className="text-secondary">Vehicle</span>
           </DialogTitle>
-          <DialogDescription className="text-gray-500 font-medium">
+          <DialogDescription className="text-gray5 font-medium">
             Add a new bus or shuttle to your fleet inventory.
           </DialogDescription>
         </DialogHeader>
@@ -60,7 +60,7 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
         <div className="p-8 space-y-6">
           {/* VEHICLE TYPE SELECTION */}
           <div className="space-y-3">
-            <Label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">
+            <Label className="text-xs font-bold text-gray4 uppercase tracking-widest px-1">
               Vehicle Classification
             </Label>
             <Select
@@ -68,15 +68,15 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
                 setFormData({ ...formData, typeId: value })
               }
             >
-              <SelectTrigger className="w-full bg-bg-dark border-white/10 p-4 rounded-md text-white focus:ring-secondary focus:border-secondary transition-all">
+              <SelectTrigger className="w-full bg-dark border-white/10 p-4 rounded-md text-white focus:ring-secondary focus:border-secondary transition-all">
                 <SelectValue placeholder="Select vehicle type..." />
               </SelectTrigger>
-              <SelectContent className="bg-bg-soft border-white/10 text-white">
+              <SelectContent className="bg-soft-dark border-white/10 text-white">
                 {VEHICLE_CATEGORIES.map((cat) => (
                   <SelectItem
                     key={cat.id}
                     value={cat.id}
-                    className="focus:bg-gray-800 cursor-pointer font-medium py-3"
+                    className="focus:bg-gray8 cursor-pointer font-medium py-3"
                   >
                     <div className="flex flex-col">
                       <span>{cat.name}</span>
@@ -89,13 +89,13 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
 
           {/* PLATE NUMBER INPUT */}
           <div className="space-y-3">
-            <Label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">
+            <Label className="text-xs font-bold text-gray4 uppercase tracking-widest px-1">
               Plate Number (Registration)
             </Label>
             <div className="relative">
               <Input
                 placeholder="E.G. KCH 001Z"
-                className="bg-bg-dark border-white/10 h-16 rounded-xl text-2xl font-black uppercase tracking-widest px-6 focus-visible:ring-secondary focus-visible:border-secondary transition-all placeholder:text-gray-800"
+                className="bg-dark border-white/10 h-16 rounded-xl text-2xl font-black uppercase tracking-widest px-6 focus-visible:ring-secondary focus-visible:border-secondary transition-all placeholder:text-gray8"
                 value={formData.reg}
                 onChange={(e) =>
                   setFormData({ ...formData, reg: e.target.value })
@@ -131,7 +131,7 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
             className={`w-full py-3 rounded-xl font-black transition-all ${
               isFormValid
                 ? "bg-secondary text-black hover:bg-secondary/90"
-                : "bg-white/5 text-gray-600"
+                : "bg-white/5 text-gray6"
             }`}
           >
             Complete Registration

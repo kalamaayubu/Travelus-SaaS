@@ -35,7 +35,7 @@ export default function Testimonials() {
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
             Success Stories from Kenya
           </h2>
-          <p className="text-gray-400">
+          <p className="text-gray4">
             Real people, real results. See how Travelus is changing lives.
           </p>
         </div>
@@ -61,7 +61,7 @@ export default function Testimonials() {
                   >
                     {t.stat}
                   </span>
-                  <p className="text-lg text-gray-200 leading-relaxed italic font-medium">
+                  <p className="text-lg text-gray2 leading-relaxed italic font-medium">
                     "{t.quote}"
                   </p>
                 </div>
@@ -71,7 +71,7 @@ export default function Testimonials() {
                   </div>
                   <div>
                     <h4 className="font-bold text-white">{t.name}</h4>
-                    <p className="text-sm text-gray-500">{t.role}</p>
+                    <p className="text-sm text-gray5">{t.role}</p>
                   </div>
                 </div>
               </div>

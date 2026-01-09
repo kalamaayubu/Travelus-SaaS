@@ -59,7 +59,7 @@ export function AssignDriverModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] bg-bg-soft border-white/10 text-white rounded-2xl p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-[425px] bg-soft-dark border-white/10 text-white rounded-2xl p-0 overflow-hidden">
         <DialogHeader className="p-8 pb-4">
           <DialogTitle className="text-xl font-black uppercase tracking-tight flex items-center gap-2">
             <FerrisWheel className="text-secondary size-5" />
@@ -69,13 +69,13 @@ export function AssignDriverModal({
 
         <div className="p-8 space-y-6">
           {/* VEHICLE INFO CARD */}
-          <div className="bg-bg-dark p-4 rounded-lg border border-white/5 flex items-center justify-between">
+          <div className="bg-dark p-4 rounded-lg border border-white/5 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-white/5 text-gray-400">
+              <div className="p-2 rounded-lg bg-white/5 text-gray4">
                 <Car size={18} />
               </div>
               <div>
-                <p className="text-[10px] font-bold text-gray-500 uppercase">
+                <p className="text-[10px] font-bold text-gray5 uppercase">
                   Target Vehicle
                 </p>
                 <p className="text-sm font-black text-white">{vehicleReg}</p>
@@ -87,7 +87,7 @@ export function AssignDriverModal({
           </div>
 
           <div className="space-y-3">
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+            <label className="text-xs font-bold text-gray4 uppercase tracking-widest">
               Search Driver
             </label>
             <Popover open={open} onOpenChange={setOpen}>
@@ -95,7 +95,7 @@ export function AssignDriverModal({
                 <button
                   role="combobox"
                   aria-expanded={open}
-                  className="w-full justify-between bg-bg-dark border-white/10 h-14 rounded-lg hover:bg-bg-dark hover:text-white"
+                  className="w-full justify-between bg-dark border-white/10 h-14 rounded-lg hover:bg-dark hover:text-white"
                 >
                   {selectedDriverId
                     ? DRIVERS.find((d) => d.id === selectedDriverId)?.name
@@ -103,7 +103,7 @@ export function AssignDriverModal({
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 bg-bg-soft border-white/10">
+              <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 bg-soft-dark border-white/10">
                 <Command className="bg-transparent text-white">
                   <CommandInput
                     placeholder="Search name or phone..."
@@ -120,7 +120,7 @@ export function AssignDriverModal({
                             setSelectedDriverId(driver.id);
                             setOpen(false);
                           }}
-                          className="hover:bg-gray-800 cursor-pointer py-3"
+                          className="hover:bg-gray8 cursor-pointer py-3"
                         >
                           <Check
                             className={cn(
@@ -150,7 +150,7 @@ export function AssignDriverModal({
           <button
             onClick={handleAssign}
             disabled={!selectedDriverId}
-            className="w-full py-3 bg-secondary text-black font-black hover:bg-secondary/90 rounded-lg disabled:bg-white/5 disabled:text-gray-600"
+            className="w-full py-3 bg-secondary text-black font-black hover:bg-secondary/90 rounded-lg disabled:bg-white/5 disabled:text-gray6"
           >
             Confirm Assignment
           </button>

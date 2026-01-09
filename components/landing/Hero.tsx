@@ -20,7 +20,7 @@ export default function Hero() {
           </h1>
 
           {/* Subtext */}
-          <p className="mt-4 text-xl md:text-2xl text-gray-300 leading-snug">
+          <p className="mt-4 text-xl md:text-2xl text-gray3 leading-snug">
             Giving you all the benefits of a booking system you need without the
             high cost associated to it.
           </p>
@@ -33,7 +33,7 @@ export default function Hero() {
               className="w-full"
             />
 
-            <div className="p-5 flex md:hidden shadow shadow-secondary/60  left-20 top-1/2 rounded-lg gap-6 px-8  z-20 flex-col bg-gray-800/20 border border-white/10">
+            <div className="p-5 flex md:hidden shadow shadow-secondary/60  left-20 top-1/2 rounded-lg gap-6 px-8  z-20 flex-col bg-gray8/20 border border-white/10">
               <div className="flex items-center gap-4">
                 <CheckCircle className="text-green-600" />
                 <span>Verified Drivers</span>
@@ -49,7 +49,7 @@ export default function Hero() {
             </div>
           </div>
         </div>
-        <div className="p-5 hidden md:flex left-20 top-1/2 shadow shadow-secondary/60 absolute rounded-lg gap-6 px-8  z-20 flex-col bg-gray-800/20 border border-white/10">
+        <div className="p-5 hidden md:flex left-20 top-1/2 shadow shadow-secondary/60 absolute rounded-lg gap-6 px-8  z-20 flex-col bg-gray8/20 border border-white/10">
           <div className="flex items-center gap-4">
             <CheckCircle className="text-green-600" />
             <span>Verified Drivers</span>

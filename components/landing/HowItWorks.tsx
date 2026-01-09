@@ -67,7 +67,7 @@ export default function HowItWorks() {
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
             How <span className="text-primary">Travelus</span> Works
           </h2>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray4 text-lg">
             Simple steps for everyone on the road.
           </p>
         </div>
@@ -89,7 +89,7 @@ export default function HowItWorks() {
                 <div key={idx} className="relative flex gap-8 group">
                   <div className="relative z-10 size-14 shrink-0 rounded-full bg-[#161b22] border border-white/10 flex items-center justify-center text-white font-bold group-hover:border-secondary/60 transition-colors">
                     <step.icon className="size-6 text-secondary" />
-                    <span className="absolute -top-1 -right-1 size-6 bg-gray-700 rounded-full text-[10px] flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 size-6 bg-gray7 rounded-full text-[10px] flex items-center justify-center">
                       {idx + 1}
                     </span>
                   </div>
@@ -97,7 +97,7 @@ export default function HowItWorks() {
                     <h4 className="text-xl font-semibold text-white mb-2">
                       {step.title}
                     </h4>
-                    <p className="text-gray-400 leading-relaxed">
+                    <p className="text-gray4 leading-relaxed">
                       {step.description}
                     </p>
                   </div>
@@ -122,7 +122,7 @@ export default function HowItWorks() {
                 <div key={idx} className="relative flex gap-8 group">
                   <div className="relative z-10 size-14 shrink-0 rounded-full bg-[#161b22] border border-white/10 flex items-center justify-center text-white font-bold group-hover:border-primary/60 transition-colors">
                     <step.icon className="size-6 text-blue-400" />
-                    <span className="absolute -top-1 -right-1 size-6 rounded-full text-[10px] flex items-center justify-center bg-gray-700">
+                    <span className="absolute -top-1 -right-1 size-6 rounded-full text-[10px] flex items-center justify-center bg-gray7">
                       {idx + 1}
                     </span>
                   </div>
@@ -130,7 +130,7 @@ export default function HowItWorks() {
                     <h4 className="text-xl font-semibold text-white mb-2">
                       {step.title}
                     </h4>
-                    <p className="text-gray-400 leading-relaxed">
+                    <p className="text-gray4 leading-relaxed">
                       {step.description}
                     </p>
                   </div>

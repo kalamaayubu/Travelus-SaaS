@@ -60,7 +60,7 @@ export default function SeatMap({
                 return (
                   <div
                     key={colIndex}
-                    className="size-10 rounded-lg bg-gray1/10 border border-gray0/5 flex items-center justify-center text-gray4 shadow-inner"
+                    className="size-10 rounded-lg bg-gray1/10 border border-white/5 flex items-center justify-center text-gray4 shadow-inner"
                   >
                     <CircleArrowRight size={18} />
                   </div>
@@ -76,12 +76,12 @@ export default function SeatMap({
                   className={cn(
                     "size-10 rounded-lg flex flex-col items-center justify-center transition-all border shrink-0 relative",
                     isBooked
-                      ? "bg-gray0/[0.02] border-white/10 cursor-not-allowed"
+                      ? "bg-white/[0.02] border-white/10 cursor-not-allowed"
                       : isReserved
                       ? "bg-primary/80 border-white/10 cursor-not-allowed"
                       : isSelected
                       ? "bg-secondary border-secondary text-green-600 shadow-[0_4px_12px_rgba(255,176,0,0.4)] scale-110 z-10"
-                      : "bg-bg-soft border-white/10 text-gray6 hover:border-primary active:scale-95 shadow-sm"
+                      : "bg-soft-dark border-white/10 text-gray6 hover:border-primary active:scale-95 shadow-sm"
                   )}
                 >
                   {isBooked ? (

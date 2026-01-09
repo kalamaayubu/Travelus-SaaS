@@ -64,7 +64,7 @@ export default function FeaturesSection() {
   return (
     <section
       id="features"
-      className="bg-bg-dark py-24 px-6 relative overflow-hidden"
+      className="bg-dark py-24 px-6 relative overflow-hidden"
     >
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
@@ -73,7 +73,7 @@ export default function FeaturesSection() {
             Everything you need to{" "}
             <span className="text-secondary">move people</span>
           </h2>
-          <p className="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+          <p className="text-gray4 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
             Whether you're an operator managing a fleet or a passenger looking
             for a comfortable ride, we've built features just for you.
           </p>
@@ -102,7 +102,7 @@ export default function FeaturesSection() {
               <h3 className="text-xl font-semibold text-white mb-3">
                 {feature.title}
               </h3>
-              <p className="text-gray-400 leading-relaxed">
+              <p className="text-gray4 leading-relaxed">
                 {feature.description}
               </p>
             </div>

@@ -5,19 +5,19 @@ import { ShieldCheck } from "lucide-react";
 
 export default function LoginPage() {
   return (
-    <section className="min-h-screen bg-bg-dark rounded flex items-center justify-center px-6">
+    <section className="min-h-screen bg-dark rounded flex items-center justify-center px-6">
       <div className="max-w-lg px-8 py-6 rounded-xl bg-white/5 border border-white/[0.2] w-full">
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center size-16 rounded-2xl bg-primary/10 text-primary mb-6">
             <ShieldCheck className="size-8" />
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
-          <p className="text-gray-400">Securely log in to your dashboard</p>
+          <p className="text-gray4">Securely log in to your dashboard</p>
         </div>
 
         <form className="space-y-4">
           <div>
-            <label className="text-sm text-gray-400 mb-1 block">
+            <label className="text-sm text-gray4 mb-1 block">
               Phone Number
             </label>
             <input
@@ -29,7 +29,7 @@ export default function LoginPage() {
 
           <div>
             <div className="flex justify-between mb-1">
-              <label className="text-sm text-gray-400 block">Password</label>
+              <label className="text-sm text-gray4 block">Password</label>
             </div>
             <input
               type="password"
@@ -46,7 +46,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-center text-gray-500 mt-8 text-sm">
+        <p className="text-center text-gray5 mt-8 text-sm">
           New to Travelus?{" "}
           <Link href="/signup" className="text-primary hover:underline">
             Create an account

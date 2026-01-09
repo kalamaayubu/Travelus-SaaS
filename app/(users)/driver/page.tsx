@@ -43,17 +43,17 @@ export default function IndependentDriverDashboard() {
         ].map((stat, i) => (
           <div
             key={i}
-            className="p-6 rounded-2xl bg-bg-soft border border-white/5 hover:border-primary/20 transition-all"
+            className="p-6 rounded-2xl bg-soft-dark border border-white/5 hover:border-primary/20 transition-all"
           >
             <div className="flex justify-between items-center mb-4">
               <div className={`p-2 rounded-lg bg-white/5 ${stat.color}`}>
                 <stat.icon className="size-5" />
               </div>
-              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+              <span className="text-[10px] font-bold text-gray5 uppercase tracking-widest">
                 Lifetime
               </span>
             </div>
-            <p className="text-gray-400 text-xs font-medium">{stat.label}</p>
+            <p className="text-gray4 text-xs font-medium">{stat.label}</p>
             <h3 className="text-2xl font-black text-white mt-1">
               {stat.value}
             </h3>
@@ -62,11 +62,11 @@ export default function IndependentDriverDashboard() {
       </div>
 
       {/* 2. WEEKLY EARNINGS LINE GRAPH */}
-      <div className="p-8 rounded-3xl bg-bg-soft border border-white/5">
+      <div className="p-8 rounded-3xl bg-soft-dark border border-white/5">
         <div className="flex justify-between items-center mb-8">
           <div>
             <h3 className="text-lg font-bold text-white">Weekly Performance</h3>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray5">
               Earnings across the last 7 days
             </p>
           </div>
@@ -92,7 +92,7 @@ export default function IndependentDriverDashboard() {
           {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
             <div
               key={day}
-              className="text-[10px] text-gray-600 font-bold uppercase tracking-tighter w-full text-center"
+              className="text-[10px] text-gray6 font-bold uppercase tracking-tighter w-full text-center"
             >
               {day}
             </div>
@@ -101,7 +101,7 @@ export default function IndependentDriverDashboard() {
       </div>
 
       {/* 3. ACTIVE TRIP MANIFEST */}
-      <div className="rounded-3xl bg-bg-soft border border-primary/20 overflow-hidden shadow-2xl shadow-primary/5">
+      <div className="rounded-3xl bg-soft-dark border border-primary/20 overflow-hidden shadow-2xl shadow-primary/5">
         <div className="p-6 border-b border-white/5 bg-white/[0.02] flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="size-12 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
@@ -111,7 +111,7 @@ export default function IndependentDriverDashboard() {
               <h3 className="text-white font-black uppercase tracking-tight">
                 Active Trip Manifest
               </h3>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray5">
                 Route: Nairobi (CBD) → Nakuru (Main)
               </p>
             </div>
@@ -120,7 +120,7 @@ export default function IndependentDriverDashboard() {
             <span className="text-[10px] bg-green-500/10 text-green-500 px-3 py-1 rounded-full font-bold">
               LOADED
             </span>
-            <span className="text-[10px] bg-white/5 text-gray-400 px-3 py-1 rounded-full font-bold uppercase tracking-widest flex items-center gap-1">
+            <span className="text-[10px] bg-white/5 text-gray4 px-3 py-1 rounded-full font-bold uppercase tracking-widest flex items-center gap-1">
               <CalendarDays size={10} /> 25 Dec
             </span>
           </div>
@@ -128,7 +128,7 @@ export default function IndependentDriverDashboard() {
 
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="text-[10px] text-gray-500 uppercase tracking-widest bg-white/[0.01]">
+            <thead className="text-[10px] text-gray5 uppercase tracking-widest bg-white/[0.01]">
               <tr>
                 <th className="px-8 py-4">Passenger</th>
                 <th className="px-8 py-4">Seats</th>
@@ -175,7 +175,7 @@ export default function IndependentDriverDashboard() {
                       </span>
                     </div>
                   </td>
-                  <td className="px-8 py-5 text-gray-400 text-sm font-medium">
+                  <td className="px-8 py-5 text-gray4 text-sm font-medium">
                     {booking.seats} Seats
                   </td>
                   <td className="px-8 py-5 font-mono text-primary font-bold">
@@ -193,7 +193,7 @@ export default function IndependentDriverDashboard() {
                     </span>
                   </td>
                   <td className="px-8 py-5 text-right">
-                    <button className="p-2 hover:bg-white/10 rounded-lg transition-colors text-gray-500">
+                    <button className="p-2 hover:bg-white/10 rounded-lg transition-colors text-gray5">
                       <MoreHorizontal className="size-5" />
                     </button>
                   </td>

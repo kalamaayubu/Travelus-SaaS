@@ -18,7 +18,7 @@ export default function OperatorLayout({ children, params }: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-bg-dark text-white">
+    <div className="flex min-h-screen bg-dark text-white">
       {/* Mobile Navigation menu */}
       <button
         onClick={() => setIsOpen(!isOpen)}

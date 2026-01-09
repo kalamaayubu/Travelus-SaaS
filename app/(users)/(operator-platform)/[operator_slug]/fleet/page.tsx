@@ -53,7 +53,7 @@ export default function FleetPage() {
             <h1 className="text-3xl font-black text-white uppercase tracking-tight">
               Fleet <span className="text-secondary">Inventory</span>
             </h1>
-            <p className="text-gray-500 font-medium text-sm">
+            <p className="text-gray5 font-medium text-sm">
               Manage and track all registered vehicles
             </p>
           </div>
@@ -67,15 +67,15 @@ export default function FleetPage() {
         </div>
 
         {/* FILTER & SEARCH BAR */}
-        <div className="flex flex-col md:flex-row gap-4 items-center bg-bg-soft p-4 rounded-lg border border-white/5">
+        <div className="flex flex-col md:flex-row gap-4 items-center bg-soft-dark p-4 rounded-lg border border-white/5">
           <div className="relative flex-1 w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-gray-500" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-gray5" />
             <input
-              className="w-full bg-bg-dark border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm focus:border-secondary outline-none transition-all"
+              className="w-full bg-dark border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm focus:border-secondary outline-none transition-all"
               placeholder="Search by plate number or driver..."
             />
           </div>
-          <button className="p-3 bg-bg-dark border border-white/10 rounded-xl text-gray-400 hover:text-white">
+          <button className="p-3 bg-dark border border-white/10 rounded-xl text-gray4 hover:text-white">
             <Filter className="size-5" />
           </button>
         </div>
@@ -85,7 +85,7 @@ export default function FleetPage() {
           {vehicles.map((bus) => (
             <div
               key={bus.id}
-              className="bg-bg-soft rounded-xl border border-white/5 overflow-hidden group hover:border-secondary/30 transition-all shadow-xl"
+              className="bg-soft-dark rounded-xl border border-white/5 overflow-hidden group hover:border-secondary/30 transition-all shadow-xl"
             >
               {/* Top Bar: Status & Registration */}
               <div className="p-6 pb-0 flex justify-between items-start">
@@ -100,31 +100,31 @@ export default function FleetPage() {
                           ? "bg-green-500"
                           : bus.status === "maintenance"
                           ? "bg-red-500"
-                          : "bg-gray-500"
+                          : "bg-gray5"
                       }`}
                     />
                   </div>
-                  <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">
+                  <p className="text-[10px] text-gray5 uppercase font-bold tracking-widest">
                     {bus.type}
                   </p>
                 </div>
-                <button className="p-2 hover:bg-white/5 rounded-full text-gray-500 hover:text-white">
+                <button className="p-2 hover:bg-white/5 rounded-full text-gray5 hover:text-white">
                   <MoreVertical className="size-5" />
                 </button>
               </div>
 
               {/* Stats Row */}
               <div className="p-6 grid grid-cols-2 gap-4">
-                <div className="bg-bg-dark p-4 rounded-lg border border-white/5">
-                  <p className="text-[10px] text-gray-500 font-bold uppercase">
+                <div className="bg-dark p-4 rounded-lg border border-white/5">
+                  <p className="text-[10px] text-gray5 font-bold uppercase">
                     Driver
                   </p>
                   <p className="text-sm font-bold text-white truncate">
                     {bus.currentDriver || "Unassigned"}
                   </p>
                 </div>
-                <div className="bg-bg-dark p-4 rounded-lg border border-white/5">
-                  <p className="text-[10px] text-gray-500 font-bold uppercase">
+                <div className="bg-dark p-4 rounded-lg border border-white/5">
+                  <p className="text-[10px] text-gray5 font-bold uppercase">
                     Total Trips
                   </p>
                   <p className="text-sm font-bold text-white">
@@ -135,7 +135,7 @@ export default function FleetPage() {
 
               {/* Maintenance & Action Bar */}
               <div className="px-6 pb-6 pt-2 flex items-center justify-between border-t border-white/5 bg-white/[0.01]">
-                <div className="flex items-center gap-2 text-gray-500">
+                <div className="flex items-center gap-2 text-gray5">
                   <ToolCase className="size-3" />
                   <span className="text-[10px] font-bold">
                     Last Service: {bus.lastServiceDate}

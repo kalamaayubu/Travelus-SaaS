@@ -43,7 +43,7 @@ export default function SignupPage() {
   };
 
   return (
-    <section className="min-h-screen bg-bg-dark flex items-center justify-center px-6 py-20">
+    <section className="min-h-screen bg-dark flex items-center justify-center px-6 py-20">
       <div className="max-w-lg px-8 py-6 rounded-xl bg-white/5 border border-white/[0.2] w-full">
         {/* Progress Bar (Only show if role is selected) */}
         {role === "operator" && (
@@ -54,7 +54,7 @@ export default function SignupPage() {
                   className={`size-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                     step >= s
                       ? "bg-secondary border-secondary text-black"
-                      : "bg-white/10 text-gray-500"
+                      : "bg-white/10 text-gray5"
                   }`}
                 >
                   {step > s ? <Check className="size-4" /> : s}
@@ -75,7 +75,7 @@ export default function SignupPage() {
           <h1 className="text-3xl font-bold text-white mb-2">
             {role ? `Join as ${role}` : "Create an account"}
           </h1>
-          <p className="text-gray-400">Join the future of Kenyan transport</p>
+          <p className="text-gray4">Join the future of Kenyan transport</p>
         </div>
 
         {!role ? (
@@ -90,11 +90,11 @@ export default function SignupPage() {
               </div>
               <div className="text-left">
                 <h3 className="text-white font-bold">Passenger</h3>
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray4 text-sm">
                   Book seats and travel comfortably.
                 </p>
               </div>
-              <ArrowRight className="size-5 text-gray-600 ml-auto group-hover:text-tertiary group-hover:translate-x-1 transition-all" />
+              <ArrowRight className="size-5 text-gray6 ml-auto group-hover:text-tertiary group-hover:translate-x-1 transition-all" />
             </button>
             {/* ... Driver and Operator buttons same as previous code ... */}
             {/* Driver Option */}
@@ -107,11 +107,11 @@ export default function SignupPage() {
               </div>
               <div className="text-left">
                 <h3 className="text-white font-bold">Independent Driver</h3>
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray4 text-sm">
                   Pay 10% per seat. No monthly fees.
                 </p>
               </div>
-              <ArrowRight className="size-5 text-gray-600 ml-auto group-hover:text-primary group-hover:translate-x-1 transition-all" />
+              <ArrowRight className="size-5 text-gray6 ml-auto group-hover:text-primary group-hover:translate-x-1 transition-all" />
             </button>
 
             {/* Operator option */}
@@ -124,11 +124,11 @@ export default function SignupPage() {
               </div>
               <div className="text-left">
                 <h3 className="text-white font-bold">Fleet Operator</h3>
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray4 text-sm">
                   Manage routes and 0% commission.
                 </p>
               </div>
-              <ArrowRight className="size-5 text-gray-600 ml-auto group-hover:text-secondary border-secondary group-hover:translate-x-1 transition-all" />
+              <ArrowRight className="size-5 text-gray6 ml-auto group-hover:text-secondary border-secondary group-hover:translate-x-1 transition-all" />
             </button>
           </div>
         ) : (
@@ -137,7 +137,7 @@ export default function SignupPage() {
             {step === 1 && (
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">
+                  <label className="text-sm text-gray4 mb-1 block">
                     Full Name
                   </label>
                   <input
@@ -147,7 +147,7 @@ export default function SignupPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">
+                  <label className="text-sm text-gray4 mb-1 block">
                     Phone (M-Pesa)
                   </label>
                   <input
@@ -157,7 +157,7 @@ export default function SignupPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">
+                  <label className="text-sm text-gray4 mb-1 block">
                     Password
                   </label>
                   <input
@@ -181,7 +181,7 @@ export default function SignupPage() {
             {step === 2 && (
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">
+                  <label className="text-sm text-gray4 mb-1 block">
                     Sacco / Company Name
                   </label>
                   <input
@@ -194,7 +194,7 @@ export default function SignupPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">
+                  <label className="text-sm text-gray4 mb-1 block">
                     Choose your Travelus URL
                   </label>
                   <div className="relative">
@@ -203,11 +203,11 @@ export default function SignupPage() {
                       className="w-full bg-white/5 border border-white/10 rounded-xl pl-4 pr-32 py-3 text-white focus:outline-none focus:border-secondary transition-colors"
                       placeholder="supermetro"
                     />
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray5 text-sm font-medium">
                       .travelus.co.ke
                     </div>
                   </div>
-                  <p className="text-[10px] text-gray-500 mt-2 flex items-center gap-1 uppercase tracking-wider">
+                  <p className="text-[10px] text-gray5 mt-2 flex items-center gap-1 uppercase tracking-wider">
                     <Globe className="size-3" /> This will be your private fleet
                     portal
                   </p>
@@ -232,21 +232,21 @@ export default function SignupPage() {
             {/* STEP 3: FINAL REVIEW */}
             {step === 3 && (
               <div className="space-y-6">
-                <div className="p-6 rounded-2xl bg-bg-dark border-secondary/5 border border-secondary/20 space-y-3">
+                <div className="p-6 rounded-2xl bg-dark border-secondary/5 border border-secondary/20 space-y-3">
                   <div className="flex justify-between border-b border-white/5 pb-2">
-                    <span className="text-gray-400 text-sm">Business</span>
+                    <span className="text-gray4 text-sm">Business</span>
                     <span className="text-white font-medium">
                       {formData.businessName || "Not set"}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400 text-sm">Plan</span>
+                    <span className="text-gray4 text-sm">Plan</span>
                     <span className="text-secondary border-secondary font-bold uppercase text-xs tracking-widest">
                       Pro Subscription
                     </span>
                   </div>
                 </div>
-                <p className="text-xs text-gray-500 text-center leading-relaxed">
+                <p className="text-xs text-gray5 text-center leading-relaxed">
                   By clicking finish, you agree to our Terms of Service and will
                   be redirected to your new dashboard.
                 </p>
@@ -269,14 +269,14 @@ export default function SignupPage() {
                 setRole(null);
                 setStep(1);
               }}
-              className="block mx-auto text-gray-500 text-xs hover:text-white transition-colors"
+              className="block mx-auto text-gray5 text-xs hover:text-white transition-colors"
             >
               ← Cancel and go back
             </button>
           </div>
         )}
 
-        <p className="text-center text-gray-500 mt-8 text-sm">
+        <p className="text-center text-gray5 mt-8 text-sm">
           Already have an account?{" "}
           <Link href="/login" className="text-secondary hover:underline">
             Log in

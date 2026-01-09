@@ -21,7 +21,7 @@ export default function FinalCTA() {
               <span className="text-secondary">Join </span>
               <span>the movement.</span>
             </h2>
-            <p className="text-gray-400 text-lg md:text-xl mb-12 leading-relaxed">
+            <p className="text-gray4 text-lg md:text-xl mb-12 leading-relaxed">
               Whether you’re behind the wheel or in the passenger seat, Travelus
               makes every kilometer count. No downloads required—start right
               from your browser.

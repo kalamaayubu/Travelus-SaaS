@@ -49,7 +49,7 @@ export default function FAQ() {
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
             FAQs
           </h2>
-          <p className="text-gray-400">
+          <p className="text-gray4">
             Find answers to common questions from both passengers and operators.
           </p>
         </div>
@@ -71,7 +71,7 @@ export default function FAQ() {
                     <div
                       key={id}
                       className={`rounded-xl transition-all ${
-                        isOpen ? "bg-gray-50/10" : "bg-gray-50/5"
+                        isOpen ? "bg-gray1/10" : "bg-gray1/5"
                       }`}
                     >
                       <button
@@ -88,7 +88,7 @@ export default function FAQ() {
                         )}
                       </button>
                       {isOpen && (
-                        <div className="px-6 pb-6 text-gray-400 leading-relaxed">
+                        <div className="px-6 pb-6 text-gray4 leading-relaxed">
                           {faq.a}
                         </div>
                       )}

@@ -12,11 +12,11 @@
   --color-tertiary: #16a34a;
 
   /* App Backgrounds */
-  --color-bg-dark: #0b0f14;
-  --color-bg-soft: #111827;
+  --color-dark: #0b0f14;
+  --color-soft-dark: #111827;
 
   /* Gray Scale Logic */
-  --color-gray0: #ffffff;
+  --color-white: #ffffff;
   --color-gray1: #f3f4f6;
   --color-gray2: #e5e7eb;
   --color-gray3: #d1d5db;
@@ -24,6 +24,13 @@
   --color-gray5: #6b7280;
   --color-gray6: #4b5563;
   --color-gray7: #374151;
+  --color-gray8: #1f2937;
+}
+
+/* DYNAMIC COLOR VARIABLES */
+:root {
+  --bg-dark: "#0b0f14";
+  --bg-soft: "#111827";
 }
 
 /* ======================

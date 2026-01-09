@@ -13,7 +13,7 @@ export default function DriverLayout({
   const [isCollapsed, setIsCollapsed] = useState(false); // Desktop Collapse
 
   return (
-    <div className="flex min-h-screen bg-bg-dark text-white">
+    <div className="flex min-h-screen bg-dark text-white">
       {/* MOBILE TRIGGER */}
       <button
         onClick={() => setIsOpen(!isOpen)}

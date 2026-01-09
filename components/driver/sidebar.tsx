@@ -37,7 +37,7 @@ export function DriverSidebar({
   return (
     <aside
       className={`
-        fixed inset-y-0 left-0 z-40 bg-bg-dark border-r border-white/5 transition-all duration-300 ease-in-out
+        fixed inset-y-0 left-0 z-40 bg-dark border-r border-white/5 transition-all duration-300 ease-in-out
         lg:relative lg:translate-x-0
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         ${isCollapsed ? "w-24" : "w-72"}
@@ -93,7 +93,7 @@ export function DriverSidebar({
                   ${
                     isActive
                       ? "bg-primary text-black font-bold shadow-lg shadow-primary/20"
-                      : "text-gray-500 hover:text-white hover:bg-white/5"
+                      : "text-gray5 hover:text-white hover:bg-white/5"
                   }
                 `}
               >
@@ -123,14 +123,14 @@ export function DriverSidebar({
             {!isCollapsed && (
               <div className="overflow-hidden animate-in fade-in">
                 <p className="text-sm font-bold truncate">Driver Juma</p>
-                <p className="text-[10px] text-gray-500 truncate">
+                <p className="text-[10px] text-gray5 truncate">
                   10% Commission Plan
                 </p>
               </div>
             )}
           </div>
           <button
-            className={`flex items-center text-gray-500 hover:text-red-500 transition-colors ${
+            className={`flex items-center text-gray5 hover:text-red-500 transition-colors ${
               isCollapsed ? "justify-center py-3" : "gap-3 px-4 py-3 w-full"
             }`}
           >
