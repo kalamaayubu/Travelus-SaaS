@@ -116,7 +116,7 @@ export default function HowItWorks() {
 
             <div className="space-y-12 relative">
               {/* Vertical Line */}
-              <div className="absolute left-[27px] top-2 bottom-2 w-[2px] bg-gradient-to-b from-primary/50 to-transparent" />
+              <div className="absolute left-6.75 top-2 bottom-2 w-[2px] bg-gradient-to-b from-primary/50 to-transparent" />
 
               {operatorSteps.map((step, idx) => (
                 <div key={idx} className="relative flex gap-8 group">

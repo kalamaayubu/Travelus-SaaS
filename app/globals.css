@@ -29,8 +29,8 @@
 
 /* DYNAMIC COLOR VARIABLES */
 :root {
-  --bg-dark: "#0b0f14";
-  --bg-soft: "#111827";
+  --bg-dark: #0b0f14;
+  --bg-soft: #111827;
 }
 
 /* ======================
@@ -42,7 +42,7 @@
   }
 
   body {
-    background-color: var(--color-bg-dark);
+    background-color: var(--color-dark);
     color: #e5e7eb;
   }
 

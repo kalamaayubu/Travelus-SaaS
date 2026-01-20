@@ -86,8 +86,8 @@ export default function FeaturesSection() {
               key={index}
               className="group relative p-8 rounded-2xl overflow-hidden bg-white/5 border border-white/10 transition-all duration-500"
             >
-              <div className="h-px absolute top-0 left-0 rounded-full w-full bg-linear-to-l from-transparent via-primary to-transparent" />
-              <div className="h-px absolute bottom-0 left-0 rounded-full w-full bg-linear-to-l from-transparent via-secondary to-transparent" />
+              <div className="h-px absolute top-0 left-0 rounded-full w-full bg-linear-to-l from-primary via-transparent to-transparent" />
+              <div className="h-px absolute bottom-0 left-0 rounded-full w-full bg-linear-to-l from-transparent via-transparent to-secondary" />
 
               <div
                 className={`size-12 relative rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}
