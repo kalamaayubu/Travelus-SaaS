@@ -3,9 +3,8 @@
 import { useState } from "react";
 import { Plus, Search, Filter, MoreVertical, ToolCase } from "lucide-react";
 import { Vehicle, VEHICLE_CATEGORIES } from "@/types/fleet";
-import { AddVehicleModal } from "@/components/operator/add-vehicle-modal";
-import { AssignDriverModal } from "@/components/operator/assign-driver-modal";
-import { UserPlus } from "lucide-react"; // Highly recommended for a "Quick Assign" icon
+import { AssignDriverModal } from "@/components/operator/AssignDriverModal";
+import { AddVehicleModal } from "@/components/operator/AddVehicleModal";
 
 // Mock Data for the UI-First phase
 const MOCK_VEHICLES: Vehicle[] = [
@@ -42,7 +41,7 @@ export default function FleetPage() {
   const [vehicles] = useState<Vehicle[]>(MOCK_VEHICLES);
   const [isAddVehicleModalOpen, setIsAddVehicleModalOpen] = useState(false);
   const [assigningVehicleReg, setAssigningVehicleReg] = useState<string | null>(
-    null
+    null,
   );
   return (
     <>
@@ -99,8 +98,8 @@ export default function FleetPage() {
                         bus.status === "active"
                           ? "bg-green-500"
                           : bus.status === "maintenance"
-                          ? "bg-red-500"
-                          : "bg-gray5"
+                            ? "bg-red-500"
+                            : "bg-gray5"
                       }`}
                     />
                   </div>
