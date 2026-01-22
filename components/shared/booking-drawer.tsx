@@ -114,7 +114,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
                 onClick={prevStep}
                 className="p-2 hover:bg-white/5 rounded-lg transition-colors"
               >
-                <ArrowLeft size={20} className="text-gray4" />
+                <ArrowLeft size={20} className="3" />
               </button>
             )}
             <h2 className="text-xl font-black italic uppercase tracking-tighter text-primary leading-none">
@@ -278,8 +278,8 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
 
 // Helper components to keep the main code clean
 const FormInput = ({ label, error, ...props }: any) => (
-  <div className="space-y-2">
-    <label className="text-[10px] font-black uppercase tracking-widest text-gray4">
+  <div className="space-y-4">
+    <label className="text-[10px] font-black uppercase tracking-widest text-gray3">
       {label}
     </label>
     <input
@@ -300,9 +300,7 @@ const FormInput = ({ label, error, ...props }: any) => (
 // Booking summary row
 const SummaryRow = ({ label, value, italic }: any) => (
   <div className="flex justify-between text-xs border-b border-white/5 pb-2 last:border-0 last:pb-0">
-    <span className="text-gray4 uppercase font-bold tracking-widest">
-      {label}
-    </span>
+    <span className="3 uppercase font-bold tracking-widest">{label}</span>
     <span
       className={cn(
         "text-white font-black",
@@ -334,7 +332,7 @@ function SeatLegend() {
           >
             {i.icon}
           </div>
-          <span className="text-[11px] uppercase text-gray4 font-black tracking-widest">
+          <span className="text-[11px] uppercase 3 font-black tracking-widest">
             {i.label}
           </span>
         </div>

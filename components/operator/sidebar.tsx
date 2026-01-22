@@ -66,7 +66,7 @@ export function Sidebar({
       {/* COLLAPSE TOGGLE (Desktop Only) */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="hidden lg:flex absolute -right-3 top-12 size-6 rounded-full bg-secondary text-black items-center justify-center shadow-lg hover:scale-110 transition-transform z-50"
+        className="hidden lg:flex absolute -right-3 top-12 size-6 rounded-full bg-secondary text-black items-center justify-center hover:scale-110 transition-transform z-50"
       >
         {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
       </button>
@@ -118,7 +118,7 @@ export function Sidebar({
                   ${isCollapsed ? "justify-center p-3" : "px-4 py-3"}
                   ${
                     isActive
-                      ? "bg-secondary text-black font-bold shadow-lg shadow-secondary/20"
+                      ? "bg-secondary text-black font-bold"
                       : "text-gray5 hover:text-white hover:bg-white/5"
                   }
                 `}

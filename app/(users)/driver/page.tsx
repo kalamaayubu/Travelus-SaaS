@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Users,
   Armchair,
@@ -8,11 +9,43 @@ import {
   MoreHorizontal,
   MapPin,
   CalendarDays,
+  Plus,
+  Clock,
 } from "lucide-react";
+import ScheduleTripModal from "@/components/driver/ScheduleTripModal";
 
 export default function IndependentDriverDashboard() {
+  const [isScheduleOpen, setIsScheduleOpen] = useState(false);
+
   return (
-    <div className="max-w-[1400px] mx-auto space-y-8 animate-in fade-in duration-700">
+    <div className="max-w-[1400px] mx-auto space-y-8 animate-in fade-in duration-700 pb-20">
+      {/* --- ACTION HEADER --- */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/5 pb-8">
+        <div>
+          <h1 className="text-4xl font-black uppercase tracking-tighter text-white">
+            Dashboard{" "}
+          </h1>
+          <p className="text-gray4 text-sm font-medium mt-1">
+            Welcome back, Juma. You have{" "}
+            <span className="text-primary">1 active trip</span> today.
+          </p>
+        </div>
+
+        <button
+          onClick={() => setIsScheduleOpen(true)}
+          className="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-black px-6 py-4 rounded-xl font-black uppercase tracking-widest text-xs"
+        >
+          <Plus size={18} strokeWidth={3} />
+          Schedule New Trip
+        </button>
+
+        {/* Trip creation/scheduling modal */}
+        <ScheduleTripModal
+          isOpen={isScheduleOpen}
+          onClose={() => setIsScheduleOpen(false)}
+        />
+      </div>
+
       {/* 1. FOUR METRIC CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
@@ -43,17 +76,19 @@ export default function IndependentDriverDashboard() {
         ].map((stat, i) => (
           <div
             key={i}
-            className="p-6 rounded-2xl bg-soft-dark border border-white/5 hover:border-primary/20 transition-all"
+            className="p-6 rounded-xl bg-soft-dark border border-white/5 hover:border-primary/20 transition-all group"
           >
             <div className="flex justify-between items-center mb-4">
-              <div className={`p-2 rounded-lg bg-white/5 ${stat.color}`}>
+              <div
+                className={`p-2 rounded-md bg-white/5 ${stat.color} group-hover:scale-110 transition-transform`}
+              >
                 <stat.icon className="size-5" />
               </div>
-              <span className="text-[10px] font-bold text-gray5 uppercase tracking-widest">
+              <span className="text-[10px] font-bold text-gray3 uppercase tracking-widest">
                 Lifetime
               </span>
             </div>
-            <p className="text-gray4 text-xs font-medium">{stat.label}</p>
+            <p className="text-gray2 text-xs font-medium">{stat.label}</p>
             <h3 className="text-2xl font-black text-white mt-1">
               {stat.value}
             </h3>
@@ -62,11 +97,11 @@ export default function IndependentDriverDashboard() {
       </div>
 
       {/* 2. WEEKLY EARNINGS LINE GRAPH */}
-      <div className="p-8 rounded-3xl bg-soft-dark border border-white/5">
+      <div className="p-8 rounded-2xl bg-soft-dark border border-white/5">
         <div className="flex justify-between items-center mb-8">
           <div>
             <h3 className="text-lg font-bold text-white">Weekly Performance</h3>
-            <p className="text-xs text-gray5">
+            <p className="text-xs text-gray3">
               Earnings across the last 7 days
             </p>
           </div>
@@ -75,9 +110,9 @@ export default function IndependentDriverDashboard() {
           </div>
         </div>
 
-        <div className="h-64 w-full flex items-end justify-between gap-2 relative">
-          {/* Visualizing a Line Graph with SVG Area */}
-          <svg className="absolute inset-0 h-full w-full">
+        <div className="h-48 w-full flex items-end justify-between gap-2 relative border-b border-white/5 pb-2">
+          {/* SVG Graph Placeholder */}
+          <svg className="absolute inset-0 h-full w-full opacity-50">
             <polyline
               fill="none"
               stroke="#51baff"
@@ -85,14 +120,12 @@ export default function IndependentDriverDashboard() {
               strokeLinecap="round"
               strokeLinejoin="round"
               points="0,150 150,120 300,180 450,80 600,100 750,40 900,60"
-              className="drop-shadow-[0_0_10px_rgba(81,186,255,0.5)]"
             />
           </svg>
-          {/* X-Axis Labels */}
           {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
             <div
               key={day}
-              className="text-[10px] text-gray6 font-bold uppercase tracking-tighter w-full text-center"
+              className="text-[10px] text-gray4 font-bold uppercase tracking-tighter w-full text-center"
             >
               {day}
             </div>
@@ -101,7 +134,7 @@ export default function IndependentDriverDashboard() {
       </div>
 
       {/* 3. ACTIVE TRIP MANIFEST */}
-      <div className="rounded-3xl bg-soft-dark border border-primary/20 overflow-hidden shadow-2xl shadow-primary/5">
+      <div className="rounded-2xl bg-soft-dark border border-primary/20 overflow-hidden">
         <div className="p-6 border-b border-white/5 bg-white/[0.02] flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="size-12 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
@@ -111,24 +144,29 @@ export default function IndependentDriverDashboard() {
               <h3 className="text-white font-black uppercase tracking-tight">
                 Active Trip Manifest
               </h3>
-              <p className="text-xs text-gray5">
+              <p className="text-xs text-gray3">
                 Route: Nairobi (CBD) → Nakuru (Main)
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <div className="flex flex-col items-end">
+              <span className="text-[10px] text-gray4 uppercase font-bold">
+                Departure
+              </span>
+              <span className="text-sm font-black text-white flex items-center gap-2">
+                <Clock size={14} className="text-primary" /> 14:30 PM
+              </span>
+            </div>
             <span className="text-[10px] bg-green-500/10 text-green-500 px-3 py-1 rounded-full font-bold">
               LOADED
-            </span>
-            <span className="text-[10px] bg-white/5 text-gray4 px-3 py-1 rounded-full font-bold uppercase tracking-widest flex items-center gap-1">
-              <CalendarDays size={10} /> 25 Dec
             </span>
           </div>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="text-[10px] text-gray5 uppercase tracking-widest bg-white/[0.01]">
+            <thead className="text-[10px] text-gray3 uppercase tracking-widest bg-white/[0.01]">
               <tr>
                 <th className="px-8 py-4">Passenger</th>
                 <th className="px-8 py-4">Seats</th>
@@ -141,19 +179,19 @@ export default function IndependentDriverDashboard() {
               {[
                 {
                   name: "Kevin Otieno",
-                  seats: "02",
+                  seats: "A1, A2",
                   amount: "1,600",
                   status: "Paid",
                 },
                 {
                   name: "Mercy Wanjiku",
-                  seats: "01",
+                  seats: "C3",
                   amount: "800",
                   status: "Paid",
                 },
                 {
-                  name: "Brian Mutua",
-                  seats: "01",
+                  name: "Walk-in Guest",
+                  seats: "B4",
                   amount: "800",
                   status: "Boarded",
                 },
@@ -175,8 +213,8 @@ export default function IndependentDriverDashboard() {
                       </span>
                     </div>
                   </td>
-                  <td className="px-8 py-5 text-gray4 text-sm font-medium">
-                    {booking.seats} Seats
+                  <td className="px-8 py-5 text-gray2 text-sm font-medium">
+                    {booking.seats}
                   </td>
                   <td className="px-8 py-5 font-mono text-primary font-bold">
                     KES {booking.amount}
@@ -193,7 +231,7 @@ export default function IndependentDriverDashboard() {
                     </span>
                   </td>
                   <td className="px-8 py-5 text-right">
-                    <button className="p-2 hover:bg-white/10 rounded-lg transition-colors text-gray5">
+                    <button className="p-2 hover:bg-white/10 rounded-md transition-colors text-gray3">
                       <MoreHorizontal className="size-5" />
                     </button>
                   </td>
@@ -203,9 +241,12 @@ export default function IndependentDriverDashboard() {
           </table>
         </div>
 
-        <div className="p-6 bg-white/[0.01] border-t border-white/5 text-center">
-          <button className="text-xs font-bold text-primary hover:underline uppercase tracking-widest">
-            Close Manifest & Complete Trip
+        <div className="p-6 bg-white/[0.01] border-t border-white/5 text-center flex justify-center gap-4">
+          <button className="text-[10px] font-black text-gray4 hover:text-white uppercase tracking-widest px-4 py-2 border border-white/10 rounded-md transition-all">
+            Manage Seats
+          </button>
+          <button className="text-[10px] font-black text-primary hover:bg-primary/5 uppercase tracking-widest px-4 py-2 border border-primary/20 rounded-md transition-all">
+            Close Manifest & Depart
           </button>
         </div>
       </div>
