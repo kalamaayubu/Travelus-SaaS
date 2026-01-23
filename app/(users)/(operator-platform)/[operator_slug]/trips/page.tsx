@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, MapPin, Clock, MoreHorizontal } from "lucide-react";
+import { MapPin, Clock, MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -76,7 +75,7 @@ export default function TripsPage() {
             {MOCK_TRIPS.map((trip) => (
               <TableRow
                 key={trip.id}
-                className="border-white/5 hover:bg-white/[0.02] transition-colors"
+                className="border-white/5 hover:bg-white/2 transition-colors"
               >
                 <TableCell className="py-5">
                   <div className="flex flex-col gap-1">

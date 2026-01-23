@@ -13,7 +13,7 @@ import { TripSchedulingFields } from "@/types/driver";
 interface ModalProps {
   onClose: () => void;
   isOpen: boolean;
-  defaultMpesa: string;
+  defaultMpesa?: string;
 }
 
 export default function ScheduleTripModal({

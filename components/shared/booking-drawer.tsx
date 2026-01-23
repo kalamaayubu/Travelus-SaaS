@@ -54,10 +54,8 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
   const [step, setStep] = useState<BookingStep>("SEATS");
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
 
-  // Raw useForm without Zod
   const {
     register,
-    handleSubmit,
     watch,
     formState: { errors, isValid },
   } = useForm<PassangerBookingFields>({
@@ -127,7 +125,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
           </div>
           <button
             onClick={onClose}
-            className="size-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5"
+            className="size-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/5"
           >
             <X size={20} className="text-gray4" />
           </button>
@@ -230,7 +228,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
         <div className="p-6 border-t border-white/5 bg-bg-soft/50 space-y-4 backdrop-blur-md">
           <div className="flex justify-between items-end">
             <div className="space-y-1">
-              <p className="text-[10px] font-black text-gray3 uppercase tracking-widest">
+              <p className="text-[10px] font-black text-gray2 uppercase tracking-widest">
                 Selected Seats ({selectedSeats.length})
               </p>
               <p className="text-lg font-black text-white truncate max-w-37.5">
@@ -238,7 +236,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] font-black text-gray3 uppercase tracking-widest">
+              <p className="text-[10px] font-black text-gray2 uppercase tracking-widest">
                 Total fare
               </p>
               <p

@@ -76,12 +76,12 @@ export default function SeatMap({
                   className={cn(
                     "size-10 rounded-lg flex flex-col items-center justify-center transition-all border shrink-0 relative",
                     isBooked
-                      ? "bg-white/[0.02] border-white/10 cursor-not-allowed"
+                      ? "bg-white/2 border-white/10 cursor-not-allowed"
                       : isReserved
-                      ? "bg-primary/80 border-white/10 cursor-not-allowed"
-                      : isSelected
-                      ? "bg-secondary border-secondary text-green-600 shadow-[0_4px_12px_rgba(255,176,0,0.4)] scale-110 z-10"
-                      : "bg-soft-dark border-white/10 text-gray6 hover:border-primary active:scale-95 shadow-sm"
+                        ? "bg-primary/80 border-white/10 cursor-not-allowed"
+                        : isSelected
+                          ? "bg-secondary border-secondary text-green-600 shadow-[0_4px_12px_rgba(255,176,0,0.4)] scale-110 z-10"
+                          : "bg-soft-dark border-white/10 text-gray6 hover:border-primary active:scale-95 shadow-sm",
                   )}
                 >
                   {isBooked ? (

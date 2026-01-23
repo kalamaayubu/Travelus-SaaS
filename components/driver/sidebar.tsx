@@ -9,6 +9,7 @@ import {
   ChevronRight,
   TrendingUp,
   Settings,
+  LayoutDashboard,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -27,7 +28,8 @@ export function DriverSidebar({
   const pathname = usePathname();
 
   const menuItems = [
-    { icon: CarFront, label: "My Cockpit", href: "/driver/dashboard" },
+    { icon: LayoutDashboard, label: "Dashboard", href: "/driver/dashboard" },
+    { icon: CarFront, label: "My trips", href: "/driver/trips" },
     { icon: TrendingUp, label: "Performance", href: "/driver/stats" },
     { icon: History, label: "Trip History", href: "/driver/history" },
     { icon: User, label: "Profile", href: "/driver/profile" },
@@ -64,7 +66,7 @@ export function DriverSidebar({
             </div>
             {!isCollapsed && (
               <span className="text-xl font-black tracking-tighter uppercase animate-in fade-in slide-in-from-left-2">
-                Travel<span className="text-primary">us</span>
+                Travelus
               </span>
             )}
           </div>
@@ -88,12 +90,12 @@ export function DriverSidebar({
                 href={item.href}
                 title={isCollapsed ? item.label : ""}
                 className={`
-                  flex items-center gap-3 rounded-xl transition-all group overflow-hidden
+                  flex items-center gap-3 rounded-lg transition-all group overflow-hidden
                   ${isCollapsed ? "justify-center p-3" : "px-4 py-3"}
                   ${
                     isActive
-                      ? "bg-primary text-black font-bold shadow-lg shadow-primary/20"
-                      : "text-gray5 hover:text-white hover:bg-white/5"
+                      ? "bg-primary text-black font-bold"
+                      : "text-gray2 hover:text-white hover:bg-white/5"
                   }
                 `}
               >
@@ -119,18 +121,18 @@ export function DriverSidebar({
               isCollapsed ? "justify-center" : "gap-3"
             }`}
           >
-            <div className="size-10 min-w-10 rounded-full bg-gradient-to-tr from-primary to-blue-700 shrink-0" />
+            <div className="size-10 min-w-10 rounded-full bg-linear-to-tr from-primary to-blue-700 shrink-0" />
             {!isCollapsed && (
               <div className="overflow-hidden animate-in fade-in">
                 <p className="text-sm font-bold truncate">Driver Juma</p>
-                <p className="text-[10px] text-gray5 truncate">
+                <p className="text-[10px] text-gray2 truncate">
                   10% Commission Plan
                 </p>
               </div>
             )}
           </div>
           <button
-            className={`flex items-center text-gray5 hover:text-red-500 transition-colors ${
+            className={`flex items-center text-gray2 hover:text-red-500 transition-colors ${
               isCollapsed ? "justify-center py-3" : "gap-3 px-4 py-3 w-full"
             }`}
           >
