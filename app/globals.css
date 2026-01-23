@@ -25,6 +25,13 @@
   --color-gray6: #4b5563;
   --color-gray7: #374151;
   --color-gray8: #1f2937;
+
+  /* Text colors */
+  --text-white: #ffffff;
+  --text-gray2: #e5e7eb;
+  --text-gray4: #9ca3af;
+  --text-gray6: #4b5563;
+  --text-gray8: #1f2937;
 }
 
 /* DYNAMIC COLOR VARIABLES */
@@ -58,9 +65,9 @@
   .primary-btn {
     @apply rounded-lg px-8 py-2 font-semibold text-black;
     background-image: linear-gradient(
-      to right,
-      var(--color-primary),
-      var(--color-primary-dark)
+      to top right,
+      var(--color-primary-dark),
+      var(--color-primary)
     );
   }
   .secondary-btn {

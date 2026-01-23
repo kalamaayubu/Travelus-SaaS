@@ -12,7 +12,7 @@ import {
   Plus,
   Clock,
 } from "lucide-react";
-import ScheduleTripModal from "@/components/driver/ScheduleTripModal";
+import ScheduleTripModal from "@/components/driver/tripScheduling/ScheduleTripModal";
 
 export default function IndependentDriverDashboard() {
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
