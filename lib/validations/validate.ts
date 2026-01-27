@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 const baseSchema = z.object({
-  name: z
+  fullname: z
     .string()
     .min(1, "Full name is required")
     .min(4, "Full name must have atleast 4 characters"),

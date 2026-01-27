@@ -21,13 +21,15 @@ export default function DriverSignup() {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, role: "driver" }),
+        body: JSON.stringify({ ...data }),
       });
 
       const result = await res.json();
 
-      if (!res.ok) {
-        toast.error(result.error);
+      if (!result.success) {
+        toast.error("Registration failed", {
+          description: result.error,
+        });
         throw new Error(result.error || "Signup failed");
       }
 
@@ -35,9 +37,7 @@ export default function DriverSignup() {
         description: "Please check your email for verification.",
       });
     } catch (error: any) {
-      toast.error("Registration failed", {
-        description: error.message,
-      });
+      console.log(error.message);
     }
   };
 
@@ -49,15 +49,15 @@ export default function DriverSignup() {
           Full Name
         </label>
         <input
-          {...register("name")}
+          {...register("fullname")}
           type="text"
           placeholder="Enter Full Name"
           className={`w-full bg-white/5 border rounded-lg px-4 py-3 text-white focus:border-primary outline-none transition-colors ${
-            errors.name ? "border-red-500" : "border-white/10"
+            errors.fullname ? "border-red-500" : "border-white/10"
           }`}
         />
-        {errors.name && (
-          <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+        {errors.fullname && (
+          <p className="text-red-500 text-xs mt-1">{errors.fullname.message}</p>
         )}
       </div>
 
