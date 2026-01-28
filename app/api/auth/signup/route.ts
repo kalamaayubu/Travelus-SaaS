@@ -4,13 +4,14 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const supabase = await createClient();
+    const { origin } = new URL(req.url);
     const data = await req.json();
-    console.log("AUTH DATA: ", data);
 
     const { data: signupData, error: authError } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
       options: {
+        emailRedirectTo: `${origin}/api/auth/callback`,
         data: {
           fullname: data.fullname,
           phone: data.phone,
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
     });
 
     if (authError) {
-      console.log("AUTH ERROR:", authError);
+      console.log("Auth Error: ", authError);
       return NextResponse.json(
         {
           success: false,
@@ -39,7 +40,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.log("Unknown error occured", error);
     return NextResponse.json(
-      { error: "Internal Server error!" },
+      { success: false, error: "Internal Server error!" },
       { status: 500 },
     );
   }

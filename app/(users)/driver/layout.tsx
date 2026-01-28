@@ -17,7 +17,7 @@ export default function DriverLayout({
       {/* MOBILE TRIGGER */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-4 right-6 z-50 size-14 rounded-full bg-primary text-black shadow-xl flex items-center justify-center border-4 border-bg-dark"
+        className="lg:hidden fixed top-2 right-2 z-50 size-14 rounded-full bg-primary/80 text-black shadow-xl flex items-center justify-center border-4 border-bg-dark"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>

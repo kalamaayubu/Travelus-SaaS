@@ -1,11 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, MapPin, Users, Phone, UserPlus } from "lucide-react";
+import {
+  ArrowLeft,
+  MapPin,
+  Users,
+  Phone,
+  UserPlus,
+  Camera,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import SeatMapManager, { SeatStatus } from "@/components/driver/SeatMapManager";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import BookingScanner from "@/components/driver/BookingScanner";
 
 const MOCK_LAYOUT_DATA = {
   rows: 12,
@@ -27,6 +35,7 @@ const MOCK_LAYOUT_DATA = {
 };
 
 export default function EditTripPage() {
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
   // statuses holds the "Truth" from DB + local "SELECTED"
   const [statuses, setStatuses] = useState<Record<string, SeatStatus>>({
     C1: "BOOKED",
@@ -60,14 +69,14 @@ export default function EditTripPage() {
   };
 
   return (
-    <div className="min-h-screen text-white">
+    <div className="min-h-screen text-white pt-4 sm:pt-3 md:pt-2">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col gap-4 mb-8">
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.back()}
-              className="p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10"
+              className="p-3 bg-white/5 rounded-lg border border-white/5 hover:bg-white/10"
             >
               <ArrowLeft size={20} />
             </button>
@@ -79,6 +88,27 @@ export default function EditTripPage() {
                 Departure: 20/2/2026 12:25 AM
               </p>
             </div>
+          </div>
+          {/* Verification Trigger */}
+          <div className="bg-primary/10 border border-primary/20 rounded-2xl p-6 flex items-center justify-between group">
+            <div>
+              <h3 className="text-sm font-black uppercase tracking-widest text-secondary">
+                Passenger Boarding
+              </h3>
+              <p className="text-xs text-gray2 font-bold uppercase mt-1">
+                Scan QR code to verify passenger
+              </p>
+            </div>
+            <button
+              onClick={() => setIsScannerOpen(true)}
+              className="primary-btn group text-black h-12 px-6 rounded-xl font-black uppercase text-[10px] tracking-widest flex items-center gap-2"
+            >
+              <Camera
+                size={16}
+                className="group-hover:rotate-45 transition-all duration-500"
+              />
+              <span>Open Scanner</span>
+            </button>
           </div>
         </div>
 
@@ -182,6 +212,18 @@ export default function EditTripPage() {
           </div>
         </div>
       </div>
+
+      {/* Booking scanner */}
+      {isScannerOpen && (
+        <BookingScanner
+          tripId="882B-2026"
+          onVerified={(data) => {
+            // Update the local manifest state to show "COMPLETED/BOARDED"
+            console.log("Verified:", data);
+          }}
+          onClose={() => setIsScannerOpen(false)}
+        />
+      )}
     </div>
   );
 }

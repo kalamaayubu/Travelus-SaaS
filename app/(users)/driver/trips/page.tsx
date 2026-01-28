@@ -47,7 +47,7 @@ export default function TripsPage() {
     <div className="min-h-screen text-white">
       <div className="">
         <header className="mb-10">
-          <h1 className="text-3xl font-black italic uppercase tracking-tighter">
+          <h1 className="text-3xl font-black uppercase tracking-tighter">
             My Trips
           </h1>
           <p className="text-xs text-gray4 font-bold uppercase tracking-widest mt-1">
@@ -83,11 +83,11 @@ export default function TripsPage() {
 
                     <div className="flex flex-wrap gap-6">
                       <InfoItem
-                        icon={<Calendar size={14} className="text-tertiary" />}
+                        icon={<Calendar size={14} className="text-gray4" />}
                         text={trip.departureDate}
                       />
                       <InfoItem
-                        icon={<Clock size={14} className="text-secondary" />}
+                        icon={<Clock size={14} className="text-gray6" />}
                         text={trip.departureTime}
                       />
                     </div>

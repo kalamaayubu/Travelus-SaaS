@@ -26,16 +26,20 @@ export default function DriverSignup() {
 
       const result = await res.json();
 
+      if (result.success) {
+        toast.success("Account created successfully", {
+          description: "Please check your email for verification.",
+        });
+        return;
+      }
+
       if (!result.success) {
         toast.error("Registration failed", {
           description: result.error,
         });
-        throw new Error(result.error || "Signup failed");
       }
 
-      toast.success("Account created successfully", {
-        description: "Please check your email for verification.",
-      });
+      throw new Error(result.error || "Signup failed");
     } catch (error: any) {
       console.log(error.message);
     }
