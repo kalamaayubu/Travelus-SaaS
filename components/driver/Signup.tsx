@@ -1,10 +1,13 @@
 "use client";
 
-import { DriverSchema, DriverSignupFields } from "@/lib/validations/validate";
+import { DriverSchema } from "@/lib/validations/validate";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import z from "zod";
+
+type DriverSignupFields = z.infer<typeof DriverSchema>;
 
 export default function DriverSignup() {
   const {

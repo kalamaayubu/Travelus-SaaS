@@ -11,6 +11,7 @@ export async function POST(req: Request) {
       email: data.email,
       password: data.password,
       options: {
+        emailRedirectTo: `${origin}/callback`,
         data: {
           fullname: data.fullname,
           phone: data.phone,
