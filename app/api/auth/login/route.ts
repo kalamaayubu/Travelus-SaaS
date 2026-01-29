@@ -30,6 +30,7 @@ export async function POST(req: Request) {
       );
     }
 
+    console.log("Determining redirection");
     // Determine user redirection
     const role = profileData.role;
     let redirectUrl = from || "/";

@@ -5,7 +5,7 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl;
   let supabaseResponse = NextResponse.next({ request });
 
-  const supabase = createServerClient(
+  createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {

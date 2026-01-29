@@ -1,12 +1,60 @@
 "use client";
 
 import Link from "next/link";
-import { ShieldCheck } from "lucide-react";
+import { Loader2, ShieldCheck } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginSchema } from "@/lib/validations/validate";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
+interface LoginFields {
+  email: string;
+  password: string;
+}
 
 export default function LoginPage() {
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFields>({
+    resolver: zodResolver(LoginSchema),
+    mode: "onTouched",
+  });
+
+  const onSubmit = async (data: LoginFields) => {
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data }),
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        toast.success("Log in successfully");
+        router.replace(result.redirectUrl);
+        return;
+      }
+
+      if (!result.success) {
+        toast.error("Login failed", {
+          description: result.error,
+        });
+      }
+
+      throw new Error(result.error || "Login failed");
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+
   return (
-    <section className="min-h-screen bg-dark rounded flex items-center justify-center px-6">
-      <div className="max-w-lg px-8 py-6 rounded-xl bg-white/5 border border-white/[0.2] w-full">
+    <section className="min-h-screen bg-dark flex items-center justify-center px-6">
+      <div className="max-w-lg px-8 py-6 rounded-xl bg-white/5 border border-white/2 w-full">
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center size-16 rounded-2xl bg-primary/10 text-primary mb-6">
             <ShieldCheck className="size-8" />
@@ -15,34 +63,57 @@ export default function LoginPage() {
           <p className="text-gray4">Securely log in to your dashboard</p>
         </div>
 
-        <form className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Email */}
           <div>
             <label className="text-sm text-gray4 mb-1 block">
-              Phone Number
+              Email Address
             </label>
             <input
-              type="tel"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors"
-              placeholder="07..."
+              type="email"
+              {...register("email")}
+              placeholder="example@gmail.com"
+              className={`w-full bg-white/5 border rounded-lg px-4 py-3 text-white focus:border-primary outline-none transition-colors ${
+                errors.email ? "border-red-500" : "border-white/10"
+              }`}
             />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
+          {/* Password */}
           <div>
             <div className="flex justify-between mb-1">
               <label className="text-sm text-gray4 block">Password</label>
             </div>
             <input
               type="password"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors"
+              {...register("password")}
               placeholder="••••••••"
+              className={`w-full bg-white/5 border rounded-lg px-4 py-3 text-white focus:border-primary outline-none transition-colors ${
+                errors.password ? "border-red-500" : "border-white/10"
+              }`}
             />
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
-          <Link href="#" className="text-xs text-primary hover:underline">
+          {/* <Link href="#" className="text-xs text-primary hover:underline">
             Forgot password?
-          </Link>
+          </Link> */}
 
-          <button className="w-full bg-primary text-black py-4 rounded-xl font-bold mt-4 hover:bg-primary/90">
-            Sign In
+          <button
+            disabled={isSubmitting}
+            type="submit"
+            className="w-full py-3 flex items-center gap-4 justify-center rounded-lg font-bold bg-primary hover:bg-primary/90 text-black transition-all"
+          >
+            {isSubmitting && <Loader2 className="size-5 animate-spin" />}
+            {isSubmitting ? "Signing in..." : "Sign in"}
           </button>
         </form>
 

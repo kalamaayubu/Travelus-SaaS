@@ -17,4 +17,8 @@ const baseSchema = z.object({
 });
 
 export const DriverSchema = baseSchema;
-export type DriverSignupFields = z.infer<typeof DriverSchema>;
+
+export const LoginSchema = baseSchema.pick({
+  email: true,
+  password: true,
+});
