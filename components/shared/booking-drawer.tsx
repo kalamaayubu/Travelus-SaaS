@@ -115,7 +115,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
                 <ArrowLeft size={20} className="3" />
               </button>
             )}
-            <h2 className="text-xl font-black italic uppercase tracking-tighter text-primary leading-none">
+            <h2 className="text-xl font-black uppercase tracking-tighter text-primary leading-none">
               {step === "SEATS"
                 ? "Select Seats"
                 : step === "DETAILS"
@@ -158,6 +158,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
                   required: "Full name is required",
                   minLength: { value: 3, message: "Name is too short" },
                 })}
+                className="placeholder:text-gray4"
               />
               <FormInput
                 label="Contact Phone"
@@ -170,6 +171,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
                     message: "Invalid Kenyan number",
                   },
                 })}
+                className="placeholder:text-gray4"
               />
               <FormInput
                 label="M-Pesa Number"
@@ -182,6 +184,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
                     message: "Invalid M-Pesa number",
                   },
                 })}
+                className="placeholder:text-gray4"
               />
               <FormInput
                 label="Email (Optional)"
@@ -193,6 +196,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
                     message: "Invalid email address",
                   },
                 })}
+                className="placeholder:text-gray4"
               />
             </div>
           )}
@@ -275,7 +279,7 @@ export default function BookingDrawer({ trip, onClose }: BookingDrawerProps) {
 }
 
 // Helper components to keep the main code clean
-const FormInput = ({ label, error, ...props }: any) => (
+const FormInput = ({ label, error, className, ...props }: any) => (
   <div className="space-y-4">
     <label className="text-[10px] font-black uppercase tracking-widest text-gray3">
       {label}
@@ -284,6 +288,7 @@ const FormInput = ({ label, error, ...props }: any) => (
       className={cn(
         "w-full h-12 bg-bg-soft border rounded-xl px-4 text-white focus:outline-none transition-all placeholder:text-white/10",
         error ? "border-red-500/50" : "border-white/10 focus:border-primary",
+        className,
       )}
       {...props}
     />

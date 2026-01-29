@@ -93,10 +93,10 @@ export default function EditTripPage() {
           <div className="bg-primary/10 border border-primary/20 rounded-2xl p-6 flex items-center justify-between group">
             <div>
               <h3 className="text-sm font-black uppercase tracking-widest text-secondary">
-                Passenger Boarding
+                Verification
               </h3>
               <p className="text-xs text-gray2 font-bold uppercase mt-1">
-                Scan QR code to verify passenger
+                Scan QR code to verify passenger.
               </p>
             </div>
             <button

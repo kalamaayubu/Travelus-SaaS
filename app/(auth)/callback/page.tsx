@@ -1,6 +1,5 @@
 // app/(auth)/callback/page.tsx
 import { Suspense } from "react";
-import { Loader2 } from "lucide-react";
 import AuthCallback from "@/components/shared/AuthCallback";
 
 function LoadingFallback() {

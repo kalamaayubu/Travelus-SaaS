@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Html5Qrcode } from "html5-qrcode"; // Lower-level class for hardware control
+import { Html5Qrcode } from "html5-qrcode";
 import {
   ShieldCheck,
   XCircle,
@@ -10,7 +10,10 @@ import {
   X,
   Zap,
   ZapOff,
+  WifiOff,
 } from "lucide-react";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { cn } from "@/lib/utils";
 
 interface ScannerProps {
   tripId: string;
@@ -30,6 +33,7 @@ export default function BookingScanner({
 
   const [isTorchOn, setIsTorchOn] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
+  const isOnline = useOnlineStatus(); // Subscribe to network changes
 
   useEffect(() => {
     // Initialize the lower-level scanner
@@ -39,7 +43,7 @@ export default function BookingScanner({
     const startScanner = async () => {
       try {
         await html5QrCode.start(
-          { facingMode: "environment" }, // Rear camera
+          { facingMode: "environment" },
           {
             fps: 10,
             qrbox: { width: 250, height: 250 },
@@ -126,7 +130,8 @@ export default function BookingScanner({
           <div className="flex items-center gap-2">
             <QrCode className="text-primary" size={20} />
             <h2 className="font-bold text-white uppercase tracking-tighter text-sm">
-              SafariBridge Scanner
+              <span className="text-primary">Safari</span>
+              <span className="text-secondary">Bridge</span>
             </h2>
           </div>
           <button
@@ -139,16 +144,39 @@ export default function BookingScanner({
 
         {/* Scanner Area */}
         <div className="p-4 relative">
+          {!isOnline && scanResult.status === "idle" && (
+            <div className="absolute inset-0 z-20 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-300">
+              <div className="size-16 bg-red-500/20 rounded-full flex items-center justify-center mb-4">
+                <WifiOff size={32} className="text-red-500" />{" "}
+              </div>
+              <p className="text-white font-black uppercase text-sm tracking-[0.2em]">
+                Connection Lost
+              </p>
+              <p className="text-sm text-gray2 mt-2 leading-relaxed max-w-100">
+                Please check your internet connection
+              </p>
+            </div>
+          )}
+
           {scanResult.status === "idle" && (
             <>
               <div
                 id="reader"
-                className="overflow-hidden rounded-2xl border-2 border-primary/20 bg-black aspect-square"
+                className={cn(
+                  "overflow-hidden rounded-2xl border-2 transition-all duration-300 bg-black aspect-square",
+                  isOnline
+                    ? "border-primary/20"
+                    : "border-red-500/20 grayscale",
+                )}
               />
               {/* Torch Toggle Button - Positioned over the camera feed */}
               <button
                 onClick={toggleTorch}
-                className="absolute bottom-8 right-8 p-4 rounded-full bg-black/60 border border-white/20 text-white hover:bg-black/80 transition-all z-10 active:scale-90"
+                disabled={!isOnline}
+                className={cn(
+                  "absolute bottom-8 right-8 p-4 rounded-full bg-black/60 border border-white/20 text-white z-10",
+                  !isOnline && "opacity-0 pointer-events-none", // Hide torch when offline
+                )}
               >
                 {isTorchOn ? (
                   <ZapOff size={24} className="text-yellow-400" />
@@ -196,9 +224,9 @@ export default function BookingScanner({
           )}
         </div>
 
-        {scanResult.status === "idle" && (
+        {scanResult.status === "idle" && isOnline && (
           <div className="p-6 bg-black/40 border-t border-white/5">
-            <p className="text-[9px] text-primary text-center font-black uppercase leading-relaxed tracking-widest animate-pulse">
+            <p className="text-[9px] text-secondary text-center font-black uppercase leading-relaxed tracking-widest animate-pulse">
               Center the QR code
             </p>
           </div>
