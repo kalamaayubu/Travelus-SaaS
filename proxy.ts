@@ -6,5 +6,5 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/operator/:path*", "/passenger/:path*"],
+  matcher: ["/driver/:path*", "/passenger/:path*"],
 };

@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { toast } from "sonner";
+import { useAuth } from "../providers/auth-provider";
 
 interface DriverSidebarProps {
   isCollapsed: boolean;
@@ -26,6 +28,7 @@ export function DriverSidebar({
   isOpen,
 }: DriverSidebarProps) {
   const pathname = usePathname();
+  const { user, isLoading, isAuthenticated } = useAuth();
 
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/driver/dashboard" },
@@ -35,6 +38,30 @@ export function DriverSidebar({
     { icon: User, label: "Profile", href: "/driver/profile" },
     { icon: Settings, label: "Settings", href: "/driver/settings" },
   ];
+
+  // Logout
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        window.location.href = "/login";
+        toast.success("Logged out successful");
+      } else {
+        console.error("Logout failed:", result.error);
+        toast.error("Could not log out. Please try again.");
+      }
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
+    }
+  };
 
   return (
     <aside
@@ -124,14 +151,21 @@ export function DriverSidebar({
             <div className="size-10 min-w-10 rounded-full bg-linear-to-tr from-primary to-blue-700 shrink-0" />
             {!isCollapsed && (
               <div className="overflow-hidden animate-in fade-in">
-                <p className="text-sm font-bold truncate">Driver Juma</p>
+                <div className="text-sm font-bold truncate">
+                  {isLoading ? (
+                    <div className="w-full h-6 bg-gray8 rounded-md animate-pulse" />
+                  ) : (
+                    user?.user_metadata.fullname
+                  )}
+                </div>
                 <p className="text-[10px] text-gray2 truncate">
-                  10% Commission Plan
+                  Commission-based Plan
                 </p>
               </div>
             )}
           </div>
           <button
+            onClick={handleLogout}
             className={`flex items-center text-gray2 hover:text-red-500 transition-colors ${
               isCollapsed ? "justify-center py-3" : "gap-3 px-4 py-3 w-full"
             }`}

@@ -6,12 +6,16 @@ export default function ToasterProvider() {
   return (
     <Toaster
       position="top-right"
+      theme="dark"
       toastOptions={{
         style: {
-          background: "rgba(255, 255, 255, 0.05)",
-          color: "white",
-          border: "1px solid rgba(255, 255, 255, 0.1)",
+          background: "var(--color-soft-dark)",
+          color: "var(--text-white)",
+          border: "1px solid var(--color-gray7)",
+          borderRadius: "0.5rem",
+          fontSize: "14px",
         },
+        className: "font-sans",
       }}
     />
   );

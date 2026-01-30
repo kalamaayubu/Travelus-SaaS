@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCheck, FerrisWheel, Menu, Moon, Sun, X } from "lucide-react";
+import { FerrisWheel, Menu, Moon, Sun, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "./providers/auth-provider";
+import { toast } from "sonner";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [theme, setTheme] = useState("dark"); // Default to dark
   const pathname = usePathname();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -32,10 +35,35 @@ export default function Navbar() {
     { name: "Pricing", href: "/#pricing" },
   ];
 
+  // Logout
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        window.location.reload();
+        toast.success("Logged out successful");
+        return;
+      } else {
+        console.error("Logout failed:", result.error);
+        toast.error("Could not log out. Please try again.");
+      }
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
+    }
+  };
+
   return (
     <header className="fixed top-0 z-50 w-full bg-dark backdrop-blur border-b border-gray8/5">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-        {/* LEFT SIDE: Logo */}
+        {/* LEFT SIDE*/}
         <div className="flex items-center gap-2">
           <FerrisWheel className="text-secondary" />
           <span className="text-xl hidden sm:flex font-semibold text-primary">
@@ -43,9 +71,9 @@ export default function Navbar() {
           </span>
         </div>
 
-        {/* RIGHT SIDE: Links + Menu + Main Action Button */}
+        {/* RIGHT SIDE*/}
         <div className="flex items-center gap-4 sm:gap-6">
-          {/* Desktop Nav Links (Hidden on mobile) */}
+          {/* Desktop Navigation links */}
           <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <Link
@@ -56,14 +84,24 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
-            {pathname === "/" && (
-              <Link
-                href="/login"
-                className="hover:text-secondary transition text-sm"
-              >
-                Log in
-              </Link>
-            )}
+            {pathname === "/" &&
+              (isLoading ? (
+                ""
+              ) : isAuthenticated ? (
+                <Link
+                  href={`/${user?.user_metadata.role}/dashboard`}
+                  className="hover:text-secondary transition text-sm"
+                >
+                  Dashboard
+                </Link>
+              ) : (
+                <Link
+                  href="/login"
+                  className="hover:text-secondary transition text-sm"
+                >
+                  Log in
+                </Link>
+              ))}
           </div>
 
           {/* THEME TOGGLE BUTTON */}
@@ -80,9 +118,7 @@ export default function Navbar() {
                 Book a trip
               </Link>
             ) : (
-              <Link href="/login" className="primary-btn whitespace-nowrap">
-                Log in
-              </Link>
+              ""
             )}
           </div>
           <button
@@ -108,15 +144,17 @@ export default function Navbar() {
               {link.name}
             </Link>
           ))}
-          {pathname === "/" && (
-            <Link
-              href="/login"
-              onClick={() => setIsOpen(false)}
-              className="text-lg py-2 text-primary"
-            >
-              Log in
-            </Link>
-          )}
+          {isLoading
+            ? ""
+            : !isAuthenticated && (
+                <Link
+                  href="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="text-lg py-2 text-primary"
+                >
+                  Log in
+                </Link>
+              )}
         </div>
       )}
     </header>
