@@ -15,6 +15,9 @@
   --color-dark: #0b0f14;
   --color-soft-dark: #111827;
 
+  /* Semantic Colors */
+  --color-destructive: #ef4444;
+
   /* Gray Scale Logic */
   --color-white: #ffffff;
   --color-gray1: #f3f4f6;
