@@ -1,3 +1,12 @@
+/**
+ * @component SearchBar
+ * @description A form component using react-hook-form to capture trip criteria.
+ * Syncs input data with the browser URL to maintain shareable search states.
+ * @param {Object} props
+ * @param {Function} props.startTransition - Transition function to manage navigation pending state.
+ * @param {boolean} props.isPending - Indicates if a search/navigation is currently in progress.
+ */
+
 "use client";
 
 import { TripSearchParams } from "@/types/trip.types";

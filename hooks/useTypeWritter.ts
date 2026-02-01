@@ -1,3 +1,10 @@
+/**
+ * @hook useTypeWritter
+ * @description Provides a self-correcting typewriter effect for marketing strings.
+ * @returns {Object}
+ * @returns {string} text - The current string state being rendered.
+ */
+
 import { useState, useEffect } from "react";
 
 export const useTypeWritter = () => {

@@ -1,3 +1,14 @@
+/**
+ * @hook useBookingLogic
+ * @description Manages the state machine for the three-step booking (Seats -> Details -> Payment).
+ * @param {number} tripPrice - The cost per seat used to calculate the total fare.
+ * @returns {Object} Logic bundle including:
+ * - {BookingStep} step: Current active phase of the drawer.
+ * - {string[]} selectedSeats: Array of seat IDs selected by the user.
+ * - {number} totalFare: Dynamic calculation of seats * price.
+ * - {Function} nextStep/prevStep: Navigation handlers.
+ */
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -24,7 +35,7 @@ export const useBookingLogic = (tripPrice: number) => {
     },
   });
 
-  const formData = formMethods.watch();
+  const formData = formMethods.getValues();
   const totalFare = selectedSeats.length * tripPrice;
 
   const handleSeatClick = (id: string, isBooked: boolean) => {

@@ -1,3 +1,11 @@
+/**
+ * @component PublicSearchPage
+ * @description Server-side page component that orchestrates initial data fetching for trips.
+ * Uses searchParams to trigger API calls and passes results to the client-side TripSearch component.
+ * @param {Object} props
+ * @param {Promise<Object>} props.searchParams - URL query parameters (origin, destination, date).
+ */
+
 import TripSearch from "@/components/trip/TripSearch";
 import { Suspense } from "react";
 import type { TripSearchApiResponse } from "@/types/trip.types";
@@ -35,7 +43,7 @@ export default async function PublicSearchPage({
       apiUrl.searchParams.append("date", date);
 
       const response = await fetch(apiUrl.toString(), {
-        cache: "no-store",
+        next: { revalidate: 60 }, // Revalidate every minute
       });
 
       if (response.ok) {
@@ -51,7 +59,7 @@ export default async function PublicSearchPage({
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-dark flex items-center justify-center text-white/20 uppercase font-black tracking-widest">
+        <div className="min-h-screen text-2xl bg-dark flex items-center justify-center text-white/20 uppercase font-black tracking-widest">
           Loading...
         </div>
       }

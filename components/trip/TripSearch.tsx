@@ -21,6 +21,15 @@ interface TripSearchProps {
   };
 }
 
+/**
+ * @component TripSearch
+ * @description The primary client-side controller for the search interface.
+ * Manages UI states including loading skeletons, empty results, and the booking drawer trigger.
+ * @param {TripSearchProps} props
+ * @param {TripSearchResponse[]} props.initialTrips - Pre-fetched trip data from the server.
+ * @param {TripSearchMetaData} [props.initialMeta] - Metadata including total trips count and search context.
+ */
+
 const TripSearch = ({ initialTrips = [], initialMeta }: TripSearchProps) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -33,7 +42,7 @@ const TripSearch = ({ initialTrips = [], initialMeta }: TripSearchProps) => {
   const urlDestination = searchParams.get("destination") || "";
   const urlDate = searchParams.get("date") || "";
 
-  // Create ONE form instance
+  // Form instance
   const methods = useForm<TripSearchParams>({
     defaultValues: {
       origin: urlOrigin,
@@ -54,7 +63,6 @@ const TripSearch = ({ initialTrips = [], initialMeta }: TripSearchProps) => {
 
   const activeTripId = searchParams.get("trip");
 
-  // Use real data passed from server component
   const trips = initialTrips;
 
   const activeTripData = trips.find((t) => t.id === activeTripId);
@@ -172,16 +180,7 @@ const TripSearch = ({ initialTrips = [], initialMeta }: TripSearchProps) => {
       </main>
 
       {activeTripData && (
-        <BookingDrawer
-          trip={{
-            id: activeTripData.id,
-            from: activeTripData.departure_location,
-            to: activeTripData.destination_location,
-            price: activeTripData.price_per_seat,
-            provider: activeTripData.vehicle.type_name || "Standard Shuttle",
-          }}
-          onClose={closeDrawer}
-        />
+        <BookingDrawer tripId={activeTripId} onClose={closeDrawer} />
       )}
     </div>
   );

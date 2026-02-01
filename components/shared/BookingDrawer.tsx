@@ -1,37 +1,50 @@
 "use client";
 
 import { X, ArrowLeft, CreditCard, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useBookingLogic } from "@/hooks/useBookingLogic";
 import {
   DetailsView,
   PaymentView,
   SeatSelectionView,
 } from "../trip/BookingSteps";
+import { useQuery } from "@tanstack/react-query";
+import { TripCardSkeleton } from "../trip/TripCardSkeleton";
+import { useEffect, useRef } from "react";
 
-const MOCK_LAYOUT_DATA = {
-  rows: 12,
-  aisle: true,
-  layout: [
-    { row: 1, seats: ["Aisle", "Aisle", "Aisle", "Aisle", "Driver"] },
-    { row: 2, seats: ["DoorGap", "Aisle", "Aisle", "Seat", "Seat"] },
-    { row: 3, seats: ["Seat", "Seat", "Aisle", "Seat", "Seat"] },
-    { row: 4, seats: ["Seat", "Seat", "Aisle", "Seat", "Seat"] },
-    { row: 5, seats: ["Seat", "Seat", "Aisle", "Seat", "Seat"] },
-    { row: 6, seats: ["Seat", "Seat", "Aisle", "Seat", "Seat"] },
-    { row: 7, seats: ["Seat", "Seat", "Aisle", "Seat", "Seat"] },
-    { row: 8, seats: ["Seat", "Seat", "Aisle", "Seat", "Seat"] },
-    { row: 9, seats: ["Seat", "Seat", "Aisle", "Seat", "Seat"] },
-    { row: 10, seats: ["Seat", "Seat", "Aisle", "Seat", "Seat"] },
-    { row: 11, seats: ["Seat", "Seat", "Aisle", "Seat", "Seat"] },
-    { row: 12, seats: ["Seat", "Seat", "Seat", "Seat", "Seat"] },
-  ],
-};
+export default function BookingDrawer({
+  tripId,
+  onClose,
+}: {
+  tripId: string;
+  onClose: () => void;
+}) {
+  // DEBUGGING: observing re-renders
+  const renderCount = useRef(0);
+  useEffect(() => {
+    renderCount.current += 1;
+    console.log(`🔁 BookingDrawer re-rendered #${renderCount.current}`, {
+      tripId,
+      timestamp: Date.now(),
+    });
+  });
 
-const BOOKED_SEATS = ["C1", "C2", "E4", "L1", "L5"];
-const RESERVED_SEATS = ["I4", "H1", "H2"];
+  // Fetch trip details
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["trip-details", tripId],
+    queryFn: async () => {
+      const res = await fetch(`/api/trips/${tripId}/details`);
+      console.log("Tanstack search data: ", res);
+      if (!res.ok) {
+        throw new Error("Failed to load seats");
+      }
+      return res.json();
+    },
+    enabled: !!tripId,
+    staleTime: 1000 * 30,
+    refetchInterval: 1000 * 10,
+    refetchIntervalInBackground: false,
+  });
 
-export default function BookingDrawer({ trip, onClose }: any) {
   const {
     step,
     selectedSeats,
@@ -41,7 +54,7 @@ export default function BookingDrawer({ trip, onClose }: any) {
     handleSeatClick,
     nextStep,
     prevStep,
-  } = useBookingLogic(trip.price);
+  } = useBookingLogic(data?.trip.price_per_seat);
 
   const {
     register,
@@ -53,6 +66,21 @@ export default function BookingDrawer({ trip, onClose }: any) {
       console.log("Initiating STK Push for:", formData.mpesaPhone);
     else nextStep();
   };
+
+  // Loading and error states
+  if (isLoading)
+    return (
+      <div className="fixed inset-0 z-100 flex justify-end">
+        <div className="absolute inset-0 bg-black/80" onClick={onClose} />
+        <div className="relative w-full max-w-md bg-soft-dark h-full p-8">
+          <TripCardSkeleton />
+          <p className="text-center mt-4 text-gray4">Loading trip details...</p>
+        </div>
+      </div>
+    );
+
+  if (error)
+    return <div className="...">Error loading trip. Please try again.</div>;
 
   return (
     <div className="fixed inset-0 z-100 flex justify-end">
@@ -91,9 +119,9 @@ export default function BookingDrawer({ trip, onClose }: any) {
         <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
           {step === "SEATS" && (
             <SeatSelectionView
-              layout={MOCK_LAYOUT_DATA}
-              booked={BOOKED_SEATS}
-              reserved={RESERVED_SEATS}
+              layout={data.layout}
+              booked={data.occupiedSeats}
+              reserved={[]}
               selected={selectedSeats}
               onSeatClick={handleSeatClick}
             />
@@ -107,7 +135,7 @@ export default function BookingDrawer({ trip, onClose }: any) {
               mpesaPhone={formData.mpesaPhone}
               fullName={formData.fullName}
               seats={selectedSeats}
-              trip={trip}
+              trip={data.trip}
             />
           )}
         </div>

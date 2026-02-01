@@ -39,7 +39,6 @@ export interface TripSearchResponse {
     number_plate: string;
     type_name?: string;
     capacity: number;
-    seats_layout: object;
   };
 }
 
