@@ -1,6 +1,6 @@
 "use client";
 
-import { X, ArrowLeft, CreditCard, ChevronRight } from "lucide-react";
+import { X, ArrowLeft, CreditCard, ChevronRight, Loader2 } from "lucide-react";
 import { useBookingLogic } from "@/hooks/useBookingLogic";
 import {
   DetailsView,
@@ -9,7 +9,9 @@ import {
 } from "../trip/BookingSteps";
 import { useQuery } from "@tanstack/react-query";
 import { TripCardSkeleton } from "../trip/TripCardSkeleton";
-import { useEffect, useRef } from "react";
+import { toast } from "sonner";
+import { PassangerBookingProps } from "@/types/trip.types";
+import { useRouter } from "next/navigation";
 
 export default function BookingDrawer({
   tripId,
@@ -18,15 +20,16 @@ export default function BookingDrawer({
   tripId: string;
   onClose: () => void;
 }) {
+  const router = useRouter();
   // DEBUGGING: observing re-renders
-  const renderCount = useRef(0);
-  useEffect(() => {
-    renderCount.current += 1;
-    console.log(`🔁 BookingDrawer re-rendered #${renderCount.current}`, {
-      tripId,
-      timestamp: Date.now(),
-    });
-  });
+  // const renderCount = useRef(0);
+  // useEffect(() => {
+  //   renderCount.current += 1;
+  //   console.log(`🔁 BookingDrawer re-rendered #${renderCount.current}`, {
+  //     tripId,
+  //     timestamp: Date.now(),
+  //   });
+  // });
 
   // Fetch trip details
   const { data, error, isLoading } = useQuery({
@@ -40,8 +43,8 @@ export default function BookingDrawer({
       return res.json();
     },
     enabled: !!tripId,
-    staleTime: 1000 * 30,
-    refetchInterval: 1000 * 10,
+    staleTime: 1000 * 60 * 20,
+    refetchInterval: 1000 * 60 * 20,
     refetchIntervalInBackground: false,
   });
 
@@ -58,13 +61,78 @@ export default function BookingDrawer({
 
   const {
     register,
-    formState: { errors, isValid },
+    handleSubmit,
+    formState: { errors, isValid, isSubmitting },
   } = formMethods;
 
+  // Handle booking action
+  const onFinalSubmit = async (data: PassangerBookingProps) => {
+    const bookingPayload = { ...data, tripId, selectedSeats, totalFare };
+
+    try {
+      const res = await fetch(`/api/trips/${tripId}/booking`, {
+        method: "POST",
+        body: JSON.stringify({ bookingPayload }),
+      });
+
+      const result = await res.json();
+      if (!res.ok) {
+        toast.error(`${result.error}`);
+        return;
+      }
+
+      const seatCount = selectedSeats.length;
+      const HOLD_TIME_SECONDS = 6 * 60; // 6 minutes
+
+      let remaining = HOLD_TIME_SECONDS;
+
+      const toastId = toast.success(
+        `${seatCount} Seat${seatCount > 1 ? "s" : ""} Reserved Successfully`,
+        {
+          description: `Please complete payment for seat${seatCount > 1 ? "s" : ""} ${selectedSeats.join(
+            ", ",
+          )}. Time remaining: 06:00`,
+          duration: HOLD_TIME_SECONDS * 1000,
+          dismissible: false,
+        },
+      );
+
+      const interval = setInterval(() => {
+        remaining -= 1;
+
+        const minutes = String(Math.floor(remaining / 60)).padStart(2, "0");
+        const seconds = String(remaining % 60).padStart(2, "0");
+
+        toast.success(
+          `${seatCount} Seat${seatCount > 1 ? "s" : ""} Reserved Successfully`,
+          {
+            id: toastId,
+            description: `Please complete payment for seat${seatCount > 1 ? "s" : ""} ${selectedSeats.join(
+              ", ",
+            )}. Time remaining: ${minutes}:${seconds}`,
+          },
+        );
+
+        if (remaining <= 0) {
+          clearInterval(interval);
+        }
+      }, 1000);
+
+      router.push("/trips");
+    } catch (error) {
+      console.error("Something went wrong:", error);
+      toast.error("Network error. Please try again.");
+    }
+  };
+
+  // Deciding between navigation and final submission
   const handleAction = () => {
-    if (step === "PAYMENT")
-      console.log("Initiating STK Push for:", formData.mpesaPhone);
-    else nextStep();
+    if (step === "PAYMENT") {
+      // Submit booking
+      handleSubmit(onFinalSubmit)();
+    } else {
+      nextStep();
+    }
   };
 
   // Loading and error states
@@ -119,8 +187,8 @@ export default function BookingDrawer({
         <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
           {step === "SEATS" && (
             <SeatSelectionView
-              layout={data.layout}
-              booked={data.occupiedSeats}
+              layout={data?.layout}
+              booked={data?.occupiedSeats}
               reserved={[]}
               selected={selectedSeats}
               onSeatClick={handleSeatClick}
@@ -132,7 +200,7 @@ export default function BookingDrawer({
           {step === "PAYMENT" && (
             <PaymentView
               totalFare={totalFare}
-              mpesaPhone={formData.mpesaPhone}
+              mpesaNumber={formData.mpesaNumber}
               fullName={formData.fullName}
               seats={selectedSeats}
               trip={data.trip}
@@ -161,22 +229,36 @@ export default function BookingDrawer({
           </div>
 
           <button
-            disabled={step === "SEATS" ? selectedSeats.length === 0 : !isValid}
+            disabled={
+              isSubmitting ||
+              (step === "SEATS" ? selectedSeats.length === 0 : !isValid)
+            }
             onClick={handleAction}
-            className="primary-btn w-full h-14 rounded-xl flex items-center justify-center gap-3 disabled:opacity-20 transition-all group shadow-xl shadow-primary/10"
+            className="primary-btn w-full h-14 rounded-xl flex items-center justify-center gap-3 disabled:opacity-60 transition-all group shadow-xl shadow-primary/10"
           >
-            <span className="uppercase tracking-[0.2em] font-black text-sm">
-              {step === "SEATS" && "Proceed to Details"}
-              {step === "DETAILS" && "Confirm & Pay"}
-              {step === "PAYMENT" && "Pay with M-pesa"}
-            </span>
-            {step === "PAYMENT" ? (
-              <CreditCard size={18} />
+            {isSubmitting ? (
+              <>
+                <Loader2 className="size-5 animate-spin" />
+                <span className="uppercase tracking-[0.2em] font-black text-sm">
+                  Sending Request...
+                </span>
+              </>
             ) : (
-              <ChevronRight
-                size={18}
-                className="group-hover:translate-x-1 transition-transform"
-              />
+              <>
+                <span className="uppercase tracking-[0.2em] font-black text-sm">
+                  {step === "SEATS" && "Proceed to Details"}
+                  {step === "DETAILS" && "Confirm & Pay"}
+                  {step === "PAYMENT" && "Pay with M-pesa"}
+                </span>
+                {step === "PAYMENT" ? (
+                  <CreditCard size={18} />
+                ) : (
+                  <ChevronRight
+                    size={18}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                )}
+              </>
             )}
           </button>
         </footer>

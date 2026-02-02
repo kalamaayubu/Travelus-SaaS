@@ -38,8 +38,8 @@ export const DetailsView = ({ register, errors }: any) => (
     <FormInput
       label="Contact Phone"
       placeholder="0712345678"
-      error={errors.contactPhone?.message}
-      {...register("contactPhone", {
+      error={errors.contactNumber?.message}
+      {...register("contactNumber", {
         required: "Phone is required",
         pattern: {
           value: /^(?:254|\+254|0)?(7|1)[0-9]{8}$/,
@@ -50,8 +50,8 @@ export const DetailsView = ({ register, errors }: any) => (
     <FormInput
       label="M-Pesa Number"
       placeholder="0712345678"
-      error={errors.mpesaPhone?.message}
-      {...register("mpesaPhone", {
+      error={errors.mpesaNumber?.message}
+      {...register("mpesaNumber", {
         required: "M-Pesa number is required",
         pattern: {
           value: /^(?:254|\+254|0)?(7|1)[0-9]{8}$/,
@@ -73,7 +73,7 @@ export const DetailsView = ({ register, errors }: any) => (
 // 3. Payment View
 export const PaymentView = ({
   totalFare,
-  mpesaPhone,
+  mpesaNumber,
   fullName,
   seats,
   trip,
@@ -88,7 +88,7 @@ export const PaymentView = ({
         KES {totalFare.toLocaleString()}
       </span>{" "}
       will be sent to{" "}
-      <span className="text-secondary font-black">{mpesaPhone}</span>
+      <span className="text-secondary font-black">{mpesaNumber}</span>
     </p>
 
     <div className="bg-bg-soft p-6 rounded-xl border border-white/5 tracking-wider text-left space-y-4">
@@ -113,8 +113,8 @@ export const FormInput = ({ label, error, className, ...props }: any) => (
     </label>
     <input
       className={cn(
-        "w-full h-12 bg-bg-soft border rounded-xl px-4 text-white focus:outline-none transition-all placeholder:text-white/10",
-        error ? "border-red-500/50" : "border-white/10 focus:border-primary",
+        "w-full h-12 bg-bg-soft border  rounded-xl px-4 text-white focus:outline-none transition-all placeholder:text-white/10",
+        error ? "border-red-500/50" : "border-white/20 focus:border-primary",
         className,
       )}
       {...props}

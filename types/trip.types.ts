@@ -64,3 +64,11 @@ export interface ApiErrorResponse {
   error: string;
   details?: any;
 }
+
+// Booking
+export interface PassangerBookingProps {
+  fullName: string;
+  contactNumber: string;
+  mpesaNumber: string;
+  email?: string;
+}

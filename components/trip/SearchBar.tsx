@@ -33,8 +33,8 @@ export const SearchBar = ({ startTransition, isPending }: SearchBarProps) => {
 
     // Update URL with search params
     const params = new URLSearchParams();
-    params.set("origin", origin);
-    params.set("destination", destination);
+    params.set("origin", origin.trim());
+    params.set("destination", destination.trim());
     params.set("date", date);
 
     // Small delay to show loading state

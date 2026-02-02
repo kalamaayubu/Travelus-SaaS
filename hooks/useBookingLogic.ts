@@ -16,8 +16,8 @@ export type BookingStep = "SEATS" | "DETAILS" | "PAYMENT";
 
 export interface PassangerBookingFields {
   fullName: string;
-  contactPhone: string;
-  mpesaPhone: string;
+  contactNumber: string;
+  mpesaNumber: string;
   email?: string;
 }
 
@@ -29,8 +29,8 @@ export const useBookingLogic = (tripPrice: number) => {
     mode: "onChange",
     defaultValues: {
       fullName: "",
-      contactPhone: "",
-      mpesaPhone: "",
+      contactNumber: "",
+      mpesaNumber: "",
       email: "",
     },
   });
