@@ -33,7 +33,7 @@ export async function GET(
     `,
     )
     .eq("id", id)
-    .in("bookings.status", ["CONFIRMED", "RESERVED"]) // Filter joined relation
+    .in("bookings.status", ["BOOKED", "PENDING"])
     .single();
 
   if (error || !data) {

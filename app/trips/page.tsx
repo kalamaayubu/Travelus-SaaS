@@ -27,15 +27,13 @@ export default async function PublicSearchPage({
     destination: destination || "",
     date: date || "",
   };
-
   // Fetch from API if we have all params
   if (origin && destination && date) {
     try {
       const baseUrl =
-        process.env.NEXT_PUBLIC_APP_URL ||
-        (process.env.NODE_ENV === "production"
+        process.env.NODE_ENV === "production"
           ? "https://travelus-saas.netlify.app"
-          : "http://localhost:3000");
+          : "http://localhost:3000";
 
       const apiUrl = new URL(`${baseUrl}/api/trips/search`);
       apiUrl.searchParams.append("origin", origin);

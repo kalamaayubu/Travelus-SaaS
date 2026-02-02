@@ -110,7 +110,14 @@ export async function GET(
           const vehicle = dv?.vehicle_id;
           const vType = vehicle?.vehicle_type_id;
 
-          const bookedSeats = trip.bookings.seats.length;
+          // Calculate booked seats
+          const bookedSeatsCount =
+            trip.bookings?.reduce((total: number, booking: any) => {
+              if (Array.isArray(booking.seats)) {
+                return total + booking.seats.length;
+              }
+              return total;
+            }, 0) || 0;
 
           return {
             id: trip.id,
@@ -119,7 +126,7 @@ export async function GET(
             destination_location: trip.destination_location,
             price_per_seat: trip.price_per_seat,
             total_capacity: trip.total_capacity,
-            available_seats: trip.total_capacity - bookedSeats,
+            available_seats: trip.total_capacity - bookedSeatsCount,
             vehicle: {
               number_plate: vehicle?.number_plate,
               type_name: vType?.type_name,

@@ -30,12 +30,15 @@ export default function BookingDrawer({
   //     timestamp: Date.now(),
   //   });
   // });
-
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://travelus-saas.netlify.app"
+      : "http://localhost:3000";
   // Fetch trip details
   const { data, error, isLoading } = useQuery({
     queryKey: ["trip-details", tripId],
     queryFn: async () => {
-      const res = await fetch(`/api/trips/${tripId}/details`);
+      const res = await fetch(`${baseUrl}/api/trips/${tripId}/details`);
       console.log("Tanstack search data: ", res);
       if (!res.ok) {
         throw new Error("Failed to load seats");
@@ -43,8 +46,8 @@ export default function BookingDrawer({
       return res.json();
     },
     enabled: !!tripId,
-    staleTime: 1000 * 60 * 20,
-    refetchInterval: 1000 * 60 * 20,
+    staleTime: 1000 * 60 * 360,
+    refetchInterval: 1000 * 60 * 360,
     refetchIntervalInBackground: false,
   });
 
