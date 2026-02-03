@@ -60,10 +60,11 @@ export const DetailsView = ({ register, errors }: any) => (
       })}
     />
     <FormInput
-      label="Email (Optional)"
+      label="Email"
       placeholder="john@example.com"
       error={errors.email?.message}
       {...register("email", {
+        required: "Email is required",
         pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email address" },
       })}
     />
@@ -120,7 +121,7 @@ export const FormInput = ({ label, error, className, ...props }: any) => (
       {...props}
     />
     {error && (
-      <p className="text-[9px] text-red-500 font-bold uppercase tracking-wider">
+      <p className="text-[9px] -translate-y-2 text-red-500 font-bold uppercase tracking-wider">
         {error}
       </p>
     )}

@@ -41,7 +41,7 @@ export async function GET(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  console.log("TRIP DETAILS: ", JSON.stringify(data, null, 2));
+  // console.log("TRIP DETAILS: ", JSON.stringify(data, null, 2));
 
   // Flatten the 'seats' arrays from all bookings into one 'occupied' list
   const occupiedSeats = data.bookings?.flatMap((b: any) => b.seats) || [];

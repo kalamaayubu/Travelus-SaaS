@@ -1,6 +1,13 @@
 "use client";
 
-import { X, ArrowLeft, CreditCard, ChevronRight, Loader2 } from "lucide-react";
+import {
+  X,
+  ArrowLeft,
+  CreditCard,
+  ChevronRight,
+  Loader2,
+  Check,
+} from "lucide-react";
 import { useBookingLogic } from "@/hooks/useBookingLogic";
 import {
   DetailsView,
@@ -11,7 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { TripCardSkeleton } from "../trip/TripCardSkeleton";
 import { toast } from "sonner";
 import { PassangerBookingProps } from "@/types/trip.types";
-import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 
 export default function BookingDrawer({
   tripId,
@@ -20,7 +27,16 @@ export default function BookingDrawer({
   tripId: string;
   onClose: () => void;
 }) {
-  const router = useRouter();
+  // SIMULATION: Booking payment simulation states:
+  const [bookingId, setBookingId] = useState<string | null>(null);
+  const [isPaying, setIsPaying] = useState(false);
+  const [ticketInfo, setTicketInfo] = useState<{
+    number: string;
+    seats: string[];
+  } | null>(null);
+
+  const toastIdRef = useRef<string | number | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   // DEBUGGING: observing re-renders
   // const renderCount = useRef(0);
   // useEffect(() => {
@@ -34,6 +50,7 @@ export default function BookingDrawer({
     process.env.NODE_ENV === "production"
       ? "https://travelus-saas.netlify.app"
       : "http://localhost:3000";
+
   // Fetch trip details
   const { data, error, isLoading } = useQuery({
     queryKey: ["trip-details", tripId],
@@ -84,12 +101,16 @@ export default function BookingDrawer({
         return;
       }
 
+      // Set the payment simulation data
+      setBookingId(result.data.id);
+      setIsPaying(true);
+
       const seatCount = selectedSeats.length;
       const HOLD_TIME_SECONDS = 6 * 60; // 6 minutes
 
       let remaining = HOLD_TIME_SECONDS;
 
-      const toastId = toast.success(
+      toastIdRef.current = toast.success(
         `${seatCount} Seat${seatCount > 1 ? "s" : ""} Reserved Successfully`,
         {
           description: `Please complete payment for seat${seatCount > 1 ? "s" : ""} ${selectedSeats.join(
@@ -100,7 +121,7 @@ export default function BookingDrawer({
         },
       );
 
-      const interval = setInterval(() => {
+      timerRef.current = setInterval(() => {
         remaining -= 1;
 
         const minutes = String(Math.floor(remaining / 60)).padStart(2, "0");
@@ -109,7 +130,7 @@ export default function BookingDrawer({
         toast.success(
           `${seatCount} Seat${seatCount > 1 ? "s" : ""} Reserved Successfully`,
           {
-            id: toastId,
+            id: toastIdRef.current as string,
             description: `Please complete payment for seat${seatCount > 1 ? "s" : ""} ${selectedSeats.join(
               ", ",
             )}. Time remaining: ${minutes}:${seconds}`,
@@ -117,14 +138,48 @@ export default function BookingDrawer({
         );
 
         if (remaining <= 0) {
-          clearInterval(interval);
+          if (timerRef.current) clearInterval(timerRef.current);
         }
       }, 1000);
-
-      router.push("/trips");
     } catch (error) {
       console.error("Something went wrong:", error);
       toast.error("Network error. Please try again.");
+    }
+  };
+
+  // Simulated payment handler
+  const handleSimulatedPayment = async () => {
+    if (!bookingId) return;
+
+    try {
+      const res = await fetch(`/api/payments/booking`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingId }),
+      });
+
+      const result = await res.json();
+      if (res.ok) {
+        //  Kill the interval logic immediately
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
+
+        //  Dismiss the specific countdown toast
+        if (toastIdRef.current) {
+          toast.dismiss(toastIdRef.current);
+          toastIdRef.current = null;
+        }
+
+        setTicketInfo({ number: result.ticketNumber, seats: result.seats });
+        setIsPaying(false);
+        toast.success("Payment confirmed!");
+      } else {
+        toast.error(result.error || "Payment failed");
+      }
+    } catch (error) {
+      toast.error("Payment verification failed.");
     }
   };
 
@@ -187,84 +242,162 @@ export default function BookingDrawer({
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
-          {step === "SEATS" && (
-            <SeatSelectionView
-              layout={data?.layout}
-              booked={data?.occupiedSeats}
-              reserved={[]}
-              selected={selectedSeats}
-              onSeatClick={handleSeatClick}
-            />
-          )}
-          {step === "DETAILS" && (
-            <DetailsView register={register} errors={errors} />
-          )}
-          {step === "PAYMENT" && (
-            <PaymentView
-              totalFare={totalFare}
-              mpesaNumber={formData.mpesaNumber}
-              fullName={formData.fullName}
-              seats={selectedSeats}
-              trip={data.trip}
-            />
-          )}
-        </div>
+        {/* Payment view simulation */}
+        {ticketInfo ? (
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-6 animate-in zoom-in-95 duration-500">
+            <div className="size-20 bg-primary/20 rounded-full flex items-center justify-center shadow-2xl shadow-primary/20">
+              <Check size={40} className="text-primary" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-black text-white tracking-tighter uppercase">
+                Payment Successful
+              </h2>
+              <p className="text-gray4 text-sm">
+                Your seats are now officially booked.
+              </p>
+            </div>
 
-        <footer className="p-6 border-t border-white/5 bg-bg-soft/50 space-y-4 backdrop-blur-md">
-          <div className="flex justify-between items-end">
-            <div className="space-y-1">
-              <p className="text-[10px] font-black text-gray2 uppercase tracking-widest">
-                Selected Seats ({selectedSeats.length})
+            <div className="w-full bg-bg-soft border-2 border-dashed border-white/10 p-6 rounded-3xl relative overflow-hidden">
+              <div className="absolute -left-3 top-1/2 -translate-y-1/2 size-6 bg-soft-dark rounded-full" />
+              <div className="absolute -right-3 top-1/2 -translate-y-1/2 size-6 bg-soft-dark rounded-full" />
+
+              <p className="text-[10px] uppercase font-black text-white tracking-widest mb-1">
+                Ticket Number
               </p>
-              <p className="text-lg font-black text-white truncate max-w-37.5">
-                {selectedSeats.length > 0 ? selectedSeats.join(", ") : "--"}
+              <p className="text-5xl font-black text-secondary tracking-tighter mb-4">
+                {ticketInfo.number}
               </p>
+              <div className="flex justify-between text-left border-t border-white/5 pt-4">
+                <div>
+                  <p className="text-[8px] uppercase font-bold text-gray3">
+                    Seats
+                  </p>
+                  <p className="text-sm font-black text-white">
+                    {ticketInfo.seats.join(", ")}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[8px] uppercase font-bold text-gray3">
+                    Status
+                  </p>
+                  <p className="text-sm font-black text-primary uppercase">
+                    Booked
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="text-right">
-              <p className="text-[10px] font-black text-gray2 uppercase tracking-widest">
-                Total fare
-              </p>
-              <p className="text-xl font-black uppercase tracking-tighter text-secondary">
-                KES&nbsp;&nbsp; {totalFare.toLocaleString()}
-              </p>
-            </div>
+
+            <button
+              onClick={onClose}
+              className="primary-btn w-full h-14 rounded-2xl font-black uppercase tracking-widest"
+            >
+              Done & Close
+            </button>
           </div>
+        ) : isPaying ? (
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-8 animate-in fade-in duration-500">
+            <div className="size-24 bg-secondary/10 rounded-full flex items-center justify-center animate-pulse">
+              <CreditCard size={48} className="text-secondary" />
+            </div>
+            <div className="space-y-3">
+              <h3 className="text-xl font-black text-white uppercase tracking-tight">
+                Waiting for M-Pesa PIN...
+              </h3>
+              <p className="text-gray4 text-sm px-6">
+                We've sent an STK push to your phone. Enter your PIN to complete
+                the booking.
+              </p>
+            </div>
 
-          <button
-            disabled={
-              isSubmitting ||
-              (step === "SEATS" ? selectedSeats.length === 0 : !isValid)
-            }
-            onClick={handleAction}
-            className="primary-btn w-full h-14 rounded-xl flex items-center justify-center gap-3 disabled:opacity-60 transition-all group shadow-xl shadow-primary/10"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="size-5 animate-spin" />
-                <span className="uppercase tracking-[0.2em] font-black text-sm">
-                  Sending Request...
-                </span>
-              </>
-            ) : (
-              <>
-                <span className="uppercase tracking-[0.2em] font-black text-sm">
-                  {step === "SEATS" && "Proceed to Details"}
-                  {step === "DETAILS" && "Confirm & Pay"}
-                  {step === "PAYMENT" && "Pay with M-pesa"}
-                </span>
-                {step === "PAYMENT" ? (
-                  <CreditCard size={18} />
+            <button
+              onClick={handleSimulatedPayment}
+              className="w-full h-16 bg-white text-black font-black rounded-xl uppercase tracking-tighter hover:bg-primary transition-colors flex items-center justify-center gap-3"
+            >
+              Simulate Successful Payment
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+              {step === "SEATS" && (
+                <SeatSelectionView
+                  layout={data?.layout}
+                  booked={data?.occupiedSeats}
+                  reserved={[]}
+                  selected={selectedSeats}
+                  onSeatClick={handleSeatClick}
+                />
+              )}
+              {step === "DETAILS" && (
+                <DetailsView register={register} errors={errors} />
+              )}
+              {step === "PAYMENT" && (
+                <PaymentView
+                  totalFare={totalFare}
+                  mpesaNumber={formData.mpesaNumber}
+                  fullName={formData.fullName}
+                  seats={selectedSeats}
+                  trip={data.trip}
+                />
+              )}
+            </div>
+
+            <footer className="p-6 border-t border-white/5 bg-bg-soft/50 space-y-4 backdrop-blur-md">
+              <div className="flex justify-between items-end">
+                <div className="space-y-1">
+                  <p className="text-[10px] font-black text-gray2 uppercase tracking-widest">
+                    Selected Seats ({selectedSeats.length})
+                  </p>
+                  <p className="text-lg font-black text-white truncate max-w-37.5">
+                    {selectedSeats.length > 0 ? selectedSeats.join(", ") : "--"}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] font-black text-gray2 uppercase tracking-widest">
+                    Total fare
+                  </p>
+                  <p className="text-xl font-black uppercase tracking-tighter text-secondary">
+                    KES&nbsp;&nbsp; {totalFare.toLocaleString()}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                disabled={
+                  isSubmitting ||
+                  (step === "SEATS" ? selectedSeats.length === 0 : !isValid)
+                }
+                onClick={handleAction}
+                className="primary-btn w-full h-14 rounded-xl flex items-center justify-center gap-3 disabled:opacity-60 transition-all group shadow-xl shadow-primary/10"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="size-5 animate-spin" />
+                    <span className="uppercase tracking-[0.2em] font-black text-sm">
+                      Sending Request...
+                    </span>
+                  </>
                 ) : (
-                  <ChevronRight
-                    size={18}
-                    className="group-hover:translate-x-1 transition-transform"
-                  />
+                  <>
+                    <span className="uppercase tracking-[0.2em] font-black text-sm">
+                      {step === "SEATS" && "Proceed to Details"}
+                      {step === "DETAILS" && "Confirm & Pay"}
+                      {step === "PAYMENT" && "Pay with M-pesa"}
+                    </span>
+                    {step === "PAYMENT" ? (
+                      <CreditCard size={18} />
+                    ) : (
+                      <ChevronRight
+                        size={18}
+                        className="group-hover:translate-x-1 transition-transform"
+                      />
+                    )}
+                  </>
                 )}
-              </>
-            )}
-          </button>
-        </footer>
+              </button>
+            </footer>
+          </>
+        )}
       </div>
     </div>
   );

@@ -96,7 +96,7 @@ export async function GET(
         console.error("Error searching trips: ", error);
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
-      console.log("Raw Data: ", JSON.stringify(data, null, 2));
+      // console.log("Raw Data: ", JSON.stringify(data, null, 2));
 
       // Transform data from supabase
       const transformedData: TripSearchResponse[] =
