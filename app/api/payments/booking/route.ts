@@ -15,6 +15,7 @@ export async function PATCH(req: Request) {
       .select("id, seats");
 
     if (error || !data || data.length === 0) {
+      console.error("Error:", error);
       return NextResponse.json(
         { error: error?.message || "Booking not found or expired." },
         { status: 404 },
@@ -34,6 +35,7 @@ export async function PATCH(req: Request) {
       { status: 200 },
     );
   } catch (err) {
+    console.error("Error occured: ", err);
     return NextResponse.json({ error: "Confirmation failed" }, { status: 500 });
   }
 }

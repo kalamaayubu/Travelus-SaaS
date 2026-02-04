@@ -19,6 +19,7 @@ import { TripCardSkeleton } from "../trip/TripCardSkeleton";
 import { toast } from "sonner";
 import { PassangerBookingProps } from "@/types/trip.types";
 import { useRef, useState } from "react";
+import { TicketSuccessView } from "../passenger/TicketSuccessView";
 
 export default function BookingDrawer({
   tripId,
@@ -216,84 +217,13 @@ export default function BookingDrawer({
       />
 
       <div className="relative w-full max-w-md bg-soft-dark border-l border-white/10 h-full flex flex-col animate-in slide-in-from-right duration-500 shadow-2xl">
-        <header className="p-6 py-4 border-b border-white/5 flex items-center justify-between bg-bg-soft/30">
-          <div className="flex items-center gap-4">
-            {step !== "SEATS" && (
-              <button
-                onClick={prevStep}
-                className="p-2 hover:bg-white/5 rounded-lg transition-colors"
-              >
-                <ArrowLeft size={20} />
-              </button>
-            )}
-            <h2 className="text-xl font-black uppercase tracking-tighter text-primary leading-none">
-              {step === "SEATS"
-                ? "Select Seats"
-                : step === "DETAILS"
-                  ? "Passenger Info"
-                  : "Make payment"}
-            </h2>
-          </div>
-          <button
-            onClick={onClose}
-            className="size-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/5"
-          >
-            <X size={20} className="text-gray4" />
-          </button>
-        </header>
-
         {/* Payment view simulation */}
         {ticketInfo ? (
-          <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-6 animate-in zoom-in-95 duration-500">
-            <div className="size-20 bg-primary/20 rounded-full flex items-center justify-center shadow-2xl shadow-primary/20">
-              <Check size={40} className="text-primary" />
-            </div>
-            <div className="space-y-2">
-              <h2 className="text-2xl font-black text-white tracking-tighter uppercase">
-                Payment Successful
-              </h2>
-              <p className="text-gray4 text-sm">
-                Your seats are now officially booked.
-              </p>
-            </div>
-
-            <div className="w-full bg-bg-soft border-2 border-dashed border-white/10 p-6 rounded-3xl relative overflow-hidden">
-              <div className="absolute -left-3 top-1/2 -translate-y-1/2 size-6 bg-soft-dark rounded-full" />
-              <div className="absolute -right-3 top-1/2 -translate-y-1/2 size-6 bg-soft-dark rounded-full" />
-
-              <p className="text-[10px] uppercase font-black text-white tracking-widest mb-1">
-                Ticket Number
-              </p>
-              <p className="text-5xl font-black text-secondary tracking-tighter mb-4">
-                {ticketInfo.number}
-              </p>
-              <div className="flex justify-between text-left border-t border-white/5 pt-4">
-                <div>
-                  <p className="text-[8px] uppercase font-bold text-gray3">
-                    Seats
-                  </p>
-                  <p className="text-sm font-black text-white">
-                    {ticketInfo.seats.join(", ")}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-[8px] uppercase font-bold text-gray3">
-                    Status
-                  </p>
-                  <p className="text-sm font-black text-primary uppercase">
-                    Booked
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={onClose}
-              className="primary-btn w-full h-14 rounded-2xl font-black uppercase tracking-widest"
-            >
-              Done & Close
-            </button>
-          </div>
+          <TicketSuccessView
+            ticketNumber={ticketInfo.number}
+            seats={ticketInfo.seats}
+            onClose={onClose}
+          />
         ) : isPaying ? (
           <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-8 animate-in fade-in duration-500">
             <div className="size-24 bg-secondary/10 rounded-full flex items-center justify-center animate-pulse">
@@ -318,6 +248,31 @@ export default function BookingDrawer({
           </div>
         ) : (
           <>
+            <header className="p-6 py-4 border-b border-white/5 flex items-center justify-between bg-bg-soft/30">
+              <div className="flex items-center gap-4">
+                {step !== "SEATS" && (
+                  <button
+                    onClick={prevStep}
+                    className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+                  >
+                    <ArrowLeft size={20} />
+                  </button>
+                )}
+                <h2 className="text-xl font-black uppercase tracking-tighter text-primary leading-none">
+                  {step === "SEATS"
+                    ? "Select Seats"
+                    : step === "DETAILS"
+                      ? "Passenger Info"
+                      : "Make payment"}
+                </h2>
+              </div>
+              <button
+                onClick={onClose}
+                className="size-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/5"
+              >
+                <X size={20} className="text-gray4" />
+              </button>
+            </header>
             <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
               {step === "SEATS" && (
                 <SeatSelectionView
