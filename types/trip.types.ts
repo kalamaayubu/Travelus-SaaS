@@ -1,3 +1,8 @@
+export type TripStatus = "SCHEDULED" | "ACTIVE" | "COMPLETED";
+export type UserType = "DRIVER" | "PASSENGER";
+export type SeatMapStatus = "AVAILABLE" | "BOOKED" | "LOCKED" | "SELECTED";
+export type BookingStatus = "PENDING" | "BOOKED" | "APPROVED" | "CANCELLED";
+
 export interface Trip {
   id: string;
   departure_time: string;
