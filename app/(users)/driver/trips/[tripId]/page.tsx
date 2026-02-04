@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import SeatMapManager from "@/components/driver/SeatMapManager";
 import BookingScanner from "@/components/driver/BookingScanner";
 import Link from "next/link";
-import { DriverIndividualTripData, ManifestEntry } from "@/types/driver";
+import { DriverIndividualTripData } from "@/types/driver";
 import TripDetailsPageSkeleton from "@/components/driver/skeletons/TripDetailsPageSkeleton";
 
 export default function EditTripPage() {

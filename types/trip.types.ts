@@ -77,3 +77,11 @@ export interface PassangerBookingProps {
   mpesaNumber: string;
   email?: string;
 }
+
+export interface VerifiedPassengerData {
+  ticketNumber: string;
+  name: string;
+  seats: string[];
+  amount: number;
+  verifiedAt: string;
+}

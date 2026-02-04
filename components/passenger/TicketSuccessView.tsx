@@ -7,6 +7,7 @@ import html2canvas from "html2canvas-pro";
 
 interface TicketSuccessProps {
   ticketNumber: string;
+  encryptedBookingId: string;
   seats: string[];
   onClose: () => void;
 }
@@ -14,6 +15,7 @@ interface TicketSuccessProps {
 export const TicketSuccessView = ({
   ticketNumber,
   seats,
+  encryptedBookingId,
   onClose,
 }: TicketSuccessProps) => {
   const ticketRef = useRef<HTMLDivElement>(null);
@@ -25,7 +27,7 @@ export const TicketSuccessView = ({
 
     try {
       const canvas = await html2canvas(ticketRef.current, {
-        backgroundColor: "#0F1115", // Matches your soft-dark bg
+        backgroundColor: "#0F1115", // Soft-dark background
         scale: 3, // Higher quality
         logging: false,
         useCORS: true,
@@ -50,10 +52,6 @@ export const TicketSuccessView = ({
         ref={ticketRef}
         className="w-full flex flex-col items-center space-y-6 p-4 bg-soft-dark"
       >
-        {/* <div className="size-20 bg-primary/20 rounded-full flex items-center justify-center">
-          <Check size={40} className="text-primary" />
-        </div> */}
-
         <div className="space-y-1">
           <h2 className="text-2xl font-black text-white uppercase tracking-tighter">
             Confirmed!
@@ -62,7 +60,12 @@ export const TicketSuccessView = ({
         </div>
 
         <div className="bg-white p-4 rounded-2xl">
-          <QRCodeSVG value={ticketNumber} size={150} level="H" marginSize={0} />
+          <QRCodeSVG
+            value={encryptedBookingId}
+            size={150}
+            level="H"
+            marginSize={0}
+          />
         </div>
 
         <div className="w-full bg-bg-soft border-2 border-dashed border-white/10 p-6 rounded-2xl relative overflow-hidden">

@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  X,
-  ArrowLeft,
-  CreditCard,
-  ChevronRight,
-  Loader2,
-  Check,
-} from "lucide-react";
+import { X, ArrowLeft, CreditCard, ChevronRight, Loader2 } from "lucide-react";
 import { useBookingLogic } from "@/hooks/useBookingLogic";
 import {
   DetailsView,
@@ -33,6 +26,7 @@ export default function BookingDrawer({
   const [isPaying, setIsPaying] = useState(false);
   const [ticketInfo, setTicketInfo] = useState<{
     number: string;
+    encryptedBookingId: string;
     seats: string[];
   } | null>(null);
 
@@ -173,7 +167,11 @@ export default function BookingDrawer({
           toastIdRef.current = null;
         }
 
-        setTicketInfo({ number: result.ticketNumber, seats: result.seats });
+        setTicketInfo({
+          number: result.ticketNumber,
+          encryptedBookingId: result.encryptedBookingId,
+          seats: result.seats,
+        });
         setIsPaying(false);
         toast.success("Payment confirmed!");
       } else {
@@ -221,6 +219,7 @@ export default function BookingDrawer({
         {ticketInfo ? (
           <TicketSuccessView
             ticketNumber={ticketInfo.number}
+            encryptedBookingId={ticketInfo.encryptedBookingId}
             seats={ticketInfo.seats}
             onClose={onClose}
           />

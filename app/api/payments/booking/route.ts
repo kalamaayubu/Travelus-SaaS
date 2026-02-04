@@ -1,3 +1,4 @@
+import { encrypt } from "@/lib/crypto";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -22,14 +23,18 @@ export async function PATCH(req: Request) {
       );
     }
     // Generate ticket number from UUID prefix
-    const result = data[0]; // Manually get the first item
+    const result = data[0];
     const ticketNumber = result.id.split("-")[0].toUpperCase();
+
+    // Encrypt booking id (for safe ticket approval)
+    const encryptedBookingId = encrypt(result.id);
 
     return NextResponse.json(
       {
         success: true,
         ticketNumber,
         bookingId: bookingId,
+        encryptedBookingId,
         seats: result.seats,
       },
       { status: 200 },

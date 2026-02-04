@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { cn } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ScannerProps {
   tripId: string;
@@ -28,12 +29,58 @@ export default function BookingScanner({
 }: ScannerProps) {
   const [scanResult, setScanResult] = useState<{
     status: "idle" | "loading" | "success" | "error";
+    data?: any;
     message?: string;
   }>({ status: "idle" });
 
   const [isTorchOn, setIsTorchOn] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const isOnline = useOnlineStatus(); // Subscribe to network changes
+
+  // Call ticket verification api
+  const queryClient = useQueryClient();
+  // QR code Scanning Handler
+  const handleScan = async (decodedText: string) => {
+    if (scannerRef.current?.isScanning) {
+      await scannerRef.current.stop();
+    }
+
+    setScanResult({ status: "loading" });
+
+    try {
+      const response = await fetch("/api/bookings/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          qrData: decodedText,
+          currentTripId: tripId,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setScanResult({
+          status: "success",
+          data: result.data,
+          message: `Verified: ${result.data.name}`,
+        });
+
+        // REFRESH MANIFEST IN BACKGROUND
+        queryClient.invalidateQueries({ queryKey: ["trip", tripId] });
+
+        onVerified(result.data);
+        setTimeout(onClose, 3500); // Give driver time to read the name
+      } else {
+        setScanResult({
+          status: "error",
+          message: result.error || "Verification Failed",
+        });
+      }
+    } catch (err) {
+      setScanResult({ status: "error", message: "Network Error" });
+    }
+  };
 
   useEffect(() => {
     // Initialize the lower-level scanner
@@ -49,7 +96,7 @@ export default function BookingScanner({
             qrbox: { width: 250, height: 250 },
             aspectRatio: 1.0,
           },
-          onScanSuccess,
+          handleScan,
           () => {
             /* Frame-by-frame fail (ignore) */
           },
@@ -59,43 +106,6 @@ export default function BookingScanner({
       }
     };
 
-    async function onScanSuccess(decodedText: string) {
-      if (scannerRef.current?.isScanning) {
-        await scannerRef.current.stop(); // Stop camera for processing
-      }
-
-      setScanResult({ status: "loading" });
-
-      try {
-        const response = await fetch("/api/bookings/verify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            qrData: decodedText,
-            currentTripId: tripId,
-          }),
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-          setScanResult({
-            status: "success",
-            message: `Verified: ${result.name}`,
-          });
-          onVerified(result);
-          setTimeout(onClose, 2000);
-        } else {
-          setScanResult({
-            status: "error",
-            message: result.error || "Verification Failed",
-          });
-        }
-      } catch (err) {
-        setScanResult({ status: "error", message: "Network Error" });
-      }
-    }
-
     startScanner();
 
     return () => {
@@ -103,7 +113,7 @@ export default function BookingScanner({
         html5QrCode.stop().catch(console.error);
       }
     };
-  }, [tripId]);
+  }, [tripId, onClose, onVerified]);
 
   // Handle hardware Flash/Torch
   const toggleTorch = async () => {
@@ -111,7 +121,6 @@ export default function BookingScanner({
     if (scanner && scanner.isScanning) {
       try {
         const newState = !isTorchOn;
-        // applyVideoConstraints is part of the MediaTrack standard handled by html5-qrcode
         await scanner.applyVideoConstraints({
           advanced: [{ torch: newState }] as any,
         });
@@ -229,6 +238,46 @@ export default function BookingScanner({
             <p className="text-[9px] text-secondary text-center font-black uppercase leading-relaxed tracking-widest animate-pulse">
               Center the QR code
             </p>
+          </div>
+        )}
+
+        {scanResult.status === "success" && (
+          <div className="h-75 flex flex-col items-center justify-center p-6 text-center animate-in zoom-in-95">
+            <ShieldCheck size={60} className="text-green-500 mb-4" />
+            <h3 className="text-2xl font-black text-white">
+              {scanResult.data.name}
+            </h3>
+            <p className="text-primary font-bold uppercase tracking-widest mt-1">
+              Seats: {scanResult.data.seats.join(", ")}
+            </p>
+            <div className="mt-4 px-4 py-2 bg-white/5 rounded-lg border border-white/10">
+              <p className="text-[10px] text-gray4 uppercase font-bold">
+                Ticket Ref
+              </p>
+              <p className="font-mono text-xs">
+                {scanResult.data.ticketNumber}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {scanResult.status === "success" && (
+          <div className="h-75 flex flex-col items-center justify-center p-6 text-center animate-in zoom-in-95">
+            <ShieldCheck size={60} className="text-green-500 mb-4" />
+            <h3 className="text-2xl font-black text-white">
+              {scanResult.data.name}
+            </h3>
+            <p className="text-primary font-bold uppercase tracking-widest mt-1">
+              Seats: {scanResult.data.seats.join(", ")}
+            </p>
+            <div className="mt-4 px-4 py-2 bg-white/5 rounded-lg border border-white/10">
+              <p className="text-[10px] text-gray4 uppercase font-bold">
+                Ticket Ref
+              </p>
+              <p className="font-mono text-xs">
+                {scanResult.data.ticketNumber}
+              </p>
+            </div>
           </div>
         )}
       </div>

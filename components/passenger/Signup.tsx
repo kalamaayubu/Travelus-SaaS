@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { User } from "lucide-react";
+import { toast } from "sonner";
 
 export default function PassengerSignup() {
   const [loading, setLoading] = useState(false);
@@ -18,8 +19,9 @@ export default function PassengerSignup() {
     });
 
     const result = await res.json();
-    if (result.success) alert("Check email to verify!");
-    else alert(result.error);
+    if (result.success)
+      toast.success("Successfully registered: Check email to verify!");
+    else toast.error(result.error);
     setLoading(false);
   };
 
