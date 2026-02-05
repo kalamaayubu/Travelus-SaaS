@@ -58,7 +58,6 @@ export function useScanner({ tripId, onVerified, onClose }: UseScannerProps) {
           });
           queryClient.invalidateQueries({ queryKey: ["trip", tripId] });
           onVerified(result.data);
-          setTimeout(onClose, 3500);
         } else {
           setScanResult({
             status: "error",

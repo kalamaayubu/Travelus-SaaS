@@ -27,8 +27,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. Fetch Booking + Security check in ONE query
-    // We use !inner to ensure the booking ONLY returns if it belongs to THIS driver
+    // Fetch Booking only if it belongs to a trip of this user(Driver)
     const { data: booking, error: fetchError } = await supabase
       .from("bookings")
       .select(
@@ -47,7 +46,7 @@ export async function POST(request: Request) {
       `,
       )
       .eq("id", bookingId)
-      .eq("trips.driver_vehicles.driver_id", user.id) // Security: Must be the driver's trip
+      .eq("trips.driver_vehicles.driver_id", user.id)
       .maybeSingle();
 
     // If fetchError exists, it means either the ticket is wrong OR it's not the driver's trip
