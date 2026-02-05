@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     } catch (err) {
       console.error("Failed to decode ticket:", err);
       return NextResponse.json(
-        { success: false, error: "Invalid QR format" },
+        { success: false, error: "Invalid QR Code" },
         { status: 400 },
       );
     }
@@ -70,6 +70,18 @@ export async function POST(request: Request) {
       );
     }
 
+    // Check if already approved
+    if (booking.status === "APPROVED") {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "ALREADY USED",
+          message: "This ticket has already been verified.",
+        },
+        { status: 409 },
+      );
+    }
+
     // 4. Verification: Does this ticket belong to the specific trip being scanned?
     if (booking.trip_id !== currentTripId) {
       return NextResponse.json(
@@ -84,7 +96,7 @@ export async function POST(request: Request) {
     // 5. Update Status: Mark as APPROVED
     const { error: updateError } = await supabase
       .from("bookings")
-      .update({ status: "APPROVED" })
+      .update({ status: "APPROVED", confirmed_at: new Date().toISOString() })
       .eq("id", booking.id);
 
     if (updateError) throw updateError;
