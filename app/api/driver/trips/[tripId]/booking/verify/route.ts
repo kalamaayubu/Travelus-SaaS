@@ -12,23 +12,23 @@ export async function POST(request: Request) {
   if (!user)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  console.log("VERIFYING...");
   try {
     const { qrData, currentTripId } = await request.json();
 
-    // Decrypt booking id
+    // 2. Decrypt booking id
     let bookingId: string;
     try {
       bookingId = decrypt(qrData);
     } catch (err) {
-      console.error("TICKET DECRYPTION ERROR: ", err);
+      console.error("Failed to decode ticket:", err);
       return NextResponse.json(
-        { success: false, error: err || "Malformed or expired QR code" },
+        { success: false, error: "Invalid QR format" },
         { status: 400 },
       );
     }
 
-    // 2. Fetch the booking using the Ticket Number (ID)
+    // 3. Fetch Booking + Security check in ONE query
+    // We use !inner to ensure the booking ONLY returns if it belongs to THIS driver
     const { data: booking, error: fetchError } = await supabase
       .from("bookings")
       .select(
@@ -39,57 +39,56 @@ export async function POST(request: Request) {
         status, 
         seats, 
         amount,
-        trips ( 
-          driver_vehicle_id,
+        trips (
           driver_vehicles (
             driver_id
           )
-         )
+        )
       `,
       )
-      .eq("id", bookingId) // qrData is the bookingId from the QR
-      .single();
+      .eq("id", bookingId)
+      .eq("trips.driver_vehicles.driver_id", user.id) // Security: Must be the driver's trip
+      .maybeSingle();
 
-    if (fetchError || !booking) {
+    // If fetchError exists, it means either the ticket is wrong OR it's not the driver's trip
+    if (fetchError) {
       return NextResponse.json(
-        { success: false, error: "Invalid Ticket" },
+        {
+          success: false,
+          error: fetchError.message || "Ticket not found or Access Denied",
+        },
         { status: 404 },
       );
     }
 
-    // 3. Security Check: Does this ticket belong to THIS trip?
+    if (!booking) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Ticket not found",
+        },
+        { status: 404 },
+      );
+    }
+
+    // 4. Verification: Does this ticket belong to the specific trip being scanned?
     if (booking.trip_id !== currentTripId) {
       return NextResponse.json(
         {
           success: false,
-          error: "Wrong Trip: Ticket belongs to a different schedule.",
+          error: "Wrong Trip: Ticket is for a different schedule.",
         },
         { status: 400 },
       );
     }
 
-    // Permission Check: Is the person scanning the actual driver of this trip?
-    const driverId = (booking.trips as any)?.driver_vehicles?.driver_id;
-    if (driverId !== user.id) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Access Denied",
-        },
-        { status: 403 },
-      );
-    }
-
-    // Update: Mark as APPROVED
+    // 5. Update Status: Mark as APPROVED
     const { error: updateError } = await supabase
       .from("bookings")
       .update({ status: "APPROVED" })
       .eq("id", booking.id);
 
-    if (updateError) {
-      console.error("ERROR: ", updateError);
-      return NextResponse.json({ error: updateError.message }, { status: 400 });
-    }
+    if (updateError) throw updateError;
 
     return NextResponse.json({
       success: true,
@@ -101,8 +100,8 @@ export async function POST(request: Request) {
         verifiedAt: new Date().toISOString(),
       },
     });
-  } catch (err: any) {
-    console.error("Error: ", err);
+  } catch (err) {
+    console.error("Server Error:", err);
     return NextResponse.json(
       { success: false, error: "Server Error" },
       { status: 500 },
