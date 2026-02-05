@@ -21,6 +21,8 @@ export const TicketSuccessView = ({
   const ticketRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
+  // alert(encryptedBookingId);
+
   const downloadTicket = async () => {
     if (!ticketRef.current) return;
     setIsDownloading(true);
@@ -63,7 +65,7 @@ export const TicketSuccessView = ({
           <QRCodeSVG
             value={encryptedBookingId}
             size={150}
-            level="H"
+            level="L"
             marginSize={0}
           />
         </div>

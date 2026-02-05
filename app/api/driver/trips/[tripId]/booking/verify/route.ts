@@ -12,10 +12,21 @@ export async function POST(request: Request) {
   if (!user)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  console.log("VERIFYING...");
   try {
     const { qrData, currentTripId } = await request.json();
+
     // Decrypt booking id
-    const bookingId = decrypt(qrData);
+    let bookingId: string;
+    try {
+      bookingId = decrypt(qrData);
+    } catch (err) {
+      console.error("TICKET DECRYPTION ERROR: ", err);
+      return NextResponse.json(
+        { success: false, error: err || "Malformed or expired QR code" },
+        { status: 400 },
+      );
+    }
 
     // 2. Fetch the booking using the Ticket Number (ID)
     const { data: booking, error: fetchError } = await supabase
