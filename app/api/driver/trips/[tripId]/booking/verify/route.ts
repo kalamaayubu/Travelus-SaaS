@@ -41,7 +41,7 @@ export async function POST(request: Request) {
         amount,
         trips ( 
           driver_vehicle_id,
-          driver_vehicles!inner (
+          driver_vehicles (
             driver_id
           )
          )

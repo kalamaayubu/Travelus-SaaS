@@ -30,12 +30,23 @@ export function useScanner({ tripId, onVerified, onClose }: UseScannerProps) {
 
       setScanResult({ status: "loading" });
 
+      const baseUrl =
+        process.env.NODE_ENV === "production"
+          ? "https://travelus-saas.netlify.app"
+          : "http://localhost:3000";
+
       try {
-        const response = await fetch("/api/bookings/verify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ qrData: decodedText, currentTripId: tripId }),
-        });
+        const response = await fetch(
+          `${baseUrl}/api/driver/trips/${tripId}/booking/verify`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              qrData: decodedText,
+              currentTripId: tripId,
+            }),
+          },
+        );
 
         const result = await response.json();
 
@@ -51,11 +62,14 @@ export function useScanner({ tripId, onVerified, onClose }: UseScannerProps) {
         } else {
           setScanResult({
             status: "error",
-            message: result.error || "Verification Failed",
+            message: result.error || `Server Error: ${response.status}`,
           });
         }
       } catch (err) {
-        setScanResult({ status: "error", message: "Network Error" });
+        setScanResult({
+          status: "error",
+          message: err instanceof Error ? err.message : "Connection Failed",
+        });
       }
     },
     [tripId, onVerified, onClose, queryClient],

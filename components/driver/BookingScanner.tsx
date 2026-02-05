@@ -84,7 +84,7 @@ export default function BookingScanner(props: ScannerProps) {
           {scanResult.status === "loading" && (
             <div className="h-75 flex flex-col items-center justify-center gap-4 py-12">
               <Loader2 className="animate-spin text-primary" size={48} />
-              <p className="text-[10px] font-black uppercase text-gray4">
+              <p className="text-[10px] font-black animate-pulse uppercase text-gray4">
                 Validating Receipt...
               </p>
             </div>
