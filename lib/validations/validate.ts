@@ -22,3 +22,18 @@ export const LoginSchema = baseSchema.pick({
   email: true,
   password: true,
 });
+
+export const TicketPrintSchema = z.object({
+  ticketNumber: z
+    .string()
+    .min(1, "Ticket number is required")
+    .length(8, "Ticket must be 8 characters long")
+    .regex(
+      /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/,
+      "Ticket must contain both letters and numbers",
+    )
+    .transform((val) => val.toUpperCase().trim()),
+  email: z
+    .email("Invalid email address")
+    .transform((val) => val.toLowerCase().trim()),
+});

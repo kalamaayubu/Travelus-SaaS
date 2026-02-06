@@ -11,7 +11,7 @@ export async function PATCH(req: Request) {
   try {
     const { data, error } = await supabase
       .from("bookings")
-      .update({ status: "BOOKED" })
+      .update({ status: "BOOKED", booked_at: new Date().toISOString() })
       .eq("id", bookingId)
       .select("id, seats");
 

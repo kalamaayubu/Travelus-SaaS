@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 interface BaseModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
+  title?: string;
   description?: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
