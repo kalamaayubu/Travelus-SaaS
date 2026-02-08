@@ -2,25 +2,43 @@
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TripSchedulingFields } from "@/types/driver";
+import { useDriverVehicles } from "@/hooks/useDriverVehicles";
+import { DriverVehicleLink } from "@/types/trip.types";
 
 export default function StepFour({
   formData,
 }: {
   formData: TripSchedulingFields;
 }) {
+  const { data: vehicles } = useDriverVehicles();
+  // Find the selected vehicle object from the cached list
+  const selectedVehicle = vehicles?.find(
+    (v: DriverVehicleLink) => v.id === formData.vehicleDriverLink,
+  );
+
+  // Extract display string: "KDM 123X (14 Seats)"
+  const vehicleDisplay = selectedVehicle
+    ? `${selectedVehicle.driver_vehicle_link.number_plate}`
+    : "Vehicle not selected";
+
+  const startPoint = formData.segments?.[0]?.location_name || formData.origin;
+  const endPoint =
+    formData.segments?.[formData.segments.length - 1]?.location_name ||
+    formData.destination;
   return (
     <div className="space-y-4">
       <div className="bg-white/2 border border-white/10 rounded-xl p-5 space-y-4">
         <SummaryRow
           label="Route"
-          value={`${formData.origin || "—"} ➝ ${formData.destination || "—"}`}
+          value={`${startPoint} ➝ ${endPoint}`}
           highlight
         />
+
         <SummaryRow
           label="Schedule"
           value={`${formData.departureDate || "—"} @ ${formData.departureTime || "—"}`}
         />
-        <SummaryRow label="Vehicle" value={formData.vehicle || "—"} />
+        <SummaryRow label="Vehicle" value={vehicleDisplay} />
         <SummaryRow
           label="Fare"
           value={`KES ${formData.price || "0"}`}

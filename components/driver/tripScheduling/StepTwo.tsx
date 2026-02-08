@@ -3,6 +3,8 @@ import { useFormContext } from "react-hook-form";
 import { Calendar, Clock, Car } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TripSchedulingFields } from "@/types/driver";
+import { useDriverVehicles } from "@/hooks/useDriverVehicles";
+import { DriverVehicleLink } from "@/types/trip.types";
 
 const inputClasses =
   "w-full bg-white/5 border border-white/10 rounded-lg px-4 h-12 text-sm text-white outline-none focus:border-primary transition-all";
@@ -14,6 +16,8 @@ export default function StepTwo() {
     register,
     formState: { errors },
   } = useFormContext<TripSchedulingFields>();
+
+  const { data: vehicles, isLoading, error, refetch } = useDriverVehicles();
 
   return (
     <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
@@ -54,22 +58,44 @@ export default function StepTwo() {
           <Car size={10} className="text-primary" /> Select Vehicle
         </label>
         <select
-          {...register("vehicle", { required: "Select a vehicle" })}
+          {...register("vehicleDriverLink", { required: "Select a vehicle" })}
           className={cn(inputClasses, "appearance-none cursor-pointer")}
         >
           <option value="" className="bg-dark text-gray2">
             Choose vehicle...
           </option>
-          <option value="KDM 123X" className="bg-dark">
-            KDM 123X (14-Seater)
-          </option>
-          <option value="KCP 882B" className="bg-dark">
-            KCP 882B (10-Seater)
-          </option>
+          {isLoading ? (
+            <option>Loading your vehicles...</option>
+          ) : error ? (
+            <option>Error loading vehicles</option>
+          ) : (
+            <>
+              {vehicles?.map((v: DriverVehicleLink) => (
+                <option key={v.id} value={v.id} className="bg-dark">
+                  {v.driver_vehicle_link.number_plate} •{" "}
+                  {v.driver_vehicle_link.vehicle_types.type_name} • (
+                  {v.driver_vehicle_link.vehicle_types.capacity} Seats)
+                </option>
+              ))}
+            </>
+          )}
         </select>
-        {errors.vehicle && (
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+          {isLoading && (
+            <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+          )}
+          {error && (
+            <button
+              onClick={() => refetch()}
+              className="text-[10px] text-red-500 underline pointer-events-auto"
+            >
+              Retry
+            </button>
+          )}
+        </div>
+        {errors.vehicleDriverLink && (
           <p className="text-[9px] text-red-500 font-bold uppercase mt-1">
-            {errors.vehicle.message}
+            {errors.vehicleDriverLink.message}
           </p>
         )}
       </div>

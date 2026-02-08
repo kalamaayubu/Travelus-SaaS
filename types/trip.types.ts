@@ -85,3 +85,27 @@ export interface VerifiedPassengerData {
   amount: number;
   verifiedAt: string;
 }
+
+// Vehicle
+export interface VehicleType {
+  type_name: string;
+  capacity: number;
+  seats_layout: object;
+}
+
+export interface Vehicle {
+  number_plate: string;
+  vehicle_types: VehicleType;
+}
+
+export interface DriverVehicleLink {
+  id: string;
+  driver_vehicle_link: {
+    number_plate: string;
+    vehicle_types: {
+      type_name: string;
+      capacity: number;
+      seats_layout: object;
+    };
+  };
+}
