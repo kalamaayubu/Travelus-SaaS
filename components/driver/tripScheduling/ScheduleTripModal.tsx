@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { X, ChevronRight, ChevronLeft, Check } from "lucide-react";
+import { X, ChevronRight, ChevronLeft, Check, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import StepThree from "./StepThree";
 import StepFour from "./StepFour";
 import { TripSchedulingFields } from "@/types/driver";
+import { toast } from "sonner";
 
 interface ModalProps {
   onClose: () => void;
@@ -31,9 +32,8 @@ export default function ScheduleTripModal({
       price: "",
       departureDate: "",
       departureTime: "",
-      vehicle: "",
-      pickupPoints: "",
-      dropoffPoints: "",
+      vehicleDriverLink: "",
+      segments: [],
     },
   });
 
@@ -44,19 +44,43 @@ export default function ScheduleTripModal({
     let fieldsToValidate: (keyof TripSchedulingFields)[] = [];
     if (step === 1) fieldsToValidate = ["origin", "destination", "price"];
     if (step === 2)
-      fieldsToValidate = ["departureDate", "departureTime", "vehicle"];
+      fieldsToValidate = [
+        "departureDate",
+        "departureTime",
+        "vehicleDriverLink",
+      ];
     if (step === 3) fieldsToValidate = ["mpesaNumber"];
 
     const isValid = await methods.trigger(fieldsToValidate);
     if (isValid) setStep((s) => s + 1);
   };
 
-  const onSubmit = (data: TripSchedulingFields) => {
+  const onSubmit = async (data: TripSchedulingFields) => {
     console.log("Trip Published:", data);
-    methods.reset();
-    setStep(1);
-    onClose();
+
+    const res = await fetch(`/api/driver/schedule-trip`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      toast.error(`Error creating trip:`, { description: `${result.error}` });
+      return;
+    }
+
+    toast.error(`Trip created successfully`);
+
+    // methods.reset();
+    // setStep(1);
   };
+
+  const {
+    handleSubmit,
+    getValues,
+    formState: { isSubmitting },
+  } = methods;
 
   return (
     <div className="fixed inset-0 z-110 flex items-center justify-center p-4">
@@ -79,7 +103,7 @@ export default function ScheduleTripModal({
         </div>
 
         <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)} className="p-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <span className="text-primary text-[10px] font-black uppercase tracking-[0.3em]">
@@ -105,7 +129,7 @@ export default function ScheduleTripModal({
               {step === 1 && <StepOne />}
               {step === 2 && <StepTwo />}
               {step === 3 && <StepThree />}
-              {step === 4 && <StepFour formData={methods.getValues()} />}
+              {step === 4 && <StepFour formData={getValues()} />}
             </div>
 
             <div className="flex gap-4 pt-6 mt-4 border-t border-white/5">
@@ -121,6 +145,7 @@ export default function ScheduleTripModal({
                 <button
                   type="button"
                   onClick={nextStep}
+                  disabled={isSubmitting}
                   className="flex-2 h-12 primary-btn uppercase tracking-widest text-[10px] flex items-center justify-center gap-2"
                 >
                   Next Step <ChevronRight size={16} />
@@ -130,7 +155,17 @@ export default function ScheduleTripModal({
                   type="submit"
                   className="flex-2 h-12 text-black font-bold uppercase primary-btn tracking-widest text-[10px] flex items-center justify-center gap-2"
                 >
-                  <Check size={16} strokeWidth={3} /> Publish Trip
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="animate-spin size-5" />
+                      Publishing...
+                    </>
+                  ) : (
+                    <>
+                      <Check size={16} strokeWidth={3} />
+                      Publish trip
+                    </>
+                  )}
                 </button>
               )}
             </div>

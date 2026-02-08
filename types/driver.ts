@@ -1,3 +1,4 @@
+import { LocationId } from "@/constants/location";
 import {
   BookingStatus,
   SeatMapStatus,
@@ -5,16 +6,22 @@ import {
   UserType,
 } from "./trip.types";
 
+export interface TripSegment {
+  location_id: LocationId | "";
+  price_to_destination: number;
+  location_name: string | "";
+  rank: number;
+}
+
 export interface TripSchedulingFields {
-  origin: string;
-  destination: string;
+  origin: LocationId | "";
+  destination: LocationId | "";
   price: string;
   departureDate: string;
   departureTime: string;
-  vehicle: string;
+  vehicleDriverLink: string;
   mpesaNumber: string;
-  pickupPoints: string;
-  dropoffPoints: string;
+  segments: TripSegment[];
 }
 
 export interface DriverTripsResponse {

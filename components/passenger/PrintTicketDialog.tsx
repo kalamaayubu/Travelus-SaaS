@@ -39,6 +39,7 @@ export default function PrintTicketDialog({
   } = useForm<TicketFormValues>({
     resolver: zodResolver(TicketPrintSchema),
     defaultValues: { ticketNumber: "", email: "" },
+    mode: "onTouched",
   });
 
   const onSubmit = async (values: TicketFormValues) => {
