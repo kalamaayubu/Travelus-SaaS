@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { TripSchedulingFields } from "@/types/driver";
 import { useDriverVehicles } from "@/hooks/useDriverVehicles";
 import { DriverVehicleLink } from "@/types/trip.types";
+import { KENYA_LOCATIONS } from "@/constants/location";
 
 export default function StepFour({
   formData,
@@ -21,16 +22,18 @@ export default function StepFour({
     ? `${selectedVehicle.driver_vehicle_link.number_plate}`
     : "Vehicle not selected";
 
-  const startPoint = formData.segments?.[0]?.location_name || formData.origin;
-  const endPoint =
-    formData.segments?.[formData.segments.length - 1]?.location_name ||
-    formData.destination;
+  // Get origin and destination location names
+  const originLocation = KENYA_LOCATIONS.find((s) => s.id === formData.origin);
+  const destinationLocation = KENYA_LOCATIONS.find(
+    (s) => s.id === formData.destination,
+  );
+
   return (
     <div className="space-y-4">
       <div className="bg-white/2 border border-white/10 rounded-xl p-5 space-y-4">
         <SummaryRow
           label="Route"
-          value={`${startPoint} ➝ ${endPoint}`}
+          value={`${originLocation?.name} ➝ ${destinationLocation?.name}`}
           highlight
         />
 

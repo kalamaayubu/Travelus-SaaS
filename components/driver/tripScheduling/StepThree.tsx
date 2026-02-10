@@ -33,20 +33,22 @@ export default function StepThree() {
     const startIndex = KENYA_LOCATIONS.findIndex((l) => l.id === originId);
     const endIndex = KENYA_LOCATIONS.findIndex((l) => l.id === destinationId);
 
-    const start = Math.min(startIndex, endIndex);
-    const end = Math.max(startIndex, endIndex);
+    // Exclude the beginning and the end of the trip from stages
+    const start = Math.min(startIndex + 1, endIndex - 1);
+    const end = Math.max(startIndex + 1, endIndex - 1);
 
     return KENYA_LOCATIONS.slice(start, end + 1);
   })();
+
   // Use field array to manage the dynamic list of segments
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "segments", // This matches the JSONB column in your DB
+    name: "segments",
   });
 
   return (
     <div className="space-y-6">
-      {/* Payout Number remains unchanged */}
+      {/* Payout Number  */}
       <div>
         <label className={labelClasses}>
           <Phone size={10} className="text-primary" /> M-Pesa Payout Number
@@ -88,7 +90,7 @@ export default function StepThree() {
         {/* Dynamic List of Stops */}
         <div className="space-y-3">
           {fields.map((field, index) => {
-            // 2. Logic: Get all IDs selected in OTHER rows
+            // Get all IDs selected in OTHER rows
             const otherSelectedIds = watchedSegments
               .filter((_, i) => i !== index)
               .map((s) => s.location_id);

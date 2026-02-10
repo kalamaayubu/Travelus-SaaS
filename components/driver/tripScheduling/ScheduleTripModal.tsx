@@ -130,6 +130,7 @@ export default function ScheduleTripModal({
               {step === 2 && <StepTwo />}
               {step === 3 && <StepThree />}
               {step === 4 && <StepFour formData={getValues()} />}
+              {step === 4 && <StepFour formData={getValues()} />}
             </div>
 
             <div className="flex gap-4 pt-6 mt-4 border-t border-white/5">
@@ -157,7 +158,7 @@ export default function ScheduleTripModal({
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="animate-spin size-" />
+                      <Loader2 className="animate-spin size-5" />
                       Publishing...
                     </>
                   ) : (

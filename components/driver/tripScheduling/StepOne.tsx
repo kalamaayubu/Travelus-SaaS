@@ -3,7 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { MapPin, Banknote } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TripSchedulingFields } from "@/types/driver";
-import { KENYA_LOCATIONS } from "@/constants/location"; // Syncing with bundle
+import { KENYA_LOCATIONS } from "@/constants/location";
 
 const inputClasses =
   "w-full bg-white/5 border border-white/10 rounded-lg px-4 h-12 text-sm text-white outline-none focus:border-primary transition-all placeholder:text-gray2";
@@ -26,7 +26,6 @@ export default function StepOne() {
         <label className={labelClasses}>
           <MapPin size={10} className="text-primary" /> Departure City
         </label>
-        {/* Switched to Select to match architecture */}
         <select
           {...register("origin", { required: "Origin is required" })}
           className={cn(inputClasses, "appearance-none")}

@@ -71,7 +71,6 @@ export async function GET(
           departure_location,
           destination_location,
           price_per_seat,
-          total_capacity,
           driver_vehicle_id (
             vehicle_id (
               number_plate,
@@ -125,8 +124,7 @@ export async function GET(
             departure_location: trip.departure_location,
             destination_location: trip.destination_location,
             price_per_seat: trip.price_per_seat,
-            total_capacity: trip.total_capacity,
-            available_seats: trip.total_capacity - bookedSeatsCount,
+            available_seats: trip.total_capacity | (0 - bookedSeatsCount),
             vehicle: {
               number_plate: vehicle?.number_plate,
               type_name: vType?.type_name,

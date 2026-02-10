@@ -4,11 +4,11 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   const supabase = await createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser();
+  // if (!user)
+  //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const request = await req.json();
   const {
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     price,
     departureDate,
     departureTime,
-    driver_vehicle_id,
+    vehicleDriverLink,
     mpesaNumber,
     segments,
   } = request;
@@ -26,6 +26,10 @@ export async function POST(req: Request) {
   const fullDepartureTimestamp = `${departureDate}T${departureTime}:00`;
   console.log("Schedule data::", request);
 
+  return NextResponse.json({
+    error: "TESTING",
+    message: "TESTING",
+  });
   const { data, error } = await supabase.from("trips").insert({
     departure_time: fullDepartureTimestamp,
     price_per_seat: price,
@@ -33,7 +37,7 @@ export async function POST(req: Request) {
     destination_location: destination,
     segments: segments,
     payment_number: mpesaNumber,
-    driver_vehicle_id: driver_vehicle_id,
+    driver_vehicle_id: vehicleDriverLink,
   });
 
   if (error) {
