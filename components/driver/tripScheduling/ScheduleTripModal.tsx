@@ -10,6 +10,7 @@ import StepThree from "./StepThree";
 import StepFour from "./StepFour";
 import { TripSchedulingFields } from "@/types/driver";
 import { toast } from "sonner";
+import { getLocationName } from "@/constants/location";
 
 interface ModalProps {
   onClose: () => void;
@@ -56,15 +57,49 @@ export default function ScheduleTripModal({
   };
 
   const onSubmit = async (data: TripSchedulingFields) => {
-    console.log("Trip Published:", data);
+    // 1. Look up the location names based on the IDs
+    const originName = getLocationName(data.origin);
+    const destinationName = getLocationName(data.destination);
+
+    // full segments array (including origin and destination)
+    const fullSegments = [
+      // Start point
+      {
+        location_id: data.origin,
+        location_name: originName,
+        price_to_destination: Number(data.price),
+        rank: 0,
+      },
+
+      // Stages/stops added by driver
+      ...data.segments.map((s, index) => ({
+        ...s,
+        rank: index + 1,
+      })),
+
+      // End point
+      {
+        location_id: data.destination,
+        location_name: destinationName,
+        price_to_destination: 0,
+        rank: data.segments.length + 1,
+      },
+    ];
+
+    const payLoad = {
+      ...data,
+      originName,
+      destinationName,
+      segments: fullSegments,
+    };
 
     const res = await fetch(`/api/driver/schedule-trip`, {
       method: "POST",
-      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payLoad),
     });
 
     const result = await res.json();
-
     if (!res.ok) {
       toast.error(`Error creating trip:`, { description: `${result.error}` });
       return;
@@ -129,7 +164,6 @@ export default function ScheduleTripModal({
               {step === 1 && <StepOne />}
               {step === 2 && <StepTwo />}
               {step === 3 && <StepThree />}
-              {step === 4 && <StepFour formData={getValues()} />}
               {step === 4 && <StepFour formData={getValues()} />}
             </div>
 

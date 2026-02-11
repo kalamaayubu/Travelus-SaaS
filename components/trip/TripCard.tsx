@@ -21,7 +21,7 @@ export const TripCard = ({ trip, onSelect }: TripCardProps) => {
         </div>
         <div>
           <h3 className="text-xl md:text-2xl font-black uppercase tracking-tighter group-hover:text-primary transition-colors">
-            {trip.departure_location} → {trip.destination_location}
+            {trip.trip_origin} → {trip.trip_destiny}
           </h3>
           <div className="flex items-center gap-2 mt-1">
             <p className="text-gray3 font-bold uppercase text-[10px] tracking-widest">

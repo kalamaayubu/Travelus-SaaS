@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { TripSchedulingFields } from "@/types/driver";
 import { useDriverVehicles } from "@/hooks/useDriverVehicles";
 import { DriverVehicleLink } from "@/types/trip.types";
-import { KENYA_LOCATIONS } from "@/constants/location";
+import { getLocationName, KENYA_LOCATIONS } from "@/constants/location";
 
 export default function StepFour({
   formData,
@@ -23,17 +23,15 @@ export default function StepFour({
     : "Vehicle not selected";
 
   // Get origin and destination location names
-  const originLocation = KENYA_LOCATIONS.find((s) => s.id === formData.origin);
-  const destinationLocation = KENYA_LOCATIONS.find(
-    (s) => s.id === formData.destination,
-  );
+  const originLocation = getLocationName(formData.origin);
+  const destinationLocation = getLocationName(formData.destination);
 
   return (
     <div className="space-y-4">
       <div className="bg-white/2 border border-white/10 rounded-xl p-5 space-y-4">
         <SummaryRow
           label="Route"
-          value={`${originLocation?.name} ➝ ${destinationLocation?.name}`}
+          value={`${originLocation} ➝ ${destinationLocation}`}
           highlight
         />
 

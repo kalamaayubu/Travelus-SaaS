@@ -36,8 +36,9 @@ export interface TripSearchResponse {
   departure_time: string;
   departure_location: string;
   destination_location: string;
+  trip_origin: string;
+  trip_destiny: string;
   price_per_seat: number;
-  total_capacity: number;
   available_seats: number;
   driver_id?: string;
   vehicle: {

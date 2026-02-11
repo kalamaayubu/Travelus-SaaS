@@ -10,9 +10,10 @@
 "use client";
 
 import { TripSearchParams } from "@/types/trip.types";
-import { MapPin, Calendar, Search, Loader2 } from "lucide-react";
+import { Calendar, Search, Loader2 } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { useRouter, usePathname } from "next/navigation";
+import { KENYA_LOCATIONS } from "@/constants/location";
 
 interface SearchBarProps {
   startTransition: (callback: () => void) => void;
@@ -25,8 +26,11 @@ export const SearchBar = ({ startTransition, isPending }: SearchBarProps) => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useFormContext<TripSearchParams>();
+
+  const origin = watch("origin");
 
   const onSubmit = async (data: TripSearchParams) => {
     const { origin, destination, date } = data;
@@ -51,38 +55,33 @@ export const SearchBar = ({ startTransition, isPending }: SearchBarProps) => {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-soft-dark p-3 rounded-2xl border border-white/10 flex flex-col lg:items-center lg:flex-row gap-3"
     >
-      <div className="flex-1">
-        <div className="relative flex">
-          <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-primary" />
-          <input
-            {...register("origin", { required: "This field is required" })}
-            className={`w-full ${errors.origin ? "border-destructive" : "border-white/5"} h-12 bg-dark border pl-12 pr-4 rounded-xl text-sm focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray4`}
-            placeholder="From"
-          />
-        </div>
-        {errors.origin && (
-          <p className="text-destructive text-xs mt-1">
-            {errors.origin.message as string}
-          </p>
-        )}
+      <div className="flex flex-col space-y-2">
+        <select
+          {...register("origin")}
+          className="bg-dark border border-white/10 rounded-xl px-4 py-3 text-white focus:border-secondary transition outline-none appearance-none"
+        >
+          <option value="">From</option>
+          {KENYA_LOCATIONS.map((loc) => (
+            <option key={loc.id} value={loc.id}>
+              {loc.name}
+            </option>
+          ))}
+        </select>
       </div>
 
-      <div className="flex-1">
-        <div className="relative ">
-          <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-primary" />
-          <input
-            {...register("destination", {
-              required: "Destination is required",
-            })}
-            className={`w-full ${errors.destination ? "border-destructive" : "border-white/5"} h-12 bg-dark border pl-12 pr-4 rounded-xl text-sm focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray4`}
-            placeholder="To"
-          />
-        </div>
-        {errors.destination && (
-          <p className="text-destructive text-sm mt-1">
-            {errors.destination.message as string}
-          </p>
-        )}
+      {/* Destination Select */}
+      <div className="flex flex-col space-y-2">
+        <select
+          {...register("destination")}
+          className="bg-dark border border-white/10 rounded-xl px-4 py-3 text-white focus:border-secondary transition outline-none appearance-none"
+        >
+          <option value="">To</option>
+          {KENYA_LOCATIONS.filter((l) => l.id !== origin).map((loc) => (
+            <option key={loc.id} value={loc.id}>
+              {loc.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="flex-1">

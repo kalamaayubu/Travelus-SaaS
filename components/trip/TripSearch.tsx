@@ -10,6 +10,7 @@ import { useTypeWritter } from "@/hooks/useTypeWritter";
 import { TripSearchParams, TripSearchResponse } from "@/types/trip.types";
 import { useEffect, useTransition } from "react";
 import { TripCardSkeleton } from "./TripCardSkeleton";
+import { getLocationName } from "@/constants/location";
 
 interface TripSearchProps {
   initialTrips: TripSearchResponse[];
@@ -128,7 +129,8 @@ const TripSearch = ({ initialTrips = [], initialMeta }: TripSearchProps) => {
                       Found {initialMeta.count}{" "}
                       {initialMeta.count > 1 ? "trips" : "trip"}
                     </span>{" "}
-                    from {initialMeta.origin} to {initialMeta.destination}
+                    for {getLocationName(initialMeta.origin)} ➙{" "}
+                    {getLocationName(initialMeta.destination)}
                   </h2>
                 </div>
               )}

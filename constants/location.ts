@@ -7,3 +7,5 @@ export const KENYA_LOCATIONS = [
 ] as const;
 
 export type LocationId = (typeof KENYA_LOCATIONS)[number]["id"];
+export const getLocationName = (id: string) =>
+  KENYA_LOCATIONS.find((loc) => loc.id === id)?.name || id;

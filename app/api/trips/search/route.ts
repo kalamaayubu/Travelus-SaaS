@@ -1,12 +1,3 @@
-/**
- * @api {get} /api/trips/search Search for available trips
- * @description Fetches and filters trips from Supabase based on origin, destination, and date.
- * Handles timezone normalization to ensure the full 24-hour UTC window is captured.
- * * @param {NextRequest} req - The incoming Next.js request object containing searchParams.
- * @returns {Promise<NextResponse<TripSearchApiResponse | ApiErrorResponse>>}
- * JSON response containing transformed trip data or error details.
- */
-
 import { createClient } from "@/lib/supabase/server";
 import {
   ApiErrorResponse,
@@ -22,13 +13,9 @@ export async function GET(
     const supabase = await createClient();
 
     const { searchParams } = new URL(req.url);
-    const origin = searchParams.get("origin");
+    const origin = searchParams.get("origin"); // Should be location_id like "ke-nbi-nairobi-cbd"
     const destination = searchParams.get("destination");
     const date = searchParams.get("date");
-
-    console.log(
-      `Trip data: Origin-${origin} . Destination-${destination} . Date-${date}`,
-    );
 
     if (!origin || !destination || !date) {
       return NextResponse.json(
@@ -40,27 +27,9 @@ export async function GET(
       );
     }
 
-    // Validate date format
-    const dateObj = new Date(date);
-    if (isNaN(dateObj.getTime())) {
-      return NextResponse.json(
-        { error: "Invalid date format" },
-        { status: 400 },
-      );
-    }
-
-    // Treate as a local date
     const [year, month, day] = date.split("-").map(Number);
-
     const startOfDay = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
-    const endOfDay = new Date(Date.UTC(year, month - 1, day, 23, 59, 59, 999));
 
-    console.log(
-      "Searching between (UTC):",
-      startOfDay.toISOString(),
-      "and",
-      endOfDay.toISOString(),
-    );
     try {
       const { data, error } = await supabase
         .from("trips")
@@ -68,9 +37,10 @@ export async function GET(
           `
           id,
           departure_time,
-          departure_location,
-          destination_location,
+          segments,
           price_per_seat,
+          destination_location_name,
+          departure_location_name,
           driver_vehicle_id (
             vehicle_id (
               number_plate,
@@ -79,83 +49,92 @@ export async function GET(
                 capacity
               )
             )
+          ),
+          bookings (
+            seats,
+            status
           )
-        bookings (
-          seats,
-          status
-        )
-          `,
+        `,
         )
         .gte("departure_time", startOfDay.toISOString())
-        .eq("departure_location", origin)
-        .eq("destination_location", destination)
+        // Filter: segments must contain both origin and destination location_ids
+        .contains("segments", JSON.stringify([{ location_id: origin }]))
+        .contains("segments", JSON.stringify([{ location_id: destination }]))
         .order("departure_time", { ascending: true });
 
-      if (error) {
-        console.error("Error searching trips: ", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
-      }
-      // console.log("Raw Data: ", JSON.stringify(data, null, 2));
+      if (error) throw error;
 
-      // Transform data from supabase
-      const transformedData: TripSearchResponse[] =
-        (data as any[])?.map((trip) => {
-          // Extract the relationship object safely
-          const dvId = trip.driver_vehicle_id;
+      const transformedData: TripSearchResponse[] = (data as any[])
+        .map((trip) => {
+          const segments = trip.segments || [];
 
-          // Normalize: handle if it's an array or a single object
-          const dv = Array.isArray(dvId) ? dvId[0] : dvId;
+          // Find the specific objects in the segments array
+          const originSegment = segments.find(
+            (s: any) => s.location_id === origin,
+          );
+          const destSegment = segments.find(
+            (s: any) => s.location_id === destination,
+          );
 
+          // VALIDATION: Origin must come BEFORE Destination in the route rank
+          if (
+            !originSegment ||
+            !destSegment ||
+            originSegment.rank >= destSegment.rank
+          ) {
+            return null;
+          }
+
+          const dv = Array.isArray(trip.driver_vehicle_id)
+            ? trip.driver_vehicle_id[0]
+            : trip.driver_vehicle_id;
           const vehicle = dv?.vehicle_id;
           const vType = vehicle?.vehicle_type_id;
+          const capacity = vType?.capacity || 0;
 
-          // Calculate booked seats
           const bookedSeatsCount =
-            trip.bookings?.reduce((total: number, booking: any) => {
-              if (Array.isArray(booking.seats)) {
-                return total + booking.seats.length;
-              }
-              return total;
+            trip.bookings?.reduce((total: number, b: any) => {
+              return b.status !== "CANCELLED" && Array.isArray(b.seats)
+                ? total + b.seats.length
+                : total;
             }, 0) || 0;
+
+          // Calculate Dynamic Price based on segments (e.g., price from origin to destination)
+          // Based on your data, price_to_destination is the cost FROM that stop TO the end.
+          // Adjust this logic if your pricing is calculated differently.
+          const segmentPrice = originSegment.price_to_destination;
 
           return {
             id: trip.id,
             departure_time: trip.departure_time,
-            departure_location: trip.departure_location,
-            destination_location: trip.destination_location,
-            price_per_seat: trip.price_per_seat,
-            available_seats: trip.total_capacity | (0 - bookedSeatsCount),
+            trip_origin: trip.departure_location_name,
+            trip_destiny: trip.destination_location_name,
+            departure_location: originSegment.location_name,
+            destination_location: destSegment.location_name,
+            price_per_seat: segmentPrice || trip.price_per_seat,
+            available_seats: capacity - bookedSeatsCount,
             vehicle: {
               number_plate: vehicle?.number_plate,
               type_name: vType?.type_name,
-              capacity: vType?.capacity,
+              capacity: capacity,
             },
           };
-        }) || [];
+        })
+        .filter(Boolean) as TripSearchResponse[]; // Remove trips where origin rank > destination rank
 
-      // console.log("Transformed data: ", transformedData);
-      console.log(`Found ${transformedData.length} trips`);
-      return NextResponse.json(
-        {
-          data: transformedData,
-          meta: {
-            count: transformedData.length,
-            origin,
-            destination,
-            date,
-          },
-        },
-        { status: 200 },
-      );
-    } catch (dbError) {
+      return NextResponse.json({
+        data: transformedData,
+        meta: { count: transformedData.length, origin, destination, date },
+      });
+    } catch (dbError: any) {
       console.error("Database error: ", dbError);
       return NextResponse.json(
-        { error: "Database query failed" },
+        { error: dbError.message || "Database query failed" },
         { status: 500 },
       );
     }
   } catch (error) {
-    console.error("Unknown error occurred: ", error);
+    console.error("Unknown error: ", error);
     return NextResponse.json(
       { error: "An internal server error occurred" },
       { status: 500 },
