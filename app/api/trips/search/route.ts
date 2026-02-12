@@ -76,7 +76,7 @@ export async function GET(
               number_plate,
               vehicle_type_id (
                 type_name,
-                capacity
+                capacity 
               )
             )
           )
@@ -133,21 +133,15 @@ export async function GET(
           };
         }) || [];
 
-      // console.log("Transformed data: ", transformedData);
-      console.log(`Found ${transformedData.length} trips`);
-      return NextResponse.json(
-        {
-          data: transformedData,
-          meta: {
-            count: transformedData.length,
-            origin,
-            destination,
-            date,
-          },
-        },
-        { status: 200 },
+      console.log(
+        "TRIP SEARCH DATA: ",
+        JSON.stringify(transformedData, null, 2),
       );
-    } catch (dbError) {
+      return NextResponse.json({
+        data: transformedData,
+        meta: { count: transformedData.length, origin, destination, date },
+      });
+    } catch (dbError: any) {
       console.error("Database error: ", dbError);
       return NextResponse.json(
         { error: "Database query failed" },

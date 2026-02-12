@@ -1,7 +1,7 @@
 /**
  * @hook useBookingLogic
  * @description Manages the state machine for the three-step booking (Seats -> Details -> Payment).
- * @param {number} tripPrice - The cost per seat used to calculate the total fare.
+ * @param {number} segmentPrice - The cost per seat used to calculate the total fare.
  * @returns {Object} Logic bundle including:
  * - {BookingStep} step: Current active phase of the drawer.
  * - {string[]} selectedSeats: Array of seat IDs selected by the user.
@@ -21,7 +21,7 @@ export interface PassangerBookingFields {
   email?: string;
 }
 
-export const useBookingLogic = (tripPrice: number) => {
+export const useBookingLogic = (segmentPrice: number) => {
   const [step, setStep] = useState<BookingStep>("SEATS");
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
 
@@ -35,8 +35,8 @@ export const useBookingLogic = (tripPrice: number) => {
     },
   });
 
-  const formData = formMethods.getValues();
-  const totalFare = selectedSeats.length * tripPrice;
+  const formData = formMethods.watch();
+  const totalFare = selectedSeats.length * segmentPrice;
 
   const handleSeatClick = (id: string, isBooked: boolean) => {
     if (isBooked) return;

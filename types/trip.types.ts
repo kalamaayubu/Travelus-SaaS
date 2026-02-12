@@ -33,6 +33,8 @@ export interface VehicleType {
 // Combined types for the API response
 export interface TripSearchResponse {
   id: string;
+  trip_origin: string;
+  trip_destiny: string;
   departure_time: string;
   departure_location: string;
   destination_location: string;

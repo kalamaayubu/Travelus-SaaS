@@ -19,7 +19,7 @@ export default function SeatMap({
   onSeatClick,
 }: SeatMapProps) {
   const getRowLabel = (index: number) => String.fromCharCode(65 + index);
-
+  console.log(`Seat selection: ${selectedSeats}`);
   return (
     <div className="grid gap-3 select-none">
       {layout.layout.map((row: any, rowIndex: number) => {

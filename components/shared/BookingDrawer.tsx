@@ -13,6 +13,8 @@ import { toast } from "sonner";
 import { PassangerBookingProps } from "@/types/trip.types";
 import { useRef, useState } from "react";
 import { TicketSuccessView } from "../passenger/TicketSuccessView";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 export default function BookingDrawer({
   tripId,
@@ -41,27 +43,28 @@ export default function BookingDrawer({
   //     timestamp: Date.now(),
   //   });
   // });
-  const baseUrl =
-    process.env.NODE_ENV === "production"
-      ? "https://travelus-saas.netlify.app"
-      : "http://localhost:3000";
 
   // Fetch trip details
   const { data, error, isLoading } = useQuery({
     queryKey: ["trip-details", tripId],
     queryFn: async () => {
-      const res = await fetch(`${baseUrl}/api/trips/${tripId}/details`);
-      console.log("Tanstack search data: ", res);
-      if (!res.ok) {
-        throw new Error("Failed to load seats");
-      }
-      return res.json();
+      const res = await fetch(`/api/trips/${tripId}/details`);
+      if (!res.ok) throw new Error("Failed to load seats");
+
+      const result = await res.json();
+      console.log("RAW API RESULT: ", result); // Log the local variable, not 'data'
+      return result;
     },
     enabled: !!tripId,
     staleTime: 1000 * 60 * 360,
     refetchInterval: 1000 * 60 * 360,
     refetchIntervalInBackground: false,
   });
+
+  // 1. Get segment data from the store
+  const { originName, destinationName, segmentPrice } = useSelector(
+    (state: RootState) => state.itinerary,
+  );
 
   const {
     step,
@@ -72,7 +75,7 @@ export default function BookingDrawer({
     handleSeatClick,
     nextStep,
     prevStep,
-  } = useBookingLogic(data?.trip.price_per_seat);
+  } = useBookingLogic(segmentPrice);
 
   const {
     register,
@@ -199,7 +202,13 @@ export default function BookingDrawer({
         <div className="absolute inset-0 bg-black/80" onClick={onClose} />
         <div className="relative w-full max-w-md bg-soft-dark h-full p-8">
           <TripCardSkeleton />
-          <p className="text-center mt-4 text-gray4">Loading trip details...</p>
+          <div className="relative w-full max-w-md bg-soft-dark h-full p-8 flex flex-col justify-center items-center">
+            <Loader2 className="animate-spin text-secondary mb-4" size={40} />
+            <h2 className="text-xl font-black uppercase text-white">
+              {originName} ➙ {destinationName}
+            </h2>
+            <p className="text-gray4 mt-2">Fetching live seat map...</p>
+          </div>
         </div>
       </div>
     );
