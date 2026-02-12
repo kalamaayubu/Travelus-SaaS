@@ -13,21 +13,23 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  console.log("USER/DRIVER:", user.id);
-
   try {
     const { data, error } = await supabase
       .from("trips")
       .select(
         `
         id,
-        departure_location,
-        destination_location,
+        departure_location_name,
+        destination_location_name,
         departure_time,
         status,
-        total_capacity,
-        driver_vehicle_id (
-            driver_id
+        driver_vehicles:driver_vehicle_id (
+          driver_id,
+          vehicles (
+            vehicle_types (
+              capacity 
+            )
+          )   
         ),
         bookings (
           id,
@@ -55,19 +57,32 @@ export async function GET() {
       );
     }
 
-    console.log("TRIPS DATA:", data);
+    console.log("TRIPS DATA:", JSON.stringify(data, null, 2));
 
     const formattedTrips = data.map((trip) => {
+      // Safe access joined data
+      const dv = Array.isArray(trip.driver_vehicle_id)
+        ? trip.driver_vehicle_id[0]
+        : trip.driver_vehicle_id;
+
+      const vehicle = Array.isArray(dv?.vehicles)
+        ? dv.vehicles[0]
+        : dv?.vehicles;
+      const vType = Array.isArray(vehicle?.vehicle_types)
+        ? vehicle.vehicle_types[0]
+        : vehicle?.vehicle_types;
+
+      // Revenue calculation
       const confirmedBookings = trip.bookings || [];
       const revenue = confirmedBookings.reduce((sum, b) => sum + b.amount, 0);
-      console.log("Confirmed Bookings:", confirmedBookings);
-      console.log("Trip revenue:", revenue);
+      // console.log("Confirmed Bookings:", confirmedBookings);
+      // console.log("Trip revenue:", revenue);
 
       return {
         id: trip.id,
         displayId: trip.id.substring(0, 6).toUpperCase(),
-        from: trip.departure_location,
-        to: trip.destination_location,
+        from: trip.departure_location_name,
+        to: trip.destination_location_name,
         departureDate: new Date(trip.departure_time).toLocaleDateString(
           "en-KE",
           {
@@ -85,7 +100,7 @@ export async function GET() {
         ),
         status: trip.status,
         bookedSeats: confirmedBookings.length,
-        totalSeats: trip.total_capacity,
+        totalSeats: vType?.capacity,
         revenue: revenue.toLocaleString(),
       };
     });

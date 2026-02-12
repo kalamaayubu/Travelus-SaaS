@@ -102,6 +102,11 @@ export const PaymentView = ({
         <SummaryRow label="Traveler" value={fullName} />
         <SummaryRow label="Seats" value={seats.join(", ")} />
         <SummaryRow label="Route" value={`${tripOrigin} ➙ ${tripDestiny}`} />
+        <SummaryRow
+          label="Pick up"
+          value={`${originName} ➙ ${destinationName}`}
+        />
+
         {trip.provider && (
           <SummaryRow label="Provider" value={trip.provider} italic />
         )}

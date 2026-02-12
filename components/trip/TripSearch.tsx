@@ -12,6 +12,7 @@ import { TripSearchParams, TripSearchResponse } from "@/types/trip.types";
 import { useEffect, useTransition } from "react";
 import { TripCardSkeleton } from "./TripCardSkeleton";
 import { setItinerary } from "@/redux/slices/itinerarySlice";
+import { getLocationName } from "@/constants/location";
 
 interface TripSearchProps {
   initialTrips: TripSearchResponse[];

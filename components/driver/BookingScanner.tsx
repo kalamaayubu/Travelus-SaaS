@@ -25,7 +25,7 @@ export default function BookingScanner(props: ScannerProps) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center p-6 backdrop-blur-md">
-      <div className="w-full max-w-md bg-soft-dark border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+      <div className="w-full max-w-md bg-soft-dark border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
         {/* Header */}
         <div className="p-4 border-b border-white/5 flex justify-between items-center bg-white/5">
           <div className="flex items-center gap-2">
@@ -92,47 +92,56 @@ export default function BookingScanner(props: ScannerProps) {
 
           {/* Success State */}
           {scanResult.status === "success" && (
-            <div className="h-full flex flex-col items-center justify-center p-6 text-center animate-in fade-in zoom-in duration-300">
-              <ShieldCheck
-                size={80}
-                className="text-primary mb-4 drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]"
-              />
+            <div className="h-full flex flex-col p-6 animate-in gap-4 fade-in zoom-in duration-300">
+              {/* Header Section: Keeps the "Success" vibe */}
+              <div className="flex flex-col items-center justify-center mb-4 text-center">
+                <ShieldCheck
+                  size={64}
+                  className="text-primary mb-4 drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]"
+                />
+                <h3 className="text-2xl font-black text-white italic uppercase tracking-tight">
+                  {scanResult.data.name}
+                </h3>
+              </div>
 
-              <h3 className="text-3xl font-black text-white italic uppercase tracking-tight">
-                {scanResult.data.name}
-              </h3>
-
-              <div className="flex flex-col gap-1 mt-2">
-                <p className="text-primary font-bold uppercase tracking-widest text-sm">
-                  Seats: {scanResult.data.seats.join(", ")}
-                </p>
-                <p className="text-white/60 font-medium text-lg">
-                  {new Intl.NumberFormat("en-US", {
+              {/* Key-Value Details Section */}
+              <div className="space-y-4 bg-white/5 p-2  border-y border-white/10 border-dashed">
+                <DataRow
+                  label="Seats"
+                  value={scanResult.data.seats.join(", ")}
+                />
+                <DataRow
+                  label="Amount"
+                  value={new Intl.NumberFormat("en-US", {
                     style: "currency",
                     currency: "KES",
                   }).format(scanResult.data.amount)}
-                </p>
-              </div>
+                />
+                <DataRow
+                  label="Ticket ID"
+                  value={scanResult.data.ticketNumber}
+                  isMono
+                />
 
-              <div className="mt-6 w-full space-y-3">
-                <div className="px-4 py-2 bg-white/5 rounded-lg border border-white/10 inline-block">
-                  <p className="font-mono text-[10px] text-white/40 uppercase tracking-tighter">
-                    Ticket: {scanResult.data.ticketNumber}
-                  </p>
+                <div className="pt-2 mt-2 border-t border-white/5 flex justify-between items-center">
+                  <span className="text-[10px] text-white/30 uppercase font-bold tracking-widest">
+                    Verified At
+                  </span>
+                  <span className="text-[10px] text-white/60 font-medium">
+                    {new Date(scanResult.data.verifiedAt).toLocaleTimeString(
+                      [],
+                      {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      },
+                    )}
+                  </span>
                 </div>
-
-                <p className="text-[10px] text-white/30 uppercase font-bold tracking-widest">
-                  Verified at{" "}
-                  {new Date(scanResult.data.verifiedAt).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </p>
               </div>
 
               <button
                 onClick={props.onClose}
-                className="mt-8 w-full py-4 bg-primary text-black font-black uppercase rounded-2xl active:scale-95 transition-transform"
+                className="mt-auto w-full py-4 bg-primary text-black font-black uppercase rounded-2xl active:scale-95 transition-transform"
               >
                 Done
               </button>
@@ -157,3 +166,17 @@ export default function BookingScanner(props: ScannerProps) {
     </div>
   );
 }
+
+// Helper Component for the Rows
+const DataRow = ({ label, value, isMono = false }) => (
+  <div className="flex justify-between items-baseline gap-4">
+    <span className="text-[10px] text-white/40 uppercase font-bold tracking-widest shrink-0">
+      {label}
+    </span>
+    <span
+      className={`text-white text-right font-medium ${isMono ? "font-mono text-xs" : "text-sm"}`}
+    >
+      {value}
+    </span>
+  </div>
+);

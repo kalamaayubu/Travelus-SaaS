@@ -67,7 +67,7 @@ export default function EditTripPage() {
 
   return (
     <div className="min-h-screen text-white pt-4">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex items-center gap-4">

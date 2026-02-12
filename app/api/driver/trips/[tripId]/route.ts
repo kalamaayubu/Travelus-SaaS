@@ -24,7 +24,7 @@ export async function GET(
       .from("trips")
       .select(
         `
-        id, departure_location, destination_location, departure_time,
+        id, departure_location_name, destination_location_name, departure_time,
         driver_vehicle_id (
             vehicle_id (
                 number_plate,
@@ -45,7 +45,7 @@ export async function GET(
     const seatStatuses: Record<string, SeatMapStatus> = {};
     trip.bookings?.forEach((booking) => {
       booking.seats?.forEach((seatId: string) => {
-        // Precise Logic: Driver-initiated = LOCKED, Passenger-initiated = BOOKED
+        // Bookings: Driver-initiated = LOCKED, Passenger-initiated = BOOKED
         seatStatuses[seatId] =
           booking.user_type === "DRIVER" ? "LOCKED" : "BOOKED";
       });
@@ -59,7 +59,7 @@ export async function GET(
     const transformedData: DriverIndividualTripData = {
       id: trip.id,
       displayId: trip.id.substring(0, 6).toUpperCase(),
-      route: `${trip.departure_location} ➝ ${trip.destination_location}`,
+      route: `${trip.departure_location_name} ➝ ${trip.destination_location_name}`,
       departure: new Date(trip.departure_time).toLocaleString("en-KE", {
         dateStyle: "medium",
         timeStyle: "short",
