@@ -25,15 +25,14 @@ export const TripCard = ({ trip, onSelect }: TripCardProps) => {
           </h3>
           <div className="flex items-center gap-2 mt-1">
             <p className="text-gray3 font-bold uppercase text-[10px] tracking-widest">
-              {trip.vehicle.type_name || "Standard Shuttle"}
+              {trip.vehicle.type_name}
             </p>
             <div className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-secondary/10 border border-secondary/20 text-[8px] font-black text-secondary uppercase tracking-widest">
               <ShieldCheck size={10} /> Verified
             </div>
           </div>
           <p className="text-xs text-gray-400 mt-2">
-            Vehicle: {trip.vehicle.number_plate || "N/A"} •{" "}
-            {trip.vehicle.capacity} seats
+            Vehicle: {trip.vehicle.number_plate} • {trip.vehicle.capacity} seats
           </p>
         </div>
       </div>

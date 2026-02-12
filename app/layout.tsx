@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import ToasterProvider from "@/components/providers/ToasterProvider";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import TanstackProvider from "@/components/providers/TanstackProvider";
+import { ReduxProvider } from "@/components/providers/ReduxProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,9 +22,11 @@ export default function RootLayout({
       <body className={`antialiased`}>
         <AuthProvider>
           <TanstackProvider>
-            <Navbar />
-            {children}
-            <Footer />
+            <ReduxProvider>
+              <Navbar />
+              {children}
+              <Footer />
+            </ReduxProvider>
           </TanstackProvider>
           <ToasterProvider />
         </AuthProvider>

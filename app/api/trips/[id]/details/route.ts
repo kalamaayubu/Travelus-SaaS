@@ -13,18 +13,14 @@ export async function GET(
     .select(
       `
       id,
-      price_per_seat,
-      departure_time,
-      departure_location,
-      destination_location,
       driver_vehicle_id (
         vehicle_id (
-          number_plate,
+          number_plate, 
           vehicle_type_id (
             type_name,
             seats_layout
           )
-        )
+        )  
       ),
       bookings (
         seats,

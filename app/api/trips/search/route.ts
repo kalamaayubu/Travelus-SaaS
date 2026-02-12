@@ -46,7 +46,7 @@ export async function GET(
               number_plate,
               vehicle_type_id (
                 type_name,
-                capacity
+                capacity 
               )
             )
           ),

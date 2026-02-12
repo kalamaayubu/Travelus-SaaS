@@ -1,6 +1,8 @@
 import { CardSim, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SeatMap from "../shared/SeatMap";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 // 1. Seat Selection View
 export const SeatSelectionView = ({
@@ -78,33 +80,35 @@ export const PaymentView = ({
   fullName,
   seats,
   trip,
-}: any) => (
-  <div className="space-y-8 animate-in fade-in slide-in-from-right-8 text-center duration-500">
-    <div className="size-20 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-      <CardSim size={40} className="text-secondary" />
-    </div>
-    <p className="text-gray4 text-sm font-medium px-4">
-      A payment request for{" "}
-      <span className="text-white font-bold">
-        KES {totalFare.toLocaleString()}
-      </span>{" "}
-      will be sent to{" "}
-      <span className="text-secondary font-black">{mpesaNumber}</span>
-    </p>
+}: any) => {
+  const { tripOrigin, tripDestiny, originName, destinationName } = useSelector(
+    (state: RootState) => state.itinerary,
+  );
+  return (
+    <div className="space-y-8 animate-in fade-in slide-in-from-right-8 text-center duration-500">
+      <div className="size-20 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+        <CardSim size={40} className="text-secondary" />
+      </div>
+      <p className="text-gray4 text-sm font-medium px-4">
+        A payment request for{" "}
+        <span className="text-white font-bold">
+          KES {totalFare.toLocaleString()}
+        </span>{" "}
+        will be sent to{" "}
+        <span className="text-secondary font-black">{mpesaNumber}</span>
+      </p>
 
-    <div className="bg-bg-soft p-6 rounded-xl border border-white/5 tracking-wider text-left space-y-4">
-      <SummaryRow label="Traveler" value={fullName} />
-      <SummaryRow label="Seats" value={seats.join(", ")} />
-      <SummaryRow
-        label="Route"
-        value={`${trip.departure_location} → ${trip.destination_location}`}
-      />
-      {trip.provider && (
-        <SummaryRow label="Provider" value={trip.provider} italic />
-      )}
+      <div className="bg-bg-soft p-6 rounded-xl border border-white/5 tracking-wider text-left space-y-4">
+        <SummaryRow label="Traveler" value={fullName} />
+        <SummaryRow label="Seats" value={seats.join(", ")} />
+        <SummaryRow label="Route" value={`${tripOrigin} ➙ ${tripDestiny}`} />
+        {trip.provider && (
+          <SummaryRow label="Provider" value={trip.provider} italic />
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // --- Sub-components (Helpers) ---
 export const FormInput = ({ label, error, className, ...props }: any) => (
