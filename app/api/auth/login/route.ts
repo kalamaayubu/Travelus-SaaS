@@ -37,7 +37,7 @@ export async function POST(req: Request) {
 
     if (!from) {
       if (role === "passenger") redirectUrl = "/passenger/dashboard";
-      else if (role === "driver") redirectUrl = "/driver/dashboard";
+      else if (role === "driver") redirectUrl = "/driver/trips";
       else if (role === "operator") redirectUrl = "/operator";
     }
 

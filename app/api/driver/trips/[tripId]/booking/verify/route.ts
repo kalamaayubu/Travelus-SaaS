@@ -37,6 +37,7 @@ export async function POST(request: Request) {
         trip_id, 
         status, 
         seats, 
+        ticket_number,
         amount,
         trips (
           driver_vehicles (
@@ -104,7 +105,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       data: {
-        ticketNumber: booking.id.substring(0, 8).toUpperCase(),
+        ticketNumber: booking.ticket_number,
         name: booking.full_name,
         seats: booking.seats,
         amount: booking.amount,

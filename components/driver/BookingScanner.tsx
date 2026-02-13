@@ -105,11 +105,7 @@ export default function BookingScanner(props: ScannerProps) {
               </div>
 
               {/* Key-Value Details Section */}
-<<<<<<< HEAD
-              <div className="space-y-4 bg-white/5 p-2  border-y border-white/10 border-dashed">
-=======
               <div className="space-y-4 bg-white/5 py-2  border-y border-white/10 border-dashed">
->>>>>>> fca27e4 (feat: Offload api request by getting some trip data from redux context)
                 <DataRow
                   label="Seats"
                   value={scanResult.data.seats.join(", ")}
@@ -122,11 +118,7 @@ export default function BookingScanner(props: ScannerProps) {
                   }).format(scanResult.data.amount)}
                 />
                 <DataRow
-<<<<<<< HEAD
-                  label="Ticket ID"
-=======
                   label="Ticket NO"
->>>>>>> fca27e4 (feat: Offload api request by getting some trip data from redux context)
                   value={scanResult.data.ticketNumber}
                   isMono
                 />

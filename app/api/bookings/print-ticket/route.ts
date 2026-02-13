@@ -65,6 +65,7 @@ export async function POST(req: Request) {
       .from("bookings")
       .select("id, full_name, email, status, seats, booked_at")
       .eq("email", request.email)
+      .eq("ticket_number", ticketNo)
       .in("status", ["BOOKED", "APPROVED"])
       .maybeSingle();
 

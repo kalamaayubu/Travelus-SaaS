@@ -13,7 +13,7 @@ export async function PATCH(req: Request) {
       .from("bookings")
       .update({ status: "BOOKED", booked_at: new Date().toISOString() })
       .eq("id", bookingId)
-      .select("id, seats");
+      .select("id, ticket_number, seats");
 
     if (error || !data || data.length === 0) {
       console.error("Error:", error);
@@ -24,7 +24,6 @@ export async function PATCH(req: Request) {
     }
     // Generate ticket number from UUID prefix
     const result = data[0];
-    const ticketNumber = result.id.split("-")[0].toUpperCase();
 
     // Encrypt booking id (for safe ticket approval)
     const encryptedBookingId = encrypt(result.id);
@@ -32,7 +31,7 @@ export async function PATCH(req: Request) {
     return NextResponse.json(
       {
         success: true,
-        ticketNumber,
+        ticketNumber: result.ticket_number,
         bookingId: bookingId,
         encryptedBookingId,
         seats: result.seats,
