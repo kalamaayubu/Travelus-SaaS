@@ -30,14 +30,9 @@ export function useScanner({ tripId, onVerified, onClose }: UseScannerProps) {
 
       setScanResult({ status: "loading" });
 
-      const baseUrl =
-        process.env.NODE_ENV === "production"
-          ? "https://travelus-saas.netlify.app"
-          : "http://localhost:3000";
-
       try {
         const response = await fetch(
-          `${baseUrl}/api/driver/trips/${tripId}/booking/verify`,
+          `/api/driver/trips/${tripId}/booking/verify`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
