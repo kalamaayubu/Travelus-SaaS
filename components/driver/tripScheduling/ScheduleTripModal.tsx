@@ -11,6 +11,7 @@ import StepFour from "./StepFour";
 import { TripSchedulingFields } from "@/types/driver";
 import { toast } from "sonner";
 import { getLocationName } from "@/constants/location";
+import { useRouter } from "next/navigation";
 
 interface ModalProps {
   onClose: () => void;
@@ -23,6 +24,7 @@ export default function ScheduleTripModal({
   onClose,
   defaultMpesa = "0712345678",
 }: ModalProps) {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const methods = useForm<TripSchedulingFields>({
     mode: "onChange",
@@ -105,10 +107,9 @@ export default function ScheduleTripModal({
       return;
     }
 
-    toast.error(`Trip created successfully`);
-
-    // methods.reset();
-    // setStep(1);
+    toast.success(`Trip created successfully`);
+    methods.reset();
+    router.replace("/driver/trips");
   };
 
   const {

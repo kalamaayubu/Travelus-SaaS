@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ArrowRight, Download, Loader2, Check } from "lucide-react";
+import { ArrowRight, Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { QRCodeSVG } from "qrcode.react";
 import { BaseModal } from "../shared/BaseModal";
@@ -112,7 +112,7 @@ export default function PrintTicketDialog({
               </label>
               <input
                 {...register("ticketNumber")}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-secondary/50 transition font-mono uppercase"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-secondary/50 transition font-mono uppercase"
                 placeholder="e.g. 4A665687"
               />
               {errors.ticketNumber && (
@@ -129,7 +129,7 @@ export default function PrintTicketDialog({
               <input
                 {...register("email")}
                 type="email"
-                className="w-full bg-white/5 border lowercase border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-secondary/50 transition"
+                className="w-full bg-white/5 border lowercase border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-secondary/50 transition"
                 placeholder="email@example.com"
               />
               {errors.email && (
@@ -142,7 +142,7 @@ export default function PrintTicketDialog({
             <button
               disabled={isSubmitting}
               type="submit"
-              className="w-full py-4 bg-secondary text-black font-black uppercase rounded-xl flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition disabled:opacity-50"
+              className="w-full py-4 bg-secondary text-black font-black uppercase rounded-lg flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition disabled:opacity-50"
             >
               {isSubmitting ? (
                 <Loader2 className="animate-spin" size={20} />
@@ -214,14 +214,14 @@ export default function PrintTicketDialog({
           <div className="w-full grid grid-cols-2 gap-3">
             <button
               onClick={() => setRetrievedTicket(null)}
-              className="py-4 border border-white/10 text-white font-black uppercase rounded-xl text-xs hover:bg-white/5 transition"
+              className="py-4 border border-white/10 text-white font-black uppercase rounded-lg text-xs hover:bg-white/5 transition"
             >
               Back
             </button>
             <button
               onClick={handleDownload}
               disabled={isDownloading}
-              className="py-4 bg-secondary text-black font-black uppercase rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition text-xs"
+              className="py-4 bg-secondary text-black font-black uppercase rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition text-xs"
             >
               {isDownloading ? (
                 <Loader2 className="animate-spin" size={16} />

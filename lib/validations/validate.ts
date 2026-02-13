@@ -33,7 +33,5 @@ export const TicketPrintSchema = z.object({
       "Ticket must contain both letters and numbers",
     )
     .transform((val) => val.toUpperCase().trim()),
-  email: z
-    .email("Invalid email address")
-    .transform((val) => val.toLowerCase().trim()),
+  email: z.email("Please enter a valid email").min(1, "Email is required"),
 });
