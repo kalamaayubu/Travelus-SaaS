@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useDispatch } from "react-redux";
 import { CarFront, X } from "lucide-react";
 import BookingDrawer from "@/components/shared/BookingDrawer";
 import { useForm, FormProvider } from "react-hook-form";
@@ -11,8 +10,8 @@ import { useTypeWritter } from "@/hooks/useTypeWritter";
 import { TripSearchParams, TripSearchResponse } from "@/types/trip.types";
 import { useEffect, useTransition } from "react";
 import { TripCardSkeleton } from "./TripCardSkeleton";
-import { setItinerary } from "@/redux/slices/itinerarySlice";
 import { getLocationName } from "@/constants/location";
+import { useItineraryStore } from "@/zustand/useItineraryStore";
 
 interface TripSearchProps {
   initialTrips: TripSearchResponse[];
@@ -36,8 +35,9 @@ interface TripSearchProps {
 const TripSearch = ({ initialTrips = [], initialMeta }: TripSearchProps) => {
   const router = useRouter();
   const pathname = usePathname();
-  const dispatch = useDispatch();
   const searchParams = useSearchParams();
+  const setItinerary = useItineraryStore((state) => state.setItinerary);
+
   const { text } = useTypeWritter();
   const [isPending, startTransition] = useTransition();
 
@@ -75,19 +75,17 @@ const TripSearch = ({ initialTrips = [], initialMeta }: TripSearchProps) => {
 
   const openTrip = (trip: TripSearchResponse) => {
     // Set global fare on the store
-    dispatch(
-      setItinerary({
-        tripId: activeTripId,
-        tripOrigin: trip.trip_origin,
-        tripDestiny: trip.trip_destiny,
-        originId: urlOrigin,
-        departureTime: trip.departure_time,
-        originName: trip.departure_location,
-        destinationId: urlDestination,
-        destinationName: trip.destination_location,
-        segmentPrice: trip.price_per_seat,
-      }),
-    );
+    setItinerary({
+      tripId: trip.id,
+      tripOrigin: trip.trip_origin,
+      tripDestiny: trip.trip_destiny,
+      originId: urlOrigin,
+      departureTime: trip.departure_time,
+      originName: trip.departure_location,
+      destinationId: urlDestination,
+      destinationName: trip.destination_location,
+      segmentPrice: trip.price_per_seat,
+    });
 
     const params = new URLSearchParams(searchParams.toString());
     params.set("trip", trip.id.toString());

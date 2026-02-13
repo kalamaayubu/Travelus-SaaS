@@ -18,6 +18,8 @@ export default function SeatMap({
   reservedSeats,
   onSeatClick,
 }: SeatMapProps) {
+  // toast(`BOOKED SEATS: ${bookedSeats}`);
+
   const getRowLabel = (index: number) => String.fromCharCode(65 + index);
   console.log(`Seat selection: ${selectedSeats}`);
   return (

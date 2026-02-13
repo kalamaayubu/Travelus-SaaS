@@ -13,8 +13,7 @@ import { toast } from "sonner";
 import { PassangerBookingProps } from "@/types/trip.types";
 import { useRef, useState } from "react";
 import { TicketSuccessView } from "../passenger/TicketSuccessView";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useItineraryStore } from "@/zustand/useItineraryStore";
 
 export default function BookingDrawer({
   tripId,
@@ -56,15 +55,13 @@ export default function BookingDrawer({
       return result;
     },
     enabled: !!tripId,
-    staleTime: 1000 * 60 * 360,
-    refetchInterval: 1000 * 60 * 360,
+    staleTime: 1000,
+    refetchInterval: 1000 * 60 * 3,
     refetchIntervalInBackground: false,
   });
 
   // 1. Get segment data from the store
-  const { originName, destinationName, segmentPrice } = useSelector(
-    (state: RootState) => state.itinerary,
-  );
+  const { originName, destinationName, segmentPrice } = useItineraryStore();
 
   const {
     step,

@@ -1,8 +1,7 @@
 import { CardSim, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SeatMap from "../shared/SeatMap";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useItineraryStore } from "@/zustand/useItineraryStore";
 
 // 1. Seat Selection View
 export const SeatSelectionView = ({
@@ -81,9 +80,8 @@ export const PaymentView = ({
   seats,
   trip,
 }: any) => {
-  const { tripOrigin, tripDestiny, originName, destinationName } = useSelector(
-    (state: RootState) => state.itinerary,
-  );
+  const { tripOrigin, tripDestiny, originName, destinationName } =
+    useItineraryStore();
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-right-8 text-center duration-500">
       <div className="size-20 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">

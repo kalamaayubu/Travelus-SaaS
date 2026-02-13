@@ -29,7 +29,7 @@ export async function GET(
     `,
     )
     .eq("id", id)
-    .in("bookings.status", ["BOOKED", "PENDING"])
+    .in("bookings.status", ["BOOKED", "PENDING", "APPROVED"])
     .single();
 
   if (error || !data) {
@@ -37,10 +37,8 @@ export async function GET(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  console.log("TRIP DETAILS: ", JSON.stringify(data, null, 2));
-
   // Flatten the 'seats' arrays from all bookings into one 'occupied' list
-  const occupiedSeats = data.bookings?.flatMap((b: any) => b.seats) || [];
+  const occupiedSeats = data.bookings?.flatMap((b: any) => b.seats);
 
   const dv = Array.isArray(data.driver_vehicle_id)
     ? data.driver_vehicle_id[0]

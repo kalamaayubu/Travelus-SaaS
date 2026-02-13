@@ -35,7 +35,7 @@ export const useBookingLogic = (segmentPrice: number) => {
     },
   });
 
-  const formData = formMethods.watch();
+  const formData = formMethods.getValues();
   const totalFare = selectedSeats.length * segmentPrice;
 
   const handleSeatClick = (id: string, isBooked: boolean) => {

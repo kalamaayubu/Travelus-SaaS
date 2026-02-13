@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       .select("id")
       .single();
     if (error) {
-      // Catch conflicting seats error
+      // conflicting seats custom error
       if (error.message.includes("CONFLICTING_SEATS")) {
         return NextResponse.json(
           {
