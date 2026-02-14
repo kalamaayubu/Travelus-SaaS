@@ -44,7 +44,7 @@ export function BaseModal({
             {title}
           </DialogTitle>
           {description && (
-            <DialogDescription className="text-gray5 font-medium">
+            <DialogDescription className="text-gray4 font-medium">
               {description}
             </DialogDescription>
           )}

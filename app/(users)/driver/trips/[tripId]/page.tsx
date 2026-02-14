@@ -17,10 +17,13 @@ import BookingScanner from "@/components/driver/BookingScanner";
 import Link from "next/link";
 import { DriverIndividualTripData } from "@/types/driver";
 import TripDetailsPageSkeleton from "@/components/driver/skeletons/TripDetailsPageSkeleton";
+import PassengerInfoForm from "@/components/driver/PassengerInfoForm";
 
 export default function EditTripPage() {
   const { tripId } = useParams();
   const router = useRouter();
+
+  const [passengerInfoDialogOpen, setPassengerInfoDialogOpen] = useState(false);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [localSelections, setLocalSelections] = useState<
     Record<string, "SELECTED">
@@ -128,7 +131,10 @@ export default function EditTripPage() {
 
             {selectedCount > 0 && (
               <div className="mt-8 px-6 animate-in slide-in-from-bottom-2">
-                <button className="w-full h-14 bg-secondary text-black rounded-lg font-black uppercase text-xs tracking-widest flex items-center justify-center gap-3">
+                <button
+                  onClick={() => setPassengerInfoDialogOpen(true)}
+                  className="w-full h-14 bg-secondary text-black rounded-lg font-black uppercase text-xs tracking-widest flex items-center justify-center gap-3"
+                >
                   <UserPlus size={18} strokeWidth={3} />
                   Lock {selectedCount} Seat{selectedCount > 1 ? "s" : ""}
                 </button>
@@ -184,6 +190,15 @@ export default function EditTripPage() {
           tripId={tripId as string}
           onVerified={() => {}}
           onClose={() => setIsScannerOpen(false)}
+        />
+      )}
+
+      {/* Passenger information filling dialog */}
+      {passengerInfoDialogOpen && (
+        <PassengerInfoForm
+          tripId={tripId as string}
+          selectedSeats={Object.keys(localSelections)}
+          onClose={() => setPassengerInfoDialogOpen(false)}
         />
       )}
     </div>

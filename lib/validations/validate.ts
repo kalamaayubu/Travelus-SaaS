@@ -23,6 +23,17 @@ export const LoginSchema = baseSchema.pick({
   password: true,
 });
 
+export const PassengerInfoSchema = baseSchema
+  .pick({
+    fullname: true,
+    phone: true,
+  })
+  .extend({
+    amountPaid: z.coerce
+      .number({ error: "Amount must be a number" })
+      .min(1, "Enter a valid amount"),
+  });
+
 export const TicketPrintSchema = z.object({
   ticketNumber: z
     .string()

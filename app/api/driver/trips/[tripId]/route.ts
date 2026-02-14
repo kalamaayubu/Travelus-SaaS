@@ -79,7 +79,7 @@ export async function GET(
       },
     };
 
-    console.log("Tranformed data: ", JSON.stringify(transformedData, null, 2));
+    // console.log("Tranformed data: ", JSON.stringify(transformedData, null, 2));
     return NextResponse.json({ transformedData });
   } catch (err: any) {
     return NextResponse.json({ error: "Server Error" }, { status: 500 });
