@@ -9,6 +9,7 @@ import {
   Zap,
   ZapOff,
   WifiOff,
+  Circle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useScanner } from "@/hooks/useScanner";
@@ -105,7 +106,7 @@ export default function BookingScanner(props: ScannerProps) {
               </div>
 
               {/* Key-Value Details Section */}
-              <div className="space-y-4 bg-white/5 py-2  border-y border-white/10 border-dashed">
+              <div className="space-y-4 py-2  border-y border-white/10 border-dashed">
                 <DataRow
                   label="Seats"
                   value={scanResult.data.seats.join(", ")}
@@ -141,7 +142,7 @@ export default function BookingScanner(props: ScannerProps) {
 
               <button
                 onClick={props.onClose}
-                className="mt-auto w-full py-4 bg-primary text-black font-black uppercase rounded-2xl active:scale-95 transition-transform"
+                className="mt-auto w-full py-4 bg-primary text-black font-black uppercase rounded-lg active:scale-95 transition-transform"
               >
                 Done
               </button>
@@ -151,13 +152,16 @@ export default function BookingScanner(props: ScannerProps) {
           {/* Error State */}
           {scanResult.status === "error" && (
             <div className="h-75 flex flex-col items-center justify-center gap-4 py-12">
-              <XCircle size={60} className="text-red-500" />
+              <X
+                size={60}
+                className="text-red-500 bg-gray2/5 p-2 rounded-full"
+              />
               <p className="text-white font-black">{scanResult.message}</p>
               <button
                 onClick={resetScanner}
-                className="mt-4 px-8 py-3 bg-white/10 rounded-xl text-[10px] font-black uppercase"
+                className="mt-4 px-8 py-3 bg-white/10 rounded-lg text-[10px] font-black uppercase"
               >
-                Try Again
+                Scan another one
               </button>
             </div>
           )}

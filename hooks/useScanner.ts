@@ -9,6 +9,11 @@ interface UseScannerProps {
   onClose: () => void; // Function to release camera hardware and close the UI
 }
 
+const SOUNDS = {
+  SUCCESS: "/assets/audio/successSound.mp3",
+  ERROR: "/assets/audio/errorSound.wav",
+};
+
 // Manages camera hardware, torch state, and ticket verification API.
 export function useScanner({ tripId, onVerified, onClose }: UseScannerProps) {
   const [scanResult, setScanResult] = useState<{
@@ -21,6 +26,14 @@ export function useScanner({ tripId, onVerified, onClose }: UseScannerProps) {
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const isOnline = useOnlineStatus();
   const queryClient = useQueryClient();
+
+  // Helper function to  play audio
+  const playFeedback = useCallback((type: "SUCCESS" | "ERROR") => {
+    console.log("Playing sound:", type);
+    const audio = new Audio(SOUNDS[type]);
+    audio.volume = 1;
+    audio.play().catch((error) => console.warn("Audio play blocked: ", error));
+  }, []);
 
   const handleScan = useCallback(
     async (decodedText: string) => {
@@ -46,6 +59,9 @@ export function useScanner({ tripId, onVerified, onClose }: UseScannerProps) {
         const result = await response.json();
 
         if (result.success) {
+          // Play SUCCESS sound
+          playFeedback("SUCCESS");
+
           setScanResult({
             status: "success",
             data: result.data,
@@ -54,6 +70,9 @@ export function useScanner({ tripId, onVerified, onClose }: UseScannerProps) {
           queryClient.invalidateQueries({ queryKey: ["trip", tripId] });
           onVerified(result.data);
         } else {
+          // Play ERROR sound
+          playFeedback("ERROR");
+
           setScanResult({
             status: "error",
             message: result.error || `Server Error: ${response.status}`,
@@ -75,7 +94,6 @@ export function useScanner({ tripId, onVerified, onClose }: UseScannerProps) {
     }
 
     if (scannerRef.current.isScanning) return;
-
     try {
       await scannerRef.current.start(
         { facingMode: "environment" },

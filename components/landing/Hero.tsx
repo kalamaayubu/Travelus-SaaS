@@ -26,7 +26,7 @@ export default function Hero() {
           </p>
           <div className="flex flex-col relative justify-between w-full">
             <Image
-              src="/assets/Illustration.png"
+              src="/assets/images/Illustration.png"
               alt="Hero Image"
               width={600}
               height={400}
