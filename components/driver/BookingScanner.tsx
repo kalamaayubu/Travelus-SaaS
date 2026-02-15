@@ -106,7 +106,7 @@ export default function BookingScanner(props: ScannerProps) {
               </div>
 
               {/* Key-Value Details Section */}
-              <div className="space-y-4 py-2  border-y border-white/10 border-dashed">
+              <div className="space-y-4 py-2  border-y border-white/10">
                 <DataRow
                   label="Seats"
                   value={scanResult.data.seats.join(", ")}
