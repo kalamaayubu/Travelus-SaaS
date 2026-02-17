@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Clock, Users, Calendar, ArrowRight } from "lucide-react";
+import {
+  ChevronRight,
+  Clock,
+  Users,
+  Calendar,
+  ArrowRight,
+  Search,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { DriverTripsResponse } from "@/types/driver";
@@ -18,6 +25,7 @@ export default function TripsPage() {
       if (!res.ok) throw new Error("Failed to load trips");
       return res.json();
     },
+    staleTime: 0,
   });
 
   if (isLoading) return <TripsSkeleton />;
@@ -31,16 +39,26 @@ export default function TripsPage() {
 
   return (
     <div className="min-h-screen text-white">
-      <header className="mb-10">
-        <h1 className="text-3xl font-black uppercase tracking-tighter">
-          My Trips
-        </h1>
-        <p className="text-xs text-gray4 font-bold uppercase tracking-widest mt-1">
-          Manage your past and upcoming journeys
-        </p>
+      <header className="mb-10 flex gap-6 flex-col md:flex-row justify-between md:items-center">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tighter">
+            My Trips
+          </h1>
+          <p className="text-xs text-gray4 font-bold uppercase tracking-widest mt-1">
+            Manage your past and upcoming journeys
+          </p>
+        </div>
+        <div className="flex gap-3 rounded-full border border-gray6 items-center pl-4 w-fit">
+          <Search className="size-4 text-gray4" />
+          <input
+            type="text"
+            placeholder="Search..."
+            className="py-2 outline-none px-1 pr-2 "
+          />
+        </div>
       </header>
 
-      <div className="grid auto-rows-fr gap-8 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+      <div className="grid auto-rows-fr gap-4 lg:gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {trips?.map((trip) => (
           <Link
             key={trip.id}
@@ -57,7 +75,7 @@ export default function TripsPage() {
                     </span>
                   </div>
 
-                  <div className="text-xl font-black italic uppercase tracking-tighter flex items-center gap-3">
+                  <div className="text-md md:text-lg font-black uppercase tracking-wide flex items-center gap-3">
                     {trip.from}
                     <ArrowRight size={18} className="text-primary" />
                     {trip.to}

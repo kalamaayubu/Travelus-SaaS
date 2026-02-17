@@ -17,11 +17,11 @@ export default function IndependentDriverDashboard() {
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
 
   return (
-    <div className="max-w-350 mx-auto space-y-8 animate-in fade-in duration-700 pb-20">
+    <div className="max-w-350 mx-auto pt-2 space-y-8 animate-in fade-in duration-700 pb-20">
       {/* --- ACTION HEADER --- */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/5 pb-8">
         <div>
-          <h1 className="text-4xl font-black uppercase tracking-tighter text-white">
+          <h1 className="text-3xl sm:text-4xl font-black uppercase tracking-tighter text-white">
             Dashboard{" "}
           </h1>
           <p className="text-gray4 text-sm font-medium mt-1">
@@ -32,7 +32,7 @@ export default function IndependentDriverDashboard() {
 
         <button
           onClick={() => setIsScheduleOpen(true)}
-          className="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-black px-6 py-4 rounded-xl font-black uppercase tracking-widest text-xs"
+          className="flex items-center max-w-72 justify-center gap-2 bg-primary hover:bg-primary/90 text-black px-6 py-4 rounded-lg font-black uppercase tracking-widest text-xs"
         >
           <Plus size={18} strokeWidth={3} />
           Schedule New Trip
@@ -134,7 +134,7 @@ export default function IndependentDriverDashboard() {
 
       {/* 3. ACTIVE TRIP MANIFEST */}
       <div className="rounded-2xl bg-soft-dark border border-primary/20 overflow-hidden">
-        <div className="p-6 border-b border-white/5 bg-white/[0.02] flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="p-6 border-b border-white/5 bg-white/2 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="size-12 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
               <MapPin className="size-6" />
@@ -165,7 +165,7 @@ export default function IndependentDriverDashboard() {
 
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="text-[10px] text-gray3 uppercase tracking-widest bg-white/[0.01]">
+            <thead className="text-[10px] text-gray3 uppercase tracking-widest bg-white/1">
               <tr>
                 <th className="px-8 py-4">Passenger</th>
                 <th className="px-8 py-4">Seats</th>
@@ -197,7 +197,7 @@ export default function IndependentDriverDashboard() {
               ].map((booking, i) => (
                 <tr
                   key={i}
-                  className="group hover:bg-white/[0.02] transition-colors"
+                  className="group hover:bg-white/2 transition-colors"
                 >
                   <td className="px-8 py-5">
                     <div className="flex items-center gap-3">
@@ -240,7 +240,7 @@ export default function IndependentDriverDashboard() {
           </table>
         </div>
 
-        <div className="p-6 bg-white/[0.01] border-t border-white/5 text-center flex justify-center gap-4">
+        <div className="p-6 bg-white/1 border-t border-white/5 text-center flex justify-center gap-4">
           <button className="text-[10px] font-black text-gray4 hover:text-white uppercase tracking-widest px-4 py-2 border border-white/10 rounded-md transition-all">
             Manage Seats
           </button>

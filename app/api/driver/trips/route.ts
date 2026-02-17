@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import dayjs from "dayjs";
+import { TripSearchResponse } from "@/types/trip.types";
 
 export async function GET() {
   const supabase = await createClient();
@@ -23,23 +25,26 @@ export async function GET() {
         destination_location_name,
         departure_time,
         status,
-        driver_vehicles:driver_vehicle_id (
-          driver_id,
-          vehicles (
-            vehicle_types (
+        driver_vehicle_id (
+          driver_id (
+            driver_id
+          ),
+          vehicle_id (
+            vehicle_type_id (
               capacity 
             )
-          )   
+          )
         ),
         bookings (
           id,
           amount,
+          seats,
           status
         )
       `,
       )
-      .eq("driver_vehicle_id.driver_id", user.id)
-      .order("departure_time", { ascending: true });
+      .eq("driver_vehicle_id.driver_id.driver_id", user.id)
+      .order("departure_time", { ascending: false });
 
     if (error || !data) {
       console.error("ERROR: ", error);
@@ -57,55 +62,50 @@ export async function GET() {
       );
     }
 
-    console.log("TRIPS DATA:", JSON.stringify(data, null, 2));
-
     const formattedTrips = data.map((trip) => {
       // Safe access joined data
       const dv = Array.isArray(trip.driver_vehicle_id)
         ? trip.driver_vehicle_id[0]
         : trip.driver_vehicle_id;
+      const vehicle = dv?.vehicle_id;
+      const vType = vehicle?.vehicle_type_id;
+      const capacity = vType?.capacity || 0;
 
-      const vehicle = Array.isArray(dv?.vehicles)
-        ? dv.vehicles[0]
-        : dv?.vehicles;
-      const vType = Array.isArray(vehicle?.vehicle_types)
-        ? vehicle.vehicle_types[0]
-        : vehicle?.vehicle_types;
+      // Filter out PENDING and CANCELLED bookings
+      const validBookings = (trip.bookings || []).filter(
+        (b) => b.status !== "PENDING" && b.status !== "CANCELLED",
+      );
 
+      const bookedSeatsCount = validBookings.reduce(
+        (total, b) => total + (b.seats?.length || 0),
+        0,
+      );
+
+      // console.log("VALID BOOKINGS: ", validBookings);
       // Revenue calculation
-      const confirmedBookings = trip.bookings || [];
-      const revenue = confirmedBookings.reduce((sum, b) => sum + b.amount, 0);
-      // console.log("Confirmed Bookings:", confirmedBookings);
-      // console.log("Trip revenue:", revenue);
+      const revenue = validBookings.reduce(
+        (totalRevenue, b) => totalRevenue + (b.amount || 0),
+        0,
+      );
 
       return {
         id: trip.id,
         displayId: trip.id.substring(0, 6).toUpperCase(),
         from: trip.departure_location_name,
         to: trip.destination_location_name,
-        departureDate: new Date(trip.departure_time).toLocaleDateString(
-          "en-KE",
-          {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          },
-        ),
-        departureTime: new Date(trip.departure_time).toLocaleTimeString(
-          "en-KE",
-          {
-            hour: "2-digit",
-            minute: "2-digit",
-          },
-        ),
+        departureDate: dayjs(trip.departure_time).format("MMM, D, YYYY"),
+        departureTime: dayjs(trip.departure_time).format("hh:mm A"),
         status: trip.status,
-        bookedSeats: confirmedBookings.length,
+        bookedSeats: bookedSeatsCount,
+        vehicle: {
+          capacity: capacity,
+        },
         totalSeats: vType?.capacity,
         revenue: revenue.toLocaleString(),
       };
     });
 
-    console.log("TRIPS:", formattedTrips);
+    // console.log("TRIPS:", formattedTrips);
     return NextResponse.json(formattedTrips);
   } catch (err) {
     console.error("Fetch trips error:", err);

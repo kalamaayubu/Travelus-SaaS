@@ -2,14 +2,12 @@
 
 import {
   ShieldCheck,
-  XCircle,
   Loader2,
   QrCode,
   X,
   Zap,
   ZapOff,
   WifiOff,
-  Circle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useScanner } from "@/hooks/useScanner";

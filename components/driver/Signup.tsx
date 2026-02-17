@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import z from "zod";
+import Link from "next/link";
 
 type DriverSignupFields = z.infer<typeof DriverSchema>;
 
@@ -20,6 +21,27 @@ export default function DriverSignup() {
   });
 
   const onSubmit = async (data: DriverSignupFields) => {
+    const toastId = toast.info(
+      <b className="font-bold text-white text-lg">Contact Us</b>,
+      {
+        description: (
+          <span>
+            Please contact SafiriBridge team to be registered as a driver.{" "}
+            <Link
+              href="/#pricing"
+              className="underline font-bold text-sky-400"
+              // 2. Dismiss the toast using the captured ID on click
+              onClick={() => setTimeout(() => toast.dismiss(toastId), 2000)}
+            >
+              Click here.
+            </Link>
+          </span>
+        ),
+        duration: 8000,
+      },
+    );
+    return toastId;
+
     try {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
@@ -52,13 +74,11 @@ export default function DriverSignup() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Full name */}
       <div>
-        <label className="text-sm uppercase text-gray4 mb-1 block">
-          Full Name
-        </label>
+        <label className="text-sm text-gray4 mb-1 block">Full Name</label>
         <input
           {...register("fullname")}
           type="text"
-          placeholder="Enter Full Name"
+          placeholder="e.g, James Kariuki"
           className={`w-full bg-white/5 border rounded-lg px-4 py-3 text-white focus:border-primary outline-none transition-colors ${
             errors.fullname ? "border-red-500" : "border-white/10"
           }`}
@@ -70,11 +90,11 @@ export default function DriverSignup() {
 
       {/* Email */}
       <div>
-        <label className="text-sm text-gray4 uppercase mb-1 block">Email</label>
+        <label className="text-sm text-gray4 mb-1 block">Email</label>
         <input
           {...register("email")}
           type="email"
-          placeholder="Enter Email"
+          placeholder="example@gmail.com"
           className={`w-full bg-white/5 border rounded-lg px-4 py-3 text-white focus:border-primary outline-none transition-colors ${
             errors.email ? "border-red-500" : "border-white/10"
           }`}
@@ -86,9 +106,7 @@ export default function DriverSignup() {
 
       {/* Phone  */}
       <div>
-        <label className="text-sm text-gray4 uppercase mb-1 block">
-          Phone (M-Pesa)
-        </label>
+        <label className="text-sm text-gray4 mb-1 block">Phone (M-Pesa)</label>
         <input
           {...register("phone")}
           type="tel"
@@ -104,7 +122,7 @@ export default function DriverSignup() {
 
       {/* Password */}
       <div>
-        <label className="text-sm uppercase tracking-tight text-gray4 mb-1 block">
+        <label className="text-sm tracking-tight text-gray4 mb-1 block">
           Password
         </label>
         <input

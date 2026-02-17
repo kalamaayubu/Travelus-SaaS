@@ -1,5 +1,6 @@
 import { Bus, ShieldCheck } from "lucide-react";
 import { TripSearchResponse } from "@/types/trip.types";
+import dayjs from "dayjs";
 
 interface TripCardProps {
   trip: TripSearchResponse;
@@ -7,11 +8,7 @@ interface TripCardProps {
 }
 
 export const TripCard = ({ trip, onSelect }: TripCardProps) => {
-  const departureTime = new Date(trip.departure_time).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
+  const departureTime = dayjs(trip.departure_time).format("hh : mm A");
 
   return (
     <div className="group bg-soft-dark border border-white/5 py-6 px-3 md:px-5 lg:py-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-8 hover:border-secondary/10 transition-all">
@@ -31,7 +28,7 @@ export const TripCard = ({ trip, onSelect }: TripCardProps) => {
               <ShieldCheck size={10} /> Verified
             </div>
           </div>
-          <p className="text-xs text-gray-400 mt-2">
+          <p className="text-xs text-gray4 mt-2">
             Vehicle: {trip.vehicle.number_plate} • {trip.vehicle.capacity} seats
           </p>
         </div>
@@ -48,11 +45,12 @@ export const TripCard = ({ trip, onSelect }: TripCardProps) => {
           <p className="text-[10px] font-black text-gray4 uppercase tracking-widest mb-1">
             Fare per seat
           </p>
-          <p className="text-xl md:text-2xl font-black text-white">
+          <p className="text-xl font-black text-white">
             KES {trip.price_per_seat}
           </p>
-          <p className="text-[10px] text-gray-400 mt-1">
-            {trip.available_seats} seats available
+          <p className="text-[10px] text-gray4 mt-1">
+            {trip.available_seats} {trip.available_seats > 1 ? "seats" : "seat"}{" "}
+            available
           </p>
         </div>
         <button

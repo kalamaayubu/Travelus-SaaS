@@ -28,7 +28,7 @@ export function DriverSidebar({
   isOpen,
 }: DriverSidebarProps) {
   const pathname = usePathname();
-  const { user, isLoading, isAuthenticated } = useAuth();
+  const { user, isLoading } = useAuth();
 
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/driver/dashboard" },

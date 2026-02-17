@@ -34,12 +34,12 @@ export function BaseModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className={cn(
-          "bg-soft-dark border-white/10 text-white p-0 overflow-hidden rounded-2xl shadow-2xl",
+          "bg-soft-dark border-white/10 text-white p-0 overflow-hidden rounded-2xl",
           maxWidth,
         )}
       >
-        <DialogHeader className="p-8 pb-0">
-          <DialogTitle className="text-2xl font-black uppercase tracking-tight flex items-center gap-2">
+        <DialogHeader className="p-6 pb-0">
+          <DialogTitle className="text-xl md:text-2xl font-black uppercase tracking-tight flex items-center gap-2">
             {icon}
             {title}
           </DialogTitle>

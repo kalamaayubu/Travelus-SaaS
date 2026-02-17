@@ -41,7 +41,7 @@ export default async function PublicSearchPage({
       apiUrl.searchParams.append("date", date);
 
       const response = await fetch(apiUrl.toString(), {
-        next: { revalidate: 60 }, // Revalidate every minute
+        next: { revalidate: 20 }, // Revalidate every 20 seconds
       });
 
       if (response.ok) {

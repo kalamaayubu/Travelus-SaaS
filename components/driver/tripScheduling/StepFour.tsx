@@ -4,7 +4,8 @@ import { cn } from "@/lib/utils";
 import { TripSchedulingFields } from "@/types/driver";
 import { useDriverVehicles } from "@/hooks/useDriverVehicles";
 import { DriverVehicleLink } from "@/types/trip.types";
-import { getLocationName, KENYA_LOCATIONS } from "@/constants/location";
+import { getLocationName } from "@/constants/location";
+import dayjs from "dayjs";
 
 export default function StepFour({
   formData,
@@ -26,6 +27,8 @@ export default function StepFour({
   const originLocation = getLocationName(formData.origin);
   const destinationLocation = getLocationName(formData.destination);
 
+  const dateTimeString = `${formData.departureDate} ${formData.departureTime}`;
+
   return (
     <div className="space-y-4">
       <div className="bg-white/2 border border-white/10 rounded-xl p-5 space-y-4">
@@ -37,18 +40,14 @@ export default function StepFour({
 
         <SummaryRow
           label="Schedule"
-          value={`${formData.departureDate || "—"} @ ${formData.departureTime || "—"}`}
+          value={`${dayjs(dateTimeString).format("D MMM, YYYY ● hh:mm A")}`}
         />
         <SummaryRow label="Vehicle" value={vehicleDisplay} />
-        <SummaryRow
-          label="Fare"
-          value={`KES ${formData.price || "0"}`}
-          highlight
-        />
+        <SummaryRow label="Fare" value={`KES ${formData.price}`} highlight />
         <div className="pt-3 border-t border-white/5 mt-2">
           <SummaryRow
             label="Payout To"
-            value={formData.mpesaNumber || "—"}
+            value={formData.mpesaNumber}
             highlight
             color="text-primary"
           />

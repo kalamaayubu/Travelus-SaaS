@@ -93,24 +93,25 @@ export default function Navbar() {
               >
                 Print ticket
               </button>
-              {pathname === "/" &&
-                (isLoading ? (
-                  ""
-                ) : isAuthenticated ? (
-                  <Link
-                    href={`/${user?.user_metadata.role}/dashboard`}
-                    className="hover:text-secondary transition text-sm"
-                  >
-                    Dashboard
-                  </Link>
-                ) : (
-                  <Link
-                    href="/login"
-                    className="hover:text-secondary transition text-sm"
-                  >
-                    Log in
-                  </Link>
-                ))}
+              {pathname === "/" ||
+                (pathname === "/trips" &&
+                  (isLoading ? (
+                    ""
+                  ) : isAuthenticated ? (
+                    <Link
+                      href={`/${user?.user_metadata.role}/dashboard`}
+                      className="hover:text-secondary transition text-sm"
+                    >
+                      Dashboard
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/login"
+                      className="hover:text-secondary transition text-sm"
+                    >
+                      Log in
+                    </Link>
+                  )))}
             </div>
 
             {/* THEME TOGGLE BUTTON */}
@@ -164,17 +165,24 @@ export default function Navbar() {
               Print ticket
             </button>
 
-            {isLoading
-              ? ""
-              : !isAuthenticated && (
-                  <Link
-                    href="/login"
-                    onClick={() => setIsOpen(false)}
-                    className="text-lg py-2 text-primary"
-                  >
-                    Log in
-                  </Link>
-                )}
+            {isLoading ? (
+              ""
+            ) : !isAuthenticated ? (
+              <Link
+                href="/login"
+                onClick={() => setIsOpen(false)}
+                className="text-lg py-2 text-primary"
+              >
+                Log in
+              </Link>
+            ) : (
+              <Link
+                href={`/${user?.user_metadata.role}/dashboard`}
+                className="text-lg py-2 text-primary"
+              >
+                Dashboard
+              </Link>
+            )}
           </div>
         )}
       </header>

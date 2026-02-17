@@ -99,9 +99,6 @@ export async function GET(
                 : total;
             }, 0) || 0;
 
-          // Calculate Dynamic Price based on segments (e.g., price from origin to destination)
-          // Based on your data, price_to_destination is the cost FROM that stop TO the end.
-          // Adjust this logic if your pricing is calculated differently.
           const segmentPrice = originSegment.price_to_destination;
 
           return {

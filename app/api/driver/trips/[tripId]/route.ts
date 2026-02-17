@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { DriverIndividualTripData } from "@/types/driver";
 import { SeatMapStatus } from "@/types/trip.types";
+import dayjs from "dayjs";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -60,10 +61,7 @@ export async function GET(
       id: trip.id,
       displayId: trip.id.substring(0, 6).toUpperCase(),
       route: `${trip.departure_location_name} ➝ ${trip.destination_location_name}`,
-      departure: new Date(trip.departure_time).toLocaleString("en-KE", {
-        dateStyle: "medium",
-        timeStyle: "short",
-      }),
+      departure: dayjs(trip.departure_time).format("D MMM, YYYY hh:mm A"),
       vehicle: {
         plate: trip.driver_vehicle_id?.vehicle_id?.number_plate,
         capacity: trip.driver_vehicle_id?.vehicle_id?.vehicle_type_id?.capacity,
