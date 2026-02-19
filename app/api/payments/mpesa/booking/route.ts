@@ -1,7 +1,6 @@
 import { encrypt } from "@/lib/crypto";
 import { getMpesaAccessToken, getTimeStamp } from "@/lib/mpesa/mpesa";
 import { createClient } from "@/lib/supabase/server";
-import dayjs from "dayjs";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -17,14 +16,12 @@ export async function POST(req: Request) {
       .insert({
         trip_id: bookingPayload.tripId,
         amount: bookingPayload.totalFare,
-        status: "PENDING",
         user_type: "PASSENGER",
         seats: bookingPayload.selectedSeats,
         full_name: bookingPayload.fullName,
         contact_number: bookingPayload.contactNumber,
         mpesa_number: bookingPayload.mpesaNumber,
         email: bookingPayload.email,
-        reserved_at: dayjs().toISOString(),
       })
       .select("id, ticket_number, seats")
       .maybeSingle();
@@ -78,8 +75,6 @@ export async function POST(req: Request) {
       TransactionDesc: "Payment for Trip",
     };
 
-    console.log("STK PAYLOAD: ", stkPayload);
-
     // Send STK Push Request
     const mpesaResponse = await fetch(
       "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
@@ -92,9 +87,6 @@ export async function POST(req: Request) {
         body: JSON.stringify(stkPayload),
       },
     );
-
-    const rawText = await mpesaResponse;
-    console.log("MPESA RAW RESPONSE:", rawText);
 
     const mpesaRes = await mpesaResponse.json();
 
@@ -121,8 +113,6 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-
-    console.log("CheckoutId: ", mpesaRes.CheckoutRequestID);
 
     // Encrypt booking id (for safe ticket approval)
     const encryptedBookingId = encrypt(booking.id);
