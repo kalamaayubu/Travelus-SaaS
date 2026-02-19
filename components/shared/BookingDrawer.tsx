@@ -85,7 +85,7 @@ export default function BookingDrawer({
     const bookingPayload = { ...data, tripId, selectedSeats, totalFare };
 
     try {
-      const res = await fetch(`/api/trips/${tripId}/booking`, {
+      const res = await fetch(`/api/payments/mpesa/booking`, {
         method: "POST",
         body: JSON.stringify({ bookingPayload }),
       });
@@ -328,7 +328,7 @@ export default function BookingDrawer({
                   (step === "SEATS" ? selectedSeats.length === 0 : !isValid)
                 }
                 onClick={handleAction}
-                className="primary-btn w-full h-14 rounded-xl flex items-center justify-center gap-3 disabled:opacity-60 transition-all group shadow-xl shadow-primary/10"
+                className="primary-btn w-full h-14 rounded-xl flex items-center justify-center gap-3 disabled:opacity-70 transition-all group shadow-xl shadow-primary/10"
               >
                 {isSubmitting ? (
                   <>
