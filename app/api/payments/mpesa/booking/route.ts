@@ -1,7 +1,6 @@
 import { encrypt } from "@/lib/crypto";
 import { getMpesaAccessToken, getTimeStamp } from "@/lib/mpesa/mpesa";
 import { createClient } from "@/lib/supabase/server";
-import dayjs from "dayjs";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -30,6 +29,15 @@ export async function POST(req: Request) {
       .maybeSingle();
 
     if (insertError) {
+      if (insertError.message == "CONFLICTING_SEATS") {
+        console.error("Seat(s) has just been occupied");
+        return NextResponse.json(
+          {
+            error: "Seat(s) has just been occupied, choose another one",
+          },
+          { status: 400 },
+        );
+      }
       console.error("Booking insert error: ", insertError);
       return NextResponse.json(
         { error: "Failed to create booking" },
