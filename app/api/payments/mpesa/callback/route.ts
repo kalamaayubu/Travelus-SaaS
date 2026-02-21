@@ -14,7 +14,8 @@ export async function POST(req: Request) {
 
     console.log("MPESA CALLBACK RECEIVED:", JSON.stringify(res, null, 2));
 
-    if (res.ResultCode === 0) {
+    const resultCode = Number(res.ResultCode);
+    if (resultCode === 0) {
       // Extract Receipt
       const metadata = res.CallbackMetadata.Item;
       const receipt = metadata.find(

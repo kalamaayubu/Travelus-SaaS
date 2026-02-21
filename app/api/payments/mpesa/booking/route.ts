@@ -8,39 +8,27 @@ export async function POST(req: Request) {
 
   try {
     const { bookingPayload } = await req.json();
-    // console.log("BOOKING PAYLOAD: ", bookingPayload);
 
-    // 1️⃣ Create booking
+    // Create booking
     const { data: booking, error: insertError } = await supabase
       .from("bookings")
       .insert({
         trip_id: bookingPayload.tripId,
         amount: bookingPayload.totalFare,
-        status: "PENDING",
         user_type: "PASSENGER",
         seats: bookingPayload.selectedSeats,
         full_name: bookingPayload.fullName,
         contact_number: bookingPayload.contactNumber,
         mpesa_number: bookingPayload.mpesaNumber,
         email: bookingPayload.email,
-        reserved_at: dayjs().toISOString(),
       })
       .select("id, ticket_number, seats")
       .maybeSingle();
 
     if (insertError) {
-      if (insertError.message == "CONFLICTING_SEATS") {
-        console.error("Seat(s) has just been occupied");
-        return NextResponse.json(
-          {
-            error: "Seat(s) has just been occupied, choose another one",
-          },
-          { status: 400 },
-        );
-      }
       console.error("Booking insert error: ", insertError);
       return NextResponse.json(
-        { error: "Failed to create booking" },
+        { error: "Insert error, failed to create booking" },
         { status: 500 },
       );
     }
@@ -59,8 +47,6 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-
-    // console.log("BOOKING CREATED: ", booking);
 
     // Prepare M-Pesa credentials
     const accessToken = await getMpesaAccessToken();
@@ -99,9 +85,6 @@ export async function POST(req: Request) {
       },
     );
 
-    const rawText = await mpesaResponse;
-    console.log("MPESA RAW RESPONSE:", rawText);
-
     const mpesaRes = await mpesaResponse.json();
 
     if (!mpesaResponse.ok) {
@@ -120,13 +103,18 @@ export async function POST(req: Request) {
       .update({ checkout_request_id: mpesaRes.CheckoutRequestID })
       .eq("id", booking.id);
 
-    if (dbError) throw new Error("Failed to save CheckoutRequestID");
-
-    console.log("CheckoutId: ", mpesaRes.CheckoutRequestID);
+    if (dbError) {
+      console.error("Error Saving Checkout ID: ", dbError);
+      return NextResponse.json(
+        { error: "Failed to save CheckoutRequestID" },
+        { status: 400 },
+      );
+    }
 
     // Encrypt booking id (for safe ticket approval)
     const encryptedBookingId = encrypt(booking.id);
 
+    console.log("Sending response...");
     return NextResponse.json({
       success: true,
       ticketNumber: booking.ticket_number,

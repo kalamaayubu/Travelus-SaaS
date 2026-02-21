@@ -11,9 +11,10 @@ import { useQuery } from "@tanstack/react-query";
 import { TripCardSkeleton } from "../trip/TripCardSkeleton";
 import { toast } from "sonner";
 import { PassangerBookingProps } from "@/types/trip.types";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { TicketSuccessView } from "../passenger/TicketSuccessView";
 import { useItineraryStore } from "@/zustand/useItineraryStore";
+import { useBookingStatusSubscription } from "@/hooks/useBookingStatusSubscription";
 
 export default function BookingDrawer({
   tripId,
@@ -22,9 +23,10 @@ export default function BookingDrawer({
   tripId: string;
   onClose: () => void;
 }) {
-  // SIMULATION: Booking payment simulation states:
   const [bookingId, setBookingId] = useState<string | null>(null);
-  const [isPaying, setIsPaying] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<
+    "IDLE" | "WAITING" | "SUCCESS" | "FAILED"
+  >("IDLE");
   const [ticketInfo, setTicketInfo] = useState<{
     number: string;
     encryptedBookingId: string;
@@ -42,6 +44,56 @@ export default function BookingDrawer({
   //     timestamp: Date.now(),
   //   });
   // });
+
+  // DEBBUGING
+  useEffect(() => {
+    console.log("DEBBUGING...[BookingDrawer] ticketInfo:", ticketInfo);
+    console.log("DEBBUGING...[BookingDrawer] paymentStatus:", paymentStatus);
+  }, [ticketInfo, paymentStatus]);
+
+  // Clean up timer and remove toast
+  const clearTimerAndToast = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+
+    if (toastIdRef.current) {
+      toast.dismiss(toastIdRef.current);
+      toastIdRef.current = null;
+    }
+  };
+
+  const handleBooked = useCallback((updated: any) => {
+    clearTimerAndToast();
+    setTicketInfo({
+      number: updated.ticket_number,
+      encryptedBookingId: updated.id,
+      seats: updated.seats,
+    });
+    setPaymentStatus("SUCCESS");
+    toast.success("Payment confirmed");
+  }, []);
+
+  const handleFailed = useCallback(() => {
+    clearTimerAndToast();
+    setPaymentStatus("FAILED");
+    toast.error("Payment processing failed.");
+  }, []);
+
+  // Subscribe to booking status changes
+  useBookingStatusSubscription({
+    bookingId,
+    onBooked: handleBooked,
+    onFailed: handleFailed,
+  });
+
+  // Toast timer clean up
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
 
   // Fetch trip details
   const { data, error, isLoading } = useQuery({
@@ -97,8 +149,13 @@ export default function BookingDrawer({
       }
 
       // Set the payment simulation data
-      setBookingId(result.data.id);
-      setIsPaying(true);
+      setBookingId(result.bookingId);
+      setTicketInfo({
+        number: result.ticketNumber,
+        encryptedBookingId: result.encryptedBookingId,
+        seats: result.seats,
+      });
+      setPaymentStatus("WAITING");
 
       const seatCount = selectedSeats.length;
       const HOLD_TIME_SECONDS = 6 * 60; // 6 minutes
@@ -138,54 +195,13 @@ export default function BookingDrawer({
       }, 1000);
     } catch (error) {
       console.error("Something went wrong:", error);
-      toast.error("Network error. Please try again.");
-    }
-  };
-
-  // Simulated payment handler
-  const handleSimulatedPayment = async () => {
-    if (!bookingId) return;
-
-    try {
-      const res = await fetch(`/api/payments/booking`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bookingId }),
-      });
-
-      const result = await res.json();
-      if (res.ok) {
-        //  Kill the interval logic immediately
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-          timerRef.current = null;
-        }
-
-        //  Dismiss the specific countdown toast
-        if (toastIdRef.current) {
-          toast.dismiss(toastIdRef.current);
-          toastIdRef.current = null;
-        }
-
-        setTicketInfo({
-          number: result.ticketNumber,
-          encryptedBookingId: result.encryptedBookingId,
-          seats: result.seats,
-        });
-        setIsPaying(false);
-        toast.success("Payment confirmed!");
-      } else {
-        toast.error(result.error || "Payment failed");
-      }
-    } catch (error) {
-      toast.error("Payment verification failed.");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
   // Deciding between navigation and final submission
   const handleAction = () => {
     if (step === "PAYMENT") {
-      // Submit booking
       handleSubmit(onFinalSubmit)();
     } else {
       nextStep();
@@ -198,6 +214,7 @@ export default function BookingDrawer({
       <div className="fixed inset-0 z-100 flex justify-end">
         <div className="absolute inset-0 bg-black/80" onClick={onClose} />
         <div className="relative w-full max-w-md bg-soft-dark h-full p-8">
+          <TripCardSkeleton />
           <TripCardSkeleton />
           <div className="relative w-full max-w-md bg-soft-dark h-full p-8 flex flex-col justify-center items-center">
             <Loader2 className="animate-spin text-secondary mb-4" size={40} />
@@ -221,35 +238,43 @@ export default function BookingDrawer({
       />
 
       <div className="relative w-full max-w-md bg-soft-dark border-l border-white/10 h-full flex flex-col animate-in slide-in-from-right duration-500 shadow-2xl">
-        {/* Payment view simulation */}
-        {ticketInfo ? (
+        {paymentStatus === "SUCCESS" && ticketInfo ? (
           <TicketSuccessView
             ticketNumber={ticketInfo.number}
             encryptedBookingId={ticketInfo.encryptedBookingId}
             seats={ticketInfo.seats}
             onClose={onClose}
           />
-        ) : isPaying ? (
+        ) : paymentStatus === "WAITING" ? (
           <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-8 animate-in fade-in duration-500">
             <div className="size-24 bg-secondary/10 rounded-full flex items-center justify-center animate-pulse">
               <CreditCard size={48} className="text-secondary" />
             </div>
+
             <div className="space-y-3">
-              <h3 className="text-xl font-black text-white uppercase tracking-tight">
+              <h3 className="text-2xl font-black text-white uppercase tracking-tight">
                 Waiting for M-Pesa PIN...
               </h3>
-              <p className="text-gray4 text-sm px-6">
+              <p className="text-gray4 px-6">
                 We've sent an STK push to your phone. Enter your PIN to complete
                 the booking.
               </p>
             </div>
+          </div>
+        ) : paymentStatus === "FAILED" ? (
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-6">
+            <div className="size-24 bg-red-500/10 rounded-full flex items-center justify-center">
+              <X size={48} className="text-red-500" />
+            </div>
 
-            <button
-              onClick={handleSimulatedPayment}
-              className="w-full h-16 bg-white text-black font-black rounded-xl uppercase tracking-tighter hover:bg-primary transition-colors flex items-center justify-center gap-3"
-            >
-              Simulate Successful Payment
-            </button>
+            <div className="space-y-3">
+              <h3 className="text-2xl font-black text-white uppercase">
+                Payment Failed
+              </h3>
+              <p className="text-gray4 px-6">
+                Your payment was not completed. You can try again.
+              </p>
+            </div>
           </div>
         ) : (
           <>
