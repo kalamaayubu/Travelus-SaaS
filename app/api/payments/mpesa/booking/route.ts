@@ -8,9 +8,8 @@ export async function POST(req: Request) {
 
   try {
     const { bookingPayload } = await req.json();
-    // console.log("BOOKING PAYLOAD: ", bookingPayload);
 
-    // 1️⃣ Create booking
+    // Create booking
     const { data: booking, error: insertError } = await supabase
       .from("bookings")
       .insert({
@@ -48,8 +47,6 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-
-    // console.log("BOOKING CREATED: ", booking);
 
     // Prepare M-Pesa credentials
     const accessToken = await getMpesaAccessToken();
