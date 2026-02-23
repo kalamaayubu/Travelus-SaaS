@@ -9,6 +9,9 @@ export default function FinalCTA() {
 
   return (
     <section className=" py-32 px-4 relative overflow-hidden">
+      {/* Subtle Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+
       <div className="max-w-6xl mx-auto relative">
         {/* --- TOP LEFT STRING --- */}
         <div className="absolute top-8 left-8 md:top-10 md:left-10 z-20">

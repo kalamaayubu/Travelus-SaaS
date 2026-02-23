@@ -1,3 +1,4 @@
+import Contact from "@/components/landing/Contact";
 import FAQ from "@/components/landing/FAQ";
 import Features from "@/components/landing/Features";
 import FinalCTA from "@/components/landing/FinalCTA";
@@ -17,6 +18,7 @@ export default function Home() {
       <Testimonials />
       <FAQ />
       <Pricing />
+      <Contact />
       <FinalCTA />
     </>
   );

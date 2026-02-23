@@ -28,7 +28,7 @@ export default function DriverSignup() {
           <span>
             Please contact SafiriBridge team to be registered as a driver.{" "}
             <Link
-              href="/#pricing"
+              href="/#contact"
               className="underline font-bold text-sky-400"
               // 2. Dismiss the toast using the captured ID on click
               onClick={() => setTimeout(() => toast.dismiss(toastId), 2000)}
