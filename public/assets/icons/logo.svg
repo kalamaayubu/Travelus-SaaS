@@ -1,0 +1,30 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width="72"
+  height="72"
+>
+  <g transform="rotate(180 12 12)">
+    <!-- Outer rim -->
+    <circle cx="12" cy="12" r="10" stroke="#51baff" stroke-width="2.5" fill="none"/>
+
+    <!-- Three reversed river-like spokes -->
+    <path
+      d="M12 12 
+         C13 10, 13 6, 12 4
+         C11 6, 11 10, 12 12Z
+
+         M12 12
+         C10 13, 6 13, 4 12
+         C6 11, 10 11, 12 12Z
+
+         M12 12
+         C14 13, 18 13, 20 12
+         C18 11, 14 11, 12 12Z"
+      fill="#ffffff"
+    />
+
+    <!-- Center hub (round junction, thicker meeting point) -->
+    <circle cx="12" cy="12" r="2" fill="#ffffff"/>
+  </g>
+</svg>

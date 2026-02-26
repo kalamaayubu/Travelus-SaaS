@@ -28,7 +28,10 @@ export async function POST(req: Request) {
     if (insertError) {
       console.error("Booking insert error: ", insertError);
       return NextResponse.json(
-        { error: "Insert error, failed to create booking" },
+        {
+          error:
+            insertError.message || "Insert error, failed to create booking",
+        },
         { status: 500 },
       );
     }

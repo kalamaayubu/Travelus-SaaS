@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { CarFront, X } from "lucide-react";
+import { CarFront } from "lucide-react";
 import BookingDrawer from "@/components/shared/BookingDrawer";
 import { useForm, FormProvider } from "react-hook-form";
 import { SearchBar } from "./SearchBar";
@@ -106,7 +106,7 @@ const TripSearch = ({ initialTrips = [], initialMeta }: TripSearchProps) => {
     <div className="min-h-screen bg-dark text-white font-sans">
       <div className="pt-20 pb-16 px-6 max-w-6xl mt-20 mx-auto">
         <div className="space-y-6 mb-12">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9]">
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tighter uppercase leading-[0.9]">
             Book{" "}
             <span className="text-secondary inline-block min-w-75">
               {text}
@@ -114,7 +114,7 @@ const TripSearch = ({ initialTrips = [], initialMeta }: TripSearchProps) => {
             </span>
             <br /> <span className="text-white/20 italic">Across Kenya</span>
           </h1>
-          <p className="text-gray3 max-w-lg font-medium text-lg italic mx-auto md:mx-0">
+          <p className="text-gray3 max-w-lg font-medium text-lg mx-auto md:mx-0">
             Enter your departure, destination and time below to book your trip
             now
           </p>
@@ -126,7 +126,7 @@ const TripSearch = ({ initialTrips = [], initialMeta }: TripSearchProps) => {
         </FormProvider>
       </div>
 
-      <main className="max-w-6xl p-4 mx-auto">
+      <section id="available_trips" className="max-w-6xl p-4 mx-auto">
         {isPending ? (
           <div className="space-y-6 animate-in fade-in duration-500">
             <TripCardSkeleton />
@@ -138,7 +138,7 @@ const TripSearch = ({ initialTrips = [], initialMeta }: TripSearchProps) => {
           </div>
         ) : hasSearchParams ? (
           hasResults ? (
-            // Show search results
+            // Search results
             <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500 mb-48">
               {initialMeta && (
                 <div className="mb-6 text-white">
@@ -160,44 +160,49 @@ const TripSearch = ({ initialTrips = [], initialMeta }: TripSearchProps) => {
             </div>
           ) : (
             // No results found
-            <div className="text-center pb-10 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              <div className="flex justify-center">
-                <div className="size-36 rounded-full bg-secondary/5 flex items-center justify-center border border-secondary/10">
-                  <X className="text-secondary size-20" />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <h2 className="text-2xl font-black uppercase tracking-widest text-white/80">
-                  No trips found
-                </h2>
-                <p className="text-gray4 max-w-xs mx-auto font-medium">
-                  No trips available for {urlOrigin} to {urlDestination} on{" "}
-                  {urlDate}
+            <div className="flex flex-col items-center justify-center py-20 px-6 text-center animate-in fade-in zoom-in-95 duration-500">
+              <h2 className="text-3xl font-bold text-white mb-2">
+                No trips available
+              </h2>
+              <div className="bg-red-500/5 border border-white/10 rounded-xl p-4 mb-6 max-w-md">
+                <p className=" text-gray2">
+                  We couldn't find any trips for{" "}
+                  <span className="text-white font-semibold">{urlOrigin}</span>{" "}
+                  to{" "}
+                  <span className="text-white font-semibold">
+                    {urlDestination}
+                  </span>{" "}
+                  on <span className="text-white font-semibold">{urlDate}</span>
+                  .
                 </p>
-                <p>Try a different search</p>
               </div>
+              <p className="text-gray4 text-sm">
+                Tip: Try selecting a different date or nearby locations.
+              </p>
             </div>
           )
         ) : (
           // Initial empty state (no search yet)
-          <div className="text-center py-20 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            <div className="flex justify-center">
-              <div className="size-24 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
-                <CarFront className="text-primary size-10 opacity-40" />
+          <div className="flex flex-col items-center justify-center py-24 px-6 text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="relative mb-8">
+              {/* Decorative Glow */}
+              <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
+              <div className="relative size-24 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center rotate-3 hover:rotate-0 transition-transform duration-500">
+                <CarFront className="text-primary size-12" strokeWidth={1.5} />
               </div>
             </div>
-            <div className="space-y-2">
-              <h2 className="text-2xl font-black uppercase tracking-widest text-white/80">
-                Ready to move?
+            <div className="max-w-sm">
+              <h2 className="text-2xl font-bold tracking-tight text-white mb-3">
+                Your journey starts here
               </h2>
-              <p className="text-gray4 max-w-xs mx-auto font-medium">
-                Enter your departure and destination above to see available
-                trips.
+              <p className="text-gray3 leading-relaxed">
+                Select your origin, destination, and preferred date above to
+                discover the best available trips across Kenya.
               </p>
             </div>
           </div>
         )}
-      </main>
+      </section>
 
       {activeTripData && (
         <BookingDrawer tripId={activeTripId} onClose={closeDrawer} />

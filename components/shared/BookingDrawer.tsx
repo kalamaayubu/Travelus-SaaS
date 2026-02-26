@@ -14,7 +14,9 @@ import { PassangerBookingProps } from "@/types/trip.types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TicketSuccessView } from "../passenger/TicketSuccessView";
 import { useItineraryStore } from "@/zustand/useItineraryStore";
+import { useBookingTransactionMonitor } from "@/zustand/useBookingTransactionMonitor";
 import { useBookingStatusSubscription } from "@/hooks/useBookingStatusSubscription";
+import { PaymentStatus } from "@/types/payments";
 
 export default function BookingDrawer({
   tripId,
@@ -23,15 +25,13 @@ export default function BookingDrawer({
   tripId: string;
   onClose: () => void;
 }) {
-  const [bookingId, setBookingId] = useState<string | null>(null);
-  const [paymentStatus, setPaymentStatus] = useState<
-    "IDLE" | "WAITING" | "SUCCESS" | "FAILED"
-  >("IDLE");
-  const [ticketInfo, setTicketInfo] = useState<{
-    number: string;
-    encryptedBookingId: string;
-    seats: string[];
-  } | null>(null);
+  // const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("IDLE");
+  // const [ticketInfo, setTicketInfo] = useState<{
+  //   number: string;
+  //   encryptedBookingId: string;
+  //   seats: string[];
+  // } | null>(null);
+  const { startTransaction } = useBookingTransactionMonitor();
 
   const toastIdRef = useRef<string | number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -46,54 +46,54 @@ export default function BookingDrawer({
   // });
 
   // DEBBUGING
-  useEffect(() => {
-    console.log("DEBBUGING...[BookingDrawer] ticketInfo:", ticketInfo);
-    console.log("DEBBUGING...[BookingDrawer] paymentStatus:", paymentStatus);
-  }, [ticketInfo, paymentStatus]);
+  // useEffect(() => {
+  //   console.log("DEBBUGING...[BookingDrawer] ticketInfo:", ticketInfo);
+  //   console.log("DEBBUGING...[BookingDrawer] paymentStatus:", paymentStatus);
+  // }, [ticketInfo, paymentStatus]);
 
   // Clean up timer and remove toast
-  const clearTimerAndToast = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
+  // const clearTimerAndToast = () => {
+  //   if (timerRef.current) {
+  //     clearInterval(timerRef.current);
+  //     timerRef.current = null;
+  //   }
 
-    if (toastIdRef.current) {
-      toast.dismiss(toastIdRef.current);
-      toastIdRef.current = null;
-    }
-  };
+  //   if (toastIdRef.current) {
+  //     toast.dismiss(toastIdRef.current);
+  //     toastIdRef.current = null;
+  //   }
+  // };
 
-  const handleBooked = useCallback((updated: any) => {
-    clearTimerAndToast();
-    setTicketInfo({
-      number: updated.ticket_number,
-      encryptedBookingId: updated.id,
-      seats: updated.seats,
-    });
-    setPaymentStatus("SUCCESS");
-    toast.success("Payment confirmed");
-  }, []);
+  // const handleBooked = useCallback((updated: any) => {
+  //   clearTimerAndToast();
+  //   setTicketInfo({
+  //     number: updated.ticket_number,
+  //     encryptedBookingId: updated.id,
+  //     seats: updated.seats,
+  //   });
+  //   setPaymentStatus("SUCCESS");
+  //   toast.success("Payment confirmed");
+  // }, []);
 
-  const handleFailed = useCallback(() => {
-    clearTimerAndToast();
-    setPaymentStatus("FAILED");
-    toast.error("Payment processing failed.");
-  }, []);
+  // const handleFailed = useCallback(() => {
+  //   clearTimerAndToast();
+  //   setPaymentStatus("FAILED");
+  //   toast.error("Payment processing failed.");
+  // }, []);
 
   // Subscribe to booking status changes
-  useBookingStatusSubscription({
-    bookingId,
-    onBooked: handleBooked,
-    onFailed: handleFailed,
-  });
+  // useBookingStatusSubscription({
+  //   bookingId,
+  //   onBooked: handleBooked,
+  //   onFailed: handleFailed,
+  // });
 
   // Toast timer clean up
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     if (timerRef.current) clearInterval(timerRef.current);
+  //   };
+  // }, []);
 
   // Fetch trip details
   const { data, error, isLoading } = useQuery({
@@ -148,51 +148,47 @@ export default function BookingDrawer({
         return;
       }
 
-      // Set the payment simulation data
-      setBookingId(result.bookingId);
-      setTicketInfo({
-        number: result.ticketNumber,
-        encryptedBookingId: result.encryptedBookingId,
-        seats: result.seats,
-      });
-      setPaymentStatus("WAITING");
+      // Monitor transaction state globally
+      startTransaction(result.bookingId);
 
-      const seatCount = selectedSeats.length;
-      const HOLD_TIME_SECONDS = 6 * 60; // 6 minutes
+      // const seatCount = selectedSeats.length;
+      // const HOLD_TIME_SECONDS = 6 * 60; // 6 minutes
 
-      let remaining = HOLD_TIME_SECONDS;
+      // let remaining = HOLD_TIME_SECONDS;
 
-      toastIdRef.current = toast.success(
-        `${seatCount} Seat${seatCount > 1 ? "s" : ""} Reserved Successfully`,
-        {
-          description: `Please complete payment for seat${seatCount > 1 ? "s" : ""} ${selectedSeats.join(
-            ", ",
-          )}. Time remaining: 06:00`,
-          duration: HOLD_TIME_SECONDS * 1000,
-          dismissible: false,
-        },
-      );
+      // toastIdRef.current = toast.success(
+      //   `${seatCount} Seat${seatCount > 1 ? "s" : ""} Reserved Successfully`,
+      //   {
+      //     description: `Please complete payment for seat${seatCount > 1 ? "s" : ""} ${selectedSeats.join(
+      //       ", ",
+      //     )}. Time remaining: 06:00`,
+      //     duration: HOLD_TIME_SECONDS * 1000,
+      //     dismissible: false,
+      //   },
+      // );
 
-      timerRef.current = setInterval(() => {
-        remaining -= 1;
+      // timerRef.current = setInterval(() => {
+      //   remaining -= 1;
 
-        const minutes = String(Math.floor(remaining / 60)).padStart(2, "0");
-        const seconds = String(remaining % 60).padStart(2, "0");
+      //   const minutes = String(Math.floor(remaining / 60)).padStart(2, "0");
+      //   const seconds = String(remaining % 60).padStart(2, "0");
 
-        toast.success(
-          `${seatCount} Seat${seatCount > 1 ? "s" : ""} Reserved Successfully`,
-          {
-            id: toastIdRef.current as string,
-            description: `Please complete payment for seat${seatCount > 1 ? "s" : ""} ${selectedSeats.join(
-              ", ",
-            )}. Time remaining: ${minutes}:${seconds}`,
-          },
-        );
+      //   toast.success(
+      //     `${seatCount} Seat${seatCount > 1 ? "s" : ""} Reserved Successfully`,
+      //     {
+      //       id: toastIdRef.current as string,
+      //       description: `Please complete payment for seat${seatCount > 1 ? "s" : ""} ${selectedSeats.join(
+      //         ", ",
+      //       )}. Time remaining: ${minutes}:${seconds}`,
+      //     },
+      //   );
 
-        if (remaining <= 0) {
-          if (timerRef.current) clearInterval(timerRef.current);
-        }
-      }, 1000);
+      //   if (remaining <= 0) {
+      //     if (timerRef.current) clearInterval(timerRef.current);
+      //   }
+      // }, 1000);
+
+      onClose();
     } catch (error) {
       console.error("Something went wrong:", error);
       toast.error("Something went wrong. Please try again.");
@@ -238,7 +234,7 @@ export default function BookingDrawer({
       />
 
       <div className="relative w-full max-w-md bg-soft-dark border-l border-white/10 h-full flex flex-col animate-in slide-in-from-right duration-500 shadow-2xl">
-        {paymentStatus === "SUCCESS" && ticketInfo ? (
+        {/* {paymentStatus === "SUCCESS" && ticketInfo ? (
           <TicketSuccessView
             ticketNumber={ticketInfo.number}
             encryptedBookingId={ticketInfo.encryptedBookingId}
@@ -276,113 +272,116 @@ export default function BookingDrawer({
               </p>
             </div>
           </div>
-        ) : (
-          <>
-            <header className="p-6 py-4 border-b border-white/5 flex items-center justify-between bg-bg-soft/30">
-              <div className="flex items-center gap-4">
-                {step !== "SEATS" && (
-                  <button
-                    onClick={prevStep}
-                    className="p-2 hover:bg-white/5 rounded-lg transition-colors"
-                  >
-                    <ArrowLeft size={20} />
-                  </button>
-                )}
-                <h2 className="text-xl font-black uppercase tracking-tighter text-primary leading-none">
-                  {step === "SEATS"
-                    ? "Select Seats"
-                    : step === "DETAILS"
-                      ? "Passenger Info"
-                      : "Make payment"}
-                </h2>
+        ) : ( */}
+        <>
+          {/* Booking drawer heading */}
+          <div className="p-6 py-4 border-b border-white/5 flex items-center justify-between bg-bg-soft/30">
+            <div className="flex items-center gap-4">
+              {step !== "SEATS" && (
+                <button
+                  onClick={prevStep}
+                  className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+                >
+                  <ArrowLeft size={20} />
+                </button>
+              )}
+              <h2 className="text-xl font-black uppercase tracking-tighter text-primary leading-none">
+                {step === "SEATS"
+                  ? "Select Seats"
+                  : step === "DETAILS"
+                    ? "Passenger Info"
+                    : "Make payment"}
+              </h2>
+            </div>
+            <button
+              onClick={onClose}
+              className="size-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/5"
+            >
+              <X size={20} className="text-gray4" />
+            </button>
+          </div>
+
+          {/* Steps views */}
+          <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+            {step === "SEATS" && (
+              <SeatSelectionView
+                layout={data?.layout}
+                booked={data?.occupiedSeats}
+                reserved={[]}
+                selected={selectedSeats}
+                onSeatClick={handleSeatClick}
+              />
+            )}
+            {step === "DETAILS" && (
+              <DetailsView register={register} errors={errors} />
+            )}
+            {step === "PAYMENT" && (
+              <PaymentView
+                totalFare={totalFare}
+                mpesaNumber={formData.mpesaNumber}
+                fullName={formData.fullName}
+                seats={selectedSeats}
+                trip={data.trip}
+              />
+            )}
+          </div>
+
+          <footer className="p-6 border-t border-white/5 bg-bg-soft/50 space-y-4 backdrop-blur-md">
+            <div className="flex justify-between items-end">
+              <div className="space-y-1">
+                <p className="text-[10px] font-black text-gray2 uppercase tracking-widest">
+                  Selected Seats ({selectedSeats.length})
+                </p>
+                <p className="text-lg font-black text-white truncate max-w-37.5">
+                  {selectedSeats.length > 0 ? selectedSeats.join(", ") : "--"}
+                </p>
               </div>
-              <button
-                onClick={onClose}
-                className="size-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/5"
-              >
-                <X size={20} className="text-gray4" />
-              </button>
-            </header>
-            <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
-              {step === "SEATS" && (
-                <SeatSelectionView
-                  layout={data?.layout}
-                  booked={data?.occupiedSeats}
-                  reserved={[]}
-                  selected={selectedSeats}
-                  onSeatClick={handleSeatClick}
-                />
-              )}
-              {step === "DETAILS" && (
-                <DetailsView register={register} errors={errors} />
-              )}
-              {step === "PAYMENT" && (
-                <PaymentView
-                  totalFare={totalFare}
-                  mpesaNumber={formData.mpesaNumber}
-                  fullName={formData.fullName}
-                  seats={selectedSeats}
-                  trip={data.trip}
-                />
-              )}
+              <div className="text-right">
+                <p className="text-[10px] font-black text-gray2 uppercase tracking-widest">
+                  Total fare
+                </p>
+                <p className="text-xl font-black uppercase tracking-tighter text-secondary">
+                  KES&nbsp;&nbsp; {totalFare.toLocaleString()}
+                </p>
+              </div>
             </div>
 
-            <footer className="p-6 border-t border-white/5 bg-bg-soft/50 space-y-4 backdrop-blur-md">
-              <div className="flex justify-between items-end">
-                <div className="space-y-1">
-                  <p className="text-[10px] font-black text-gray2 uppercase tracking-widest">
-                    Selected Seats ({selectedSeats.length})
-                  </p>
-                  <p className="text-lg font-black text-white truncate max-w-37.5">
-                    {selectedSeats.length > 0 ? selectedSeats.join(", ") : "--"}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-[10px] font-black text-gray2 uppercase tracking-widest">
-                    Total fare
-                  </p>
-                  <p className="text-xl font-black uppercase tracking-tighter text-secondary">
-                    KES&nbsp;&nbsp; {totalFare.toLocaleString()}
-                  </p>
-                </div>
-              </div>
-
-              <button
-                disabled={
-                  isSubmitting ||
-                  (step === "SEATS" ? selectedSeats.length === 0 : !isValid)
-                }
-                onClick={handleAction}
-                className="primary-btn w-full h-14 rounded-xl flex items-center justify-center gap-3 disabled:opacity-70 transition-all group shadow-xl shadow-primary/10"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="size-5 animate-spin" />
-                    <span className="uppercase tracking-[0.2em] font-black text-sm">
-                      Sending Request...
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <span className="uppercase tracking-[0.2em] font-black text-sm">
-                      {step === "SEATS" && "Proceed to Details"}
-                      {step === "DETAILS" && "Confirm & Pay"}
-                      {step === "PAYMENT" && "Pay with M-pesa"}
-                    </span>
-                    {step === "PAYMENT" ? (
-                      <CreditCard size={18} />
-                    ) : (
-                      <ChevronRight
-                        size={18}
-                        className="group-hover:translate-x-1 transition-transform"
-                      />
-                    )}
-                  </>
-                )}
-              </button>
-            </footer>
-          </>
-        )}
+            <button
+              disabled={
+                isSubmitting ||
+                (step === "SEATS" ? selectedSeats.length === 0 : !isValid)
+              }
+              onClick={handleAction}
+              className="primary-btn w-full h-14 rounded-xl flex items-center justify-center gap-3 disabled:opacity-70 transition-all group shadow-xl shadow-primary/10"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="size-5 animate-spin" />
+                  <span className="uppercase tracking-[0.2em] font-black text-sm">
+                    Sending Request...
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="uppercase tracking-[0.2em] font-black text-sm">
+                    {step === "SEATS" && "Proceed to Details"}
+                    {step === "DETAILS" && "Confirm & Pay"}
+                    {step === "PAYMENT" && "Pay with M-pesa"}
+                  </span>
+                  {step === "PAYMENT" ? (
+                    <CreditCard size={18} />
+                  ) : (
+                    <ChevronRight
+                      size={18}
+                      className="group-hover:translate-x-1 transition-transform"
+                    />
+                  )}
+                </>
+              )}
+            </button>
+          </footer>
+        </>
+        {/* )} */}
       </div>
     </div>
   );

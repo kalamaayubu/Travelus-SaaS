@@ -5,8 +5,8 @@ import { FerrisWheel, Menu, Moon, Sun, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "./providers/auth-provider";
-import { toast } from "sonner";
 import PrintTicketDialog from "./passenger/PrintTicketDialog";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,41 +37,28 @@ export default function Navbar() {
     { name: "Pricing", href: "/#pricing" },
   ];
 
-  // Logout
-  const handleLogout = async () => {
-    try {
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        window.location.reload();
-        toast.success("Logged out successful");
-        return;
-      } else {
-        console.error("Logout failed:", result.error);
-        toast.error("Could not log out. Please try again.");
-      }
-    } catch (error) {
-      console.error("An unexpected error occurred:", error);
-    }
-  };
-
   return (
     <>
       <header className="fixed top-0 z-50 w-full bg-dark backdrop-blur border-b border-gray8/5">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
           {/* LEFT SIDE*/}
           <div className="flex items-center gap-2">
-            <FerrisWheel className="text-secondary" />
-            <span className="text-xl hidden sm:flex font-semibold text-primary">
-              Travelus
-            </span>
+            <Image
+              src={"/assets/icons/logo.svg"}
+              width={25}
+              height={25}
+              alt="Logo"
+            />
+            {/* <FerrisWheel className="text-secondary" /> */}
+            {pathname.includes("/trips") ? (
+              <p className="text-md uppercase flex font-semibold text-primary">
+                SafariBridge
+              </p>
+            ) : (
+              <p className="text-xl hidden sm:flex font-semibold text-primary">
+                SafariBridge
+              </p>
+            )}
           </div>
 
           {/* RIGHT SIDE*/}

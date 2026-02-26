@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { AlertTriangle, RefreshCcw, Home, MoveLeft } from "lucide-react";
+import { RefreshCcw, Home } from "lucide-react";
 import Link from "next/link";
 
 export default function Error({
@@ -20,12 +20,6 @@ export default function Error({
     <div className="min-h-screen bg-bg-main flex items-center justify-center p-6 relative overflow-hidden">
       <div className="max-w-md w-full text-center space-y-8 relative z-10">
         {/* Icon with Glitch Effect Style */}
-        <div className="relative inline-block">
-          <div className="size-24 bg-soft-dark border border-white/10 rounded-3xl flex items-center justify-center mx-auto">
-            <AlertTriangle size={48} className="text-red-500" />
-          </div>
-          <div className="absolute -inset-1 bg-red-500/20 blur-lg rounded-3xl -z-10 animate-pulse" />
-        </div>
 
         <div className="space-y-3">
           <h1 className="text-4xl font-black uppercase tracking-tighter text-white">

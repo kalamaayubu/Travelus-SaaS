@@ -1,4 +1,4 @@
-import { Bus, ShieldCheck, Users, Clock } from "lucide-react";
+import { ShieldCheck, Users, Clock } from "lucide-react";
 import { TripSearchResponse } from "@/types/trip.types";
 import dayjs from "dayjs";
 import { cn } from "@/lib/utils"; // Assuming you have a cn utility for classes
@@ -16,12 +16,12 @@ export const TripCard = ({ trip, onSelect }: TripCardProps) => {
       <div className="flex flex-col lg:flex-row gap-6 lg:items-center">
         {/* Section 1: Vehicle & Route Info */}
         <div className="flex flex-1 gap-5">
-          <div className="hidden sm:flex flex-col items-center justify-center p-4 rounded-xl bg-white/5 border border-white/5 text-primary/60 group-hover:scale-105 transition-transform">
+          {/* <div className="hidden sm:flex flex-col items-center justify-center p-4 rounded-xl bg-white/5 border border-white/5 text-primary/60 group-hover:scale-105 transition-transform">
             <Bus size={28} strokeWidth={1.5} />
             <span className="text-[10px] mt-2 font-bold opacity-60 uppercase">
               {trip.vehicle.type_name}
             </span>
-          </div>
+          </div> */}
 
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-3">
@@ -32,14 +32,14 @@ export const TripCard = ({ trip, onSelect }: TripCardProps) => {
 
             <div className="flex items-center gap-3">
               <div className="flex flex-col items-center gap-1">
-                <div className="size-2 rounded-full bg-primary" />
+                <div className="size-2 rounded-full animate-pulse bg-primary" />
                 <div className="w-0.5 h-4 bg-white/20" />
                 <div className="size-2 rounded-full border border-primary" />
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-lg md:text-xl font-bold tracking-tight text-white leading-none">
                   {trip.trip_origin}
-                  <span className="mx-2 text-white/30 font-light">to</span>
+                  <span className="mx-2 text-gray4 font-light">➙</span>
                   {trip.trip_destiny}
                 </h3>
                 <p className="text-sm text-gray-400 font-medium">
@@ -82,25 +82,23 @@ export const TripCard = ({ trip, onSelect }: TripCardProps) => {
           </div>
 
           {/* Pricing & CTA */}
-          <div className="col-span-2 md:col-span-1 flex lg:flex-col items-center lg:items-end justify-between lg:justify-center gap-1">
-            <div className="text-left lg:text-right">
-              <span className="block text-sm font-bold uppercase tracking-wide">
-                Per Seat
-              </span>
-              <p className="text-xl tracking-widest font-black  text-secondary ">
-                KES: {trip.price_per_seat.toLocaleString()}
-              </p>
-            </div>
-
-            <button
-              onClick={() => onSelect(trip)}
-              className={cn(
-                "h-12 px-8 whitespace-nowrap rounded-lg font-bold text-sm uppercase tracking-widest transition-all active:scale-95 bg-primary text-black hover:bg-primary/90 hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]",
-              )}
-            >
-              Select seat
-            </button>
+          {/* <div className="col-span-2 md:col-span-1 flex lg:flex-col items-center lg:items-end justify-between lg:justify-center gap-1"> */}
+          <div className="text-left lg:text-right">
+            <span className="block text-xs font-bold uppercase tracking-wide">
+              Per Seat
+            </span>
+            <p className="text-md tracking-widest font-black  text-secondary ">
+              KES: {trip.price_per_seat.toLocaleString()}
+            </p>
           </div>
+
+          <button
+            onClick={() => onSelect(trip)}
+            className={`primary-btn uppercase tracking-widest text-xs py-4`}
+          >
+            Select seat
+          </button>
+          {/* </div> */}
         </div>
       </div>
     </div>

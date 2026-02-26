@@ -30,14 +30,14 @@ export const TicketSuccessView = ({
 
     const success = await saveTicketAsImage(ticketRef.current, ticketNumber);
 
-    if (success) toast.success("Ticket saved to gallery");
+    if (success) toast.success("Ticket downloaded successfully");
     else toast.error("Failed to generate image");
 
     setIsDownloading(false);
   };
 
   return (
-    <div className="flex flex-col items-center bg-soft-dark justify-center">
+    <div className="flex flex-col max-w-md items-center pb-6 bg-soft-dark justify-center">
       {/* THE BRANDED TICKET (The part being captured) */}
       <div
         ref={ticketRef}
