@@ -13,7 +13,7 @@ const redis = new Redis({
 // 5 request for 10 minutes
 const ratelimit = new Ratelimit({
   redis: redis,
-  limiter: Ratelimit.slidingWindow(5, "10 m"),
+  limiter: Ratelimit.slidingWindow(10, "10 m"),
   analytics: true,
   ephemeralCache: new Map(),
 });
@@ -58,18 +58,22 @@ export async function POST(req: Request) {
     }
     const request = await req.json();
     const supabase = await createClient();
-    const ticketNo = request.ticketNumber.toLowerCase();
-    console.log("Ticket No: ", ticketNo);
 
     const { data: booking, error } = await supabase
       .from("bookings")
-      .select("id, full_name, email, status, seats, booked_at")
+      .select("id, full_name, email, ticket_number, status, seats, booked_at")
       .eq("email", request.email)
-      .eq("ticket_number", ticketNo)
+      .eq("ticket_number", request.ticketNumber)
       .in("status", ["BOOKED", "APPROVED"])
       .maybeSingle();
 
-    if (error) throw error;
+    if (error) {
+      console.log("WRONG: ", error);
+      return NextResponse.json({
+        success: false,
+        error: "Something went wrong, Please try again later",
+      });
+    }
 
     if (!booking) {
       return NextResponse.json(
@@ -80,7 +84,7 @@ export async function POST(req: Request) {
 
     //  Encrypted ID for the QR code
     const encryptedId = encrypt(booking.id);
-    console.log("SEATS", booking.seats);
+    console.log("TICKETNO:", booking.ticket_number);
 
     return NextResponse.json(
       {
@@ -88,7 +92,7 @@ export async function POST(req: Request) {
         encryptedId,
         status: booking.status,
         full_name: booking.full_name,
-        ticketNo: ticketNo,
+        ticketNo: booking.ticket_number,
         seats: booking.seats,
         message: "Ticket retrieved successfully",
       },

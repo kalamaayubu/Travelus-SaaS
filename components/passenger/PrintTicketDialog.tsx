@@ -57,10 +57,10 @@ export default function PrintTicketDialog({
           encryptedId: data.encryptedId,
           fullName: data.full_name,
           seats: data.seats,
-          ticketNo: data.ticketNumber, // Fixed key from your API JSON
+          ticketNo: data.ticketNo, // Fixed key from your API JSON
           status: data.status,
         });
-        toast.success("Ticket retrieved!");
+        toast.success("Ticket retrieved successfully!");
       } else {
         toast.error(data.error || "Ticket not found");
       }
@@ -76,7 +76,7 @@ export default function PrintTicketDialog({
       ticketRef.current,
       retrievedTicket.ticketNo,
     );
-    if (success) toast.success("Ticket saved!");
+    if (success) toast.success("Ticket downloaded successfully!");
     setIsDownloading(false);
   };
 
@@ -112,7 +112,7 @@ export default function PrintTicketDialog({
               </label>
               <input
                 {...register("ticketNumber")}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-secondary/50 transition font-mono uppercase"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-primary/50 transition font-mono uppercase"
                 placeholder="e.g. 4A665687"
               />
               {errors.ticketNumber && (
@@ -129,7 +129,7 @@ export default function PrintTicketDialog({
               <input
                 {...register("email")}
                 type="email"
-                className="w-full bg-white/5 border lowercase border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-secondary/50 transition"
+                className="w-full bg-white/5 border lowercase border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-primary/50 transition"
                 placeholder="email@example.com"
               />
               {errors.email && (
@@ -142,7 +142,7 @@ export default function PrintTicketDialog({
             <button
               disabled={isSubmitting}
               type="submit"
-              className="w-full py-4 bg-secondary text-black font-black uppercase rounded-lg flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition disabled:opacity-50"
+              className="w-full py-4 primary-btn text-black font-black uppercase rounded-lg flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition disabled:opacity-50"
             >
               {isSubmitting ? (
                 <Loader2 className="animate-spin" size={20} />
@@ -155,7 +155,7 @@ export default function PrintTicketDialog({
           </div>
         </form>
       ) : (
-        /* --- SUCCESS TICKET VIEW (THE SWAP) --- */
+        /* --- Success ticket retrieval VIEW (THE SWAP) --- */
         <div className="flex flex-col items-center space-y-6 animate-in zoom-in-95 duration-300">
           {/* WRAPPER FOR HTML2CANVAS */}
           <div
@@ -188,7 +188,7 @@ export default function PrintTicketDialog({
                 />
                 <TicketRow
                   label="Ticket ID"
-                  value={retrievedTicket?.ticketNo?.toUpperCase()}
+                  value={retrievedTicket.ticketNo}
                   isMono
                 />
                 <TicketRow
@@ -221,7 +221,7 @@ export default function PrintTicketDialog({
             <button
               onClick={handleDownload}
               disabled={isDownloading}
-              className="py-4 bg-secondary text-black font-black uppercase rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition text-xs"
+              className="py-4 primary-btn whitespace-nowrap text-black font-black uppercase rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition text-xs"
             >
               {isDownloading ? (
                 <Loader2 className="animate-spin" size={16} />

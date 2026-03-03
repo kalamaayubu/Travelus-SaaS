@@ -114,7 +114,7 @@ export const TripCard = ({ trip, onSelect }: TripCardProps) => {
 
           <button
             onClick={handleOpenTripDetails}
-            className={`primary-btn uppercase tracking-widest text-xs py-4`}
+            className={`primary-btn whitespace-nowrap uppercase tracking-widest text-xs py-4`}
           >
             Select seat
           </button>

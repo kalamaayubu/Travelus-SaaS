@@ -14,7 +14,7 @@ export default function SignupPage() {
 
   return (
     <section className="min-h-screen bg-dark flex items-center justify-center px-6 py-20">
-      <div className="max-w-lg px-8 py-6 rounded-xl bg-white/5 border border-white/2 w-full">
+      <div className="max-w-lg py-6 rounded-xl w-full">
         {/* Header Section */}
         <div className="text-center mb-10">
           <h1 className="text-3xl font-bold text-white mb-2">

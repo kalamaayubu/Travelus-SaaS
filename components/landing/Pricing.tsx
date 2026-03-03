@@ -38,7 +38,7 @@ export default function Pricing() {
   return (
     <section
       id="pricing"
-      className="bg-[#0b0f14] py-24 px-6 relative overflow-hidden"
+      className="bg-dark py-24 px-6 relative overflow-hidden"
     >
       {/* Decorative Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-96 bg-secondary/10 blur-[120px] pointer-events-none" />

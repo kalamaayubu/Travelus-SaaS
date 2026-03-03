@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "@/lib/validations/validate";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface LoginFields {
   email: string;
@@ -54,10 +55,16 @@ export default function LoginPage() {
 
   return (
     <section className="min-h-screen bg-dark flex items-center justify-center px-6">
-      <div className="max-w-lg px-8 py-6 rounded-xl bg-white/5 border border-white/2 w-full">
+      <div className="max-w-lg py-6 rounded-xl w-full">
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center size-16 rounded-2xl bg-primary/10 text-primary mb-6">
-            <ShieldCheck className="size-8" />
+            <Image
+              src={"/assets/icons/logo.svg"}
+              width={200}
+              height={200}
+              alt="Logo"
+              className="size-8"
+            />
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
           <p className="text-gray4">Securely log in to your dashboard</p>

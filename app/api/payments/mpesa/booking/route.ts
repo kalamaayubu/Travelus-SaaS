@@ -35,6 +35,11 @@ export async function POST(req: Request) {
       .maybeSingle();
 
     if (insertError) {
+      if (insertError.message.includes("CONFLICTING_SEATS")) {
+        return NextResponse.json({
+          error: `The ${bookingPayload.selectedSeats > 1 ? "Seats" : "Seat"} you selected has just been occupied. Please select another one.`,
+        });
+      }
       console.error("Booking insert error: ", insertError);
       return NextResponse.json(
         {

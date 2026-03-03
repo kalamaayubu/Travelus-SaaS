@@ -57,14 +57,9 @@ export default function EditTripPage() {
     }
   };
 
-  // Guard 1: Loading
   if (isLoading) return <TripDetailsPageSkeleton />;
 
-  // Guard 2: Error
-  if (error) return <div className="p-20 text-red-500">Sync Error.</div>;
-
-  // Guard 3: Data Integrity (The fix for TypeScript)
-  if (!data) return null;
+  if (!data) return null; //  Data Integrity (The fix for TypeScript)
 
   const selectedCount = Object.keys(localSelections).length;
 
@@ -101,7 +96,7 @@ export default function EditTripPage() {
             </div>
             <button
               onClick={() => setIsScannerOpen(true)}
-              className="bg-primary text-black h-12 px-6 rounded-xl font-black uppercase text-[10px] tracking-widest flex items-center gap-2 hover:scale-105 transition-transform"
+              className="bg-primary whitespace-nowrap text-black h-12 px-6 rounded-xl font-black uppercase text-[10px] tracking-widest flex items-center gap-2 hover:scale-105 transition-transform"
             >
               <Camera size={16} />
               <span>Open Scanner</span>

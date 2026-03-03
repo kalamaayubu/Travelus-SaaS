@@ -6,23 +6,21 @@ import Image from "next/image";
 export default function Hero() {
   return (
     <>
-      <section className="relative pb-24 pt-36 sm:pt-36 md:pt-36 min-h-[90vh] items-center flex flex-col overflow-hidden bg-[#0b0f14] sm:pt-16">
+      <section className="relative pb-24 pt-36 sm:pt-36 md:pt-36 min-h-[90vh] items-center flex flex-col overflow-hidden bg-dark">
         <div className="size-40 top-30 left-10 absolute rounded-full blur-3xl bg-blue-500/50 shadow-2xl" />
 
         <div className="relative max-w-6xl px-6 text-center z-10">
           {/* Headline */}
           <h1 className="text-[38px] sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight text-white">
             <span className="text-secondary">Your </span>
-            <span>Travel </span>
-            <br />
             <span> Competitive </span>
             <span className="text-green-600">Advantage</span>
           </h1>
 
           {/* Subtext */}
           <p className="mt-4 text-xl md:text-2xl text-gray3 leading-snug">
-            Giving you all the benefits of a booking system you need without the
-            high cost associated to it.
+            Giving you all the benefits of a booking system at a very low cost.
+            Start scaling your travel business today.
           </p>
           <div className="flex flex-col relative justify-between w-full">
             <Image
