@@ -2,6 +2,7 @@ import { ShieldCheck, Users, Clock } from "lucide-react";
 import { TripSearchResponse } from "@/types/trip.types";
 import dayjs from "dayjs";
 import { cn } from "@/lib/utils"; // Assuming you have a cn utility for classes
+import { itinerarySelector, useGlobalStore } from "@/zustand/useGlobalStore";
 
 interface TripCardProps {
   trip: TripSearchResponse;
@@ -11,11 +12,30 @@ interface TripCardProps {
 export const TripCard = ({ trip, onSelect }: TripCardProps) => {
   const departureTime = dayjs(trip.departure_time).format("hh:mm A");
 
+  const { setItinerary } = useGlobalStore(itinerarySelector);
+
+  const handleOpenTripDetails = () => {
+    // Populate the store before opening the drawer
+    setItinerary({
+      tripId: trip.id,
+      originName: trip.trip_origin,
+      destinationName: trip.trip_destiny,
+      segmentPrice: trip.price_per_seat,
+      selectedSeats: [],
+      totalFare: 0,
+      departureTime: trip.departure_time,
+    });
+
+    // Open trip details drawer
+    onSelect(trip);
+  };
+
   return (
     <div className="group relative bg-soft-dark border border-white/10 rounded-2xl p-5 md:p-6 transition-all duration-300 hover:border-primary/40 overflow-hidden">
       <div className="flex flex-col lg:flex-row gap-6 lg:items-center">
         {/* Section 1: Vehicle & Route Info */}
         <div className="flex flex-1 gap-5">
+          {/* Operator's logo or brand will appear here */}
           {/* <div className="hidden sm:flex flex-col items-center justify-center p-4 rounded-xl bg-white/5 border border-white/5 text-primary/60 group-hover:scale-105 transition-transform">
             <Bus size={28} strokeWidth={1.5} />
             <span className="text-[10px] mt-2 font-bold opacity-60 uppercase">
@@ -93,7 +113,7 @@ export const TripCard = ({ trip, onSelect }: TripCardProps) => {
           </div>
 
           <button
-            onClick={() => onSelect(trip)}
+            onClick={handleOpenTripDetails}
             className={`primary-btn uppercase tracking-widest text-xs py-4`}
           >
             Select seat

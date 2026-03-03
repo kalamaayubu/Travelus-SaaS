@@ -21,10 +21,10 @@
          M12 12
          C14 13, 18 13, 20 12
          C18 11, 14 11, 12 12Z"
-      fill="#ffffff"
+      fill="#51baff"
     />
 
     <!-- Center hub (round junction, thicker meeting point) -->
-    <circle cx="12" cy="12" r="2" fill="#ffffff"/>
+    <circle cx="12" cy="12" r="2" fill="#51baff"/>
   </g>
 </svg>

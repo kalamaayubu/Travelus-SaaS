@@ -51,11 +51,11 @@ export default function Navbar() {
             />
             {/* <FerrisWheel className="text-secondary" /> */}
             {pathname.includes("/trips") ? (
-              <p className="text-md uppercase flex font-semibold text-primary">
+              <p className="text-[20px] tracking-normal flex font-semibold text-white">
                 SafariBridge
               </p>
             ) : (
-              <p className="text-xl hidden sm:flex font-semibold text-primary">
+              <p className="text-2xl hidden sm:flex font-semibold text-white">
                 SafariBridge
               </p>
             )}

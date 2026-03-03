@@ -9,6 +9,15 @@ export async function POST(req: Request) {
   try {
     const { bookingPayload } = await req.json();
 
+    console.log("BOOKING PAYLOAD:", bookingPayload);
+
+    if (!bookingPayload.mpesaNumber || !bookingPayload.totalFare) {
+      return NextResponse.json(
+        { error: "Phone number and amount are required" },
+        { status: 400 },
+      );
+    }
+
     // Create booking
     const { data: booking, error: insertError } = await supabase
       .from("bookings")
@@ -41,13 +50,6 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: "Failed to create booking" },
         { status: 500 },
-      );
-    }
-
-    if (!bookingPayload.mpesaNumber || !bookingPayload.totalFare) {
-      return NextResponse.json(
-        { error: "Phone number and amount are required" },
-        { status: 400 },
       );
     }
 

@@ -9,7 +9,6 @@ import { saveTicketAsImage } from "@/utils/download-ticket";
 interface TicketSuccessProps {
   ticketNumber: string;
   encryptedBookingId: string;
-  fullName?: string;
   seats: string[];
   status?: string;
   onClose: () => void;
@@ -35,6 +34,12 @@ export const TicketSuccessView = ({
 
     setIsDownloading(false);
   };
+
+  console.log("🎟 TicketSuccessView props:", {
+    ticketNumber,
+    encryptedBookingId,
+    seats,
+  });
 
   return (
     <div className="flex flex-col max-w-md items-center pb-6 bg-soft-dark justify-center">

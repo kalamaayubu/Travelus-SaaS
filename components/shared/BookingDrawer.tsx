@@ -1,6 +1,13 @@
 "use client";
 
-import { X, ArrowLeft, CreditCard, ChevronRight, Loader2 } from "lucide-react";
+import {
+  X,
+  ArrowLeft,
+  CreditCard,
+  ChevronRight,
+  Loader2,
+  FileWarning,
+} from "lucide-react";
 import { useBookingLogic } from "@/hooks/useBookingLogic";
 import {
   DetailsView,
@@ -11,12 +18,11 @@ import { useQuery } from "@tanstack/react-query";
 import { TripCardSkeleton } from "../trip/TripCardSkeleton";
 import { toast } from "sonner";
 import { PassangerBookingProps } from "@/types/trip.types";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { TicketSuccessView } from "../passenger/TicketSuccessView";
-import { useItineraryStore } from "@/zustand/useItineraryStore";
-import { useBookingTransactionMonitor } from "@/zustand/useBookingTransactionMonitor";
-import { useBookingStatusSubscription } from "@/hooks/useBookingStatusSubscription";
-import { PaymentStatus } from "@/types/payments";
+import {
+  bookingTransactionSelector,
+  itinerarySelector,
+  useGlobalStore,
+} from "@/zustand/useGlobalStore";
 
 export default function BookingDrawer({
   tripId,
@@ -25,16 +31,8 @@ export default function BookingDrawer({
   tripId: string;
   onClose: () => void;
 }) {
-  // const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("IDLE");
-  // const [ticketInfo, setTicketInfo] = useState<{
-  //   number: string;
-  //   encryptedBookingId: string;
-  //   seats: string[];
-  // } | null>(null);
-  const { startTransaction } = useBookingTransactionMonitor();
+  const { startTransaction } = useGlobalStore(bookingTransactionSelector);
 
-  const toastIdRef = useRef<string | number | null>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
   // DEBUGGING: observing re-renders
   // const renderCount = useRef(0);
   // useEffect(() => {
@@ -44,56 +42,6 @@ export default function BookingDrawer({
   //     timestamp: Date.now(),
   //   });
   // });
-
-  // DEBBUGING
-  // useEffect(() => {
-  //   console.log("DEBBUGING...[BookingDrawer] ticketInfo:", ticketInfo);
-  //   console.log("DEBBUGING...[BookingDrawer] paymentStatus:", paymentStatus);
-  // }, [ticketInfo, paymentStatus]);
-
-  // Clean up timer and remove toast
-  // const clearTimerAndToast = () => {
-  //   if (timerRef.current) {
-  //     clearInterval(timerRef.current);
-  //     timerRef.current = null;
-  //   }
-
-  //   if (toastIdRef.current) {
-  //     toast.dismiss(toastIdRef.current);
-  //     toastIdRef.current = null;
-  //   }
-  // };
-
-  // const handleBooked = useCallback((updated: any) => {
-  //   clearTimerAndToast();
-  //   setTicketInfo({
-  //     number: updated.ticket_number,
-  //     encryptedBookingId: updated.id,
-  //     seats: updated.seats,
-  //   });
-  //   setPaymentStatus("SUCCESS");
-  //   toast.success("Payment confirmed");
-  // }, []);
-
-  // const handleFailed = useCallback(() => {
-  //   clearTimerAndToast();
-  //   setPaymentStatus("FAILED");
-  //   toast.error("Payment processing failed.");
-  // }, []);
-
-  // Subscribe to booking status changes
-  // useBookingStatusSubscription({
-  //   bookingId,
-  //   onBooked: handleBooked,
-  //   onFailed: handleFailed,
-  // });
-
-  // Toast timer clean up
-  // useEffect(() => {
-  //   return () => {
-  //     if (timerRef.current) clearInterval(timerRef.current);
-  //   };
-  // }, []);
 
   // Fetch trip details
   const { data, error, isLoading } = useQuery({
@@ -113,7 +61,7 @@ export default function BookingDrawer({
   });
 
   // 1. Get segment data from the store
-  const { originName, destinationName, segmentPrice } = useItineraryStore();
+  const { originName, destinationName } = useGlobalStore(itinerarySelector);
 
   const {
     step,
@@ -124,7 +72,7 @@ export default function BookingDrawer({
     handleSeatClick,
     nextStep,
     prevStep,
-  } = useBookingLogic(segmentPrice);
+  } = useBookingLogic();
 
   const {
     register,
@@ -143,50 +91,20 @@ export default function BookingDrawer({
       });
 
       const result = await res.json();
+      console.log("🎯 API Response:", result);
+
       if (!res.ok) {
         toast.error(`${result.error}`);
         return;
       }
 
       // Monitor transaction state globally
-      startTransaction(result.bookingId);
-
-      // const seatCount = selectedSeats.length;
-      // const HOLD_TIME_SECONDS = 6 * 60; // 6 minutes
-
-      // let remaining = HOLD_TIME_SECONDS;
-
-      // toastIdRef.current = toast.success(
-      //   `${seatCount} Seat${seatCount > 1 ? "s" : ""} Reserved Successfully`,
-      //   {
-      //     description: `Please complete payment for seat${seatCount > 1 ? "s" : ""} ${selectedSeats.join(
-      //       ", ",
-      //     )}. Time remaining: 06:00`,
-      //     duration: HOLD_TIME_SECONDS * 1000,
-      //     dismissible: false,
-      //   },
-      // );
-
-      // timerRef.current = setInterval(() => {
-      //   remaining -= 1;
-
-      //   const minutes = String(Math.floor(remaining / 60)).padStart(2, "0");
-      //   const seconds = String(remaining % 60).padStart(2, "0");
-
-      //   toast.success(
-      //     `${seatCount} Seat${seatCount > 1 ? "s" : ""} Reserved Successfully`,
-      //     {
-      //       id: toastIdRef.current as string,
-      //       description: `Please complete payment for seat${seatCount > 1 ? "s" : ""} ${selectedSeats.join(
-      //         ", ",
-      //       )}. Time remaining: ${minutes}:${seconds}`,
-      //     },
-      //   );
-
-      //   if (remaining <= 0) {
-      //     if (timerRef.current) clearInterval(timerRef.current);
-      //   }
-      // }, 1000);
+      startTransaction(
+        result.bookingId,
+        result.encryptedBookingId,
+        result.ticketNumber,
+        selectedSeats,
+      );
 
       onClose();
     } catch (error) {
@@ -224,7 +142,15 @@ export default function BookingDrawer({
     );
 
   if (error)
-    return <div className="...">Error loading trip. Please try again.</div>;
+    return (
+      <div className="flex flex-col  text-red-500 items-center">
+        <FileWarning className="size-12 text-red-500" />
+        <div className="text-2xl text-center">
+          Could not load seats Please check your internet connection and try
+          again.
+        </div>
+      </div>
+    );
 
   return (
     <div className="fixed inset-0 z-100 flex justify-end">
@@ -234,45 +160,6 @@ export default function BookingDrawer({
       />
 
       <div className="relative w-full max-w-md bg-soft-dark border-l border-white/10 h-full flex flex-col animate-in slide-in-from-right duration-500 shadow-2xl">
-        {/* {paymentStatus === "SUCCESS" && ticketInfo ? (
-          <TicketSuccessView
-            ticketNumber={ticketInfo.number}
-            encryptedBookingId={ticketInfo.encryptedBookingId}
-            seats={ticketInfo.seats}
-            onClose={onClose}
-          />
-        ) : paymentStatus === "WAITING" ? (
-          <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-8 animate-in fade-in duration-500">
-            <div className="size-24 bg-secondary/10 rounded-full flex items-center justify-center animate-pulse">
-              <CreditCard size={48} className="text-secondary" />
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-2xl font-black text-white uppercase tracking-tight">
-                Waiting for M-Pesa PIN...
-              </h3>
-              <p className="text-gray4 px-6">
-                We've sent an STK push to your phone. Enter your PIN to complete
-                the booking.
-              </p>
-            </div>
-          </div>
-        ) : paymentStatus === "FAILED" ? (
-          <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-6">
-            <div className="size-24 bg-red-500/10 rounded-full flex items-center justify-center">
-              <X size={48} className="text-red-500" />
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-2xl font-black text-white uppercase">
-                Payment Failed
-              </h3>
-              <p className="text-gray4 px-6">
-                Your payment was not completed. You can try again.
-              </p>
-            </div>
-          </div>
-        ) : ( */}
         <>
           {/* Booking drawer heading */}
           <div className="p-6 py-4 border-b border-white/5 flex items-center justify-between bg-bg-soft/30">
@@ -381,7 +268,6 @@ export default function BookingDrawer({
             </button>
           </footer>
         </>
-        {/* )} */}
       </div>
     </div>
   );

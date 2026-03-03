@@ -2,19 +2,31 @@
 
 import { useBookingStatusSubscription } from "@/hooks/useBookingStatusSubscription";
 import { TicketSuccessView } from "../passenger/TicketSuccessView";
-import { useBookingTransactionMonitor } from "@/zustand/useBookingTransactionMonitor";
-import { useItineraryStore } from "@/zustand/useItineraryStore";
 import { Loader2, XCircle } from "lucide-react";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import {
+  bookingTransactionSelector,
+  itinerarySelector,
+  useGlobalStore,
+} from "@/zustand/useGlobalStore";
 
 export function GlobalTransactionMonitor() {
+  const router = useRouter();
   const { activeTransaction, resolveTransaction, clearTransaction } =
-    useBookingTransactionMonitor();
-  const resetItinerary = useItineraryStore((s) => s.resetItinerary);
+    useGlobalStore(bookingTransactionSelector);
+  const itinerary = useGlobalStore(itinerarySelector);
 
   useBookingStatusSubscription({
     bookingId: activeTransaction?.bookingId || null,
-    onBooked: (data) => resolveTransaction("SUCCESS", data),
+    onBooked: (data) => {
+      console.log("🎉 Booking confirmed:", data);
+
+      resolveTransaction("SUCCESS", {
+        ...data,
+        encryptedBookingId: activeTransaction?.encryptedBookingId,
+      });
+    },
     onFailed: () => resolveTransaction("FAILED"),
   });
 
@@ -44,6 +56,7 @@ export function GlobalTransactionMonitor() {
     activeTransaction.status === "SUCCESS" ||
     activeTransaction.status === "FAILED"
   ) {
+    console.log("ACTIVE TRANSACTION:", activeTransaction);
     return (
       <div className="fixed inset-0 z-9999 flex items-center justify-center p-6 sm:p-4">
         {/* Backdrop overlay */}
@@ -52,10 +65,13 @@ export function GlobalTransactionMonitor() {
         <div className="relative w-full max-w-md bg-soft-dark border border-white/10 rounded-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-300">
           {activeTransaction.status === "SUCCESS" ? (
             <TicketSuccessView
-              {...activeTransaction.ticketData}
+              ticketNumber={activeTransaction.ticketNumber}
+              seats={activeTransaction.seats}
+              encryptedBookingId={activeTransaction.encryptedBookingId}
               onClose={() => {
                 clearTransaction();
-                resetItinerary();
+                itinerary.resetItinerary();
+                router.push("/");
               }}
             />
           ) : (

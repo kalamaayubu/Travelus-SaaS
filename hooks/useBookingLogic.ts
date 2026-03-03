@@ -9,6 +9,7 @@
  * - {Function} nextStep/prevStep: Navigation handlers.
  */
 
+import { itinerarySelector, useGlobalStore } from "@/zustand/useGlobalStore";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -21,9 +22,10 @@ export interface PassangerBookingFields {
   email?: string;
 }
 
-export const useBookingLogic = (segmentPrice: number) => {
+export const useBookingLogic = () => {
   const [step, setStep] = useState<BookingStep>("SEATS");
-  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+  const { segmentPrice, selectedSeats, totalFare, setItinerary } =
+    useGlobalStore(itinerarySelector);
 
   const formMethods = useForm<PassangerBookingFields>({
     mode: "onChange",
@@ -36,13 +38,21 @@ export const useBookingLogic = (segmentPrice: number) => {
   });
 
   const formData = formMethods.getValues();
-  const totalFare = selectedSeats.length * segmentPrice;
 
   const handleSeatClick = (id: string, isBooked: boolean) => {
     if (isBooked) return;
-    setSelectedSeats((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id],
-    );
+
+    const newSelection = selectedSeats.includes(id)
+      ? selectedSeats.filter((s) => s !== id)
+      : [...selectedSeats, id];
+
+    // Set total fare in store
+    setItinerary({
+      selectedSeats: newSelection,
+      totalFare: newSelection.length * segmentPrice,
+    });
+
+    return newSelection;
   };
 
   const nextStep = () => {
