@@ -46,7 +46,7 @@ export default function IndependentDriverDashboard() {
       </div>
 
       {/* 1. FOUR METRIC CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {[
           {
             label: "Total Rides",
@@ -75,7 +75,13 @@ export default function IndependentDriverDashboard() {
         ].map((stat, i) => (
           <div
             key={i}
-            className="p-6 rounded-xl bg-soft-dark border border-white/5 hover:border-primary/20 transition-all group"
+            className={`
+        p-6 rounded-xl bg-soft-dark border border-white/5 
+        hover:border-primary/20 transition-all group
+        ${i === 0 ? "col-span-2" : ""}   /* Row 1 full width on mobile */
+        ${i === 3 ? "col-span-2" : ""}   /* Row 3 full width on mobile */
+        lg:col-span-1                    /* On large screens, all 4 cards equal width */
+      `}
           >
             <div className="flex justify-between items-center mb-4">
               <div
@@ -94,7 +100,6 @@ export default function IndependentDriverDashboard() {
           </div>
         ))}
       </div>
-
       {/* 2. WEEKLY EARNINGS LINE GRAPH */}
       <div className="p-8 rounded-2xl bg-soft-dark border border-white/5">
         <div className="flex justify-between items-center mb-8">
