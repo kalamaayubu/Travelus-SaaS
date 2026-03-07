@@ -29,7 +29,7 @@ export default function EditTripPage() {
     Record<string, "SELECTED">
   >({});
 
-  const { data, isLoading, error } = useQuery<DriverIndividualTripData>({
+  const { data, isLoading } = useQuery<DriverIndividualTripData>({
     queryKey: ["trip", tripId],
     queryFn: async () => {
       const res = await fetch(`/api/driver/trips/${tripId}`);
@@ -59,29 +59,33 @@ export default function EditTripPage() {
 
   if (isLoading) return <TripDetailsPageSkeleton />;
 
-  if (!data) return null; //  Data Integrity (The fix for TypeScript)
+  if (!data) return null;
 
   const selectedCount = Object.keys(localSelections).length;
 
   return (
-    <div className="min-h-screen text-white pt-4">
+    <div className="min-h-screen text-white">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col gap-4 mb-8">
-          <div className="flex items-center gap-4">
-            <button
+          <div className="flex  gap-10 flex-col md:flex-row md:items-center justify-between items-start">
+            {/* <button
               onClick={() => router.back()}
               className="p-3 bg-white/5 rounded-lg border border-white/5 hover:bg-white/10"
             >
               <ArrowLeft size={20} />
-            </button>
+            </button> */}
             <div>
-              <h1 className="text-2xl font-black uppercase tracking-tighter">
+              <h1 className="text-xl sm:text-2xl font-black uppercase tracking-tighter">
                 {data.route}
               </h1>
               <p className="text-[10px] text-primary font-bold uppercase tracking-[0.2em]">
                 Departure: {data.departure}
               </p>
+            </div>
+            <div className="font-black text-gray4 text-xs">
+              PLATE NO: {data.vehicle.plate}
+              <div className="w-full h-0.5 bg-linear-to-tr from-secondary to-secondary-dark rounded-full"></div>
             </div>
           </div>
 
@@ -139,7 +143,7 @@ export default function EditTripPage() {
 
           {/* MANIFEST & STATS */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <StatCard
                 label="Live Revenue"
                 value={`KES ${data.stats.revenue}`}
@@ -149,11 +153,6 @@ export default function EditTripPage() {
                 label="Available"
                 value={data.vehicle.capacity - data.stats.totalOccupied}
                 sub="Seats Left"
-              />
-              <StatCard
-                label="Reference"
-                value={data.displayId}
-                sub={`Plate: ${data.vehicle.plate}`}
               />
             </div>
 
@@ -245,14 +244,12 @@ function ManifestRow({ seats, name, phone, pickup, isLocked }: any) {
 
 function StatCard({ label, value, sub }: any) {
   return (
-    <div className="bg-soft-dark border border-white/10 rounded-2xl p-5">
-      <p className="text-[8px] font-black text-gray4 uppercase tracking-widest mb-1">
+    <div className="bg-soft-dark flex flex-col border border-white/10 rounded-2xl p-5">
+      <p className="text-[10px] self-end font-black text-gray3 uppercase tracking-widest mb-1">
         {label}
       </p>
-      <p className="text-lg font-black italic tracking-tighter text-white">
-        {value}
-      </p>
-      <p className="text-[8px] font-bold text-primary uppercase mt-1 tracking-wider">
+      <p className="text-lg font-black tracking-tighter text-white">{value}</p>
+      <p className="text-[10px] font-bold text-primary uppercase mt-1 tracking-wider">
         {sub}
       </p>
     </div>
