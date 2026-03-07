@@ -31,7 +31,7 @@ export default function DriverLayout({
 
       {/* MAIN CONTENT AREA */}
       <main className="flex-1 h-screen overflow-y-auto overflow-x-hidden custom-scrollbar">
-        <div className="p-4 md:p-8">{children}</div>
+        <div className="p-4 md:p-8 mt-4">{children}</div>
       </main>
     </div>
   );
