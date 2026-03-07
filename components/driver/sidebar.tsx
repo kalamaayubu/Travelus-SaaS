@@ -15,20 +15,24 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "../providers/auth-provider";
+import { useEffect, useRef } from "react";
 
 interface DriverSidebarProps {
   isCollapsed: boolean;
   setIsCollapsed: (value: boolean) => void;
   isOpen: boolean; // For mobile drawer
+  onClose: () => void;
 }
 
 export function DriverSidebar({
   isCollapsed,
   setIsCollapsed,
   isOpen,
+  onClose,
 }: DriverSidebarProps) {
   const pathname = usePathname();
   const { user, isLoading } = useAuth();
+  const sidebarRef = useRef<HTMLElement>(null);
 
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/driver/dashboard" },
@@ -38,6 +42,35 @@ export function DriverSidebar({
     { icon: User, label: "Profile", href: "/driver/profile" },
     { icon: Settings, label: "Settings", href: "/driver/settings" },
   ];
+
+  // Effect 1: Close ONLY when the route changes
+  useEffect(() => {
+    if (isOpen) {
+      onClose();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  // Effect 2: Handle click outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        isOpen &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
+        onClose();
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, onClose]);
 
   // Logout
   const handleLogout = async () => {
@@ -65,6 +98,7 @@ export function DriverSidebar({
 
   return (
     <aside
+      ref={sidebarRef}
       className={`
         fixed inset-y-0 left-0 z-40 bg-dark border-r border-white/5 transition-all duration-300 ease-in-out
         lg:relative lg:translate-x-0

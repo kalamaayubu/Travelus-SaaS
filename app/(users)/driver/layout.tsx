@@ -27,6 +27,7 @@ export default function DriverLayout({
         isOpen={isOpen}
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
+        onClose={() => setIsOpen(false)}
       />
 
       {/* MAIN CONTENT AREA */}
